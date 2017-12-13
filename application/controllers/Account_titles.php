@@ -111,7 +111,7 @@ class Account_titles extends CORE_Controller
 
 
                 //update grandparent id
-                $account_id=$m_accounts->last_insert_id();
+                // $account_id=$m_accounts->last_insert_id(); 
                 if($parent_account_id>0){ //if there is selected parent, get the grand parent id
 
                     $grand_parent=$m_accounts->get_list($parent_account_id,'account_titles.grand_parent_id,account_titles.account_class_id');
