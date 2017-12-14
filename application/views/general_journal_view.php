@@ -863,6 +863,7 @@ $(document).ready(function(){
         dt=$('#tbl_accounts_receivable').DataTable({
             "dom": '<"toolbar">frtip',
             "bLengthChange":false,
+                "order": [[ 1, "desc" ]],
             "ajax" : "General_journal/transaction/list",
             "columns": [
                 {
@@ -1205,7 +1206,7 @@ $(document).ready(function(){
                 }).done(function(response){
                     showNotification(response);
                     $('#modal_new_department').modal('hide');
-
+                    showSpinningProgress(btn);
                     var _department=response.row_added[0];
                     $('#cbo_departments').append('<option value="'+_department.department_id+'" selected>'+_department.department_name+'</option>');
                     $('#cbo_departments').select2('val',_department.department_id);

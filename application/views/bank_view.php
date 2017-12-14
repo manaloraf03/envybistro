@@ -274,6 +274,7 @@ $(document).ready(function(){
     var initializeControls=function(){
         dt=$('#tbl_bank').DataTable({
             "dom": '<"toolbar">frtip',
+            "order": [[ 0, "desc" ]],
             "bLengthChange":false,
             "ajax" : "Bank/transaction/list",
             "language": {

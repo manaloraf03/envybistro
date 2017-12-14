@@ -1032,6 +1032,7 @@ $(document).ready(function(){
 
         dt=$('#tbl_cash_disbursement_list').DataTable({
             "dom": '<"toolbar">frtip',
+                "order": [[ 1, "desc" ]],
             "bLengthChange":false,
             "ajax" : "Cash_disbursement/transaction/list",
             "columns": [
@@ -1525,15 +1526,16 @@ $(document).ready(function(){
             _txnMode="new";
             $('#div_check').show();
             $('#div_no_check').hide();
-            var _currentDate=<?php echo json_encode(date("m/d/Y")); ?>;
+           
 
             reInitializeDropDownAccounts($('#tbl_entries'),true);
             clearFields($('#frm_journal'));
-
+             var _currentDate=<?php echo json_encode(date("m/d/Y")); ?>;
             $('#cbo_branch').select2('val',null);
             $('#cbo_pay_type').select2('val',1);
             $('#cbo_suppliers').select2('val',null);
             $('#cbo_refType').select2('val',"CV");
+            $('#cbo_bank').select2('val',null);
 
             //set defaults
             _cboPaymentMethod.select2('val',1);//set cash as default

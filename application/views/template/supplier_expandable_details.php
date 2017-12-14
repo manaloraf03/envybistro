@@ -7,7 +7,7 @@
                     <ul class="nav nav-tabs">
                         <li class="active"><a href="#supplier_info<?php echo $supplier_info->supplier_id; ?>" data-toggle="tab" class="tab-label"><i class="fa fa-users"></i> Information</a></li>
                          <li class=""><a href="#supplier_invoice<?php echo $supplier_info->supplier_id; ?>" data-toggle="tab" class="tab-label"><i class="fa fa-users"></i> Invoices</a></li>
-                         <li class=""><a href="#supplier_payment<?php echo $supplier_info->supplier_id; ?>" data-toggle="tab" class="tab-label"><i class="fa fa-users"></i> Payments</a></li>
+                         <li class=""><a href="#supplier_payment<?php echo $supplier_info->supplier_id; ?>" data-toggle="tab" class="tab-label"><i class="fa fa-users"></i> INVOICE Payments</a></li>
                     </ul>
                     <div class="tab-content" style="height: auto;">
                         <div class="tab-pane active" id="supplier_info<?php echo $supplier_info->supplier_id; ?>" style="min-height: 300px;">

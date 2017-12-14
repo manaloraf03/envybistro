@@ -910,6 +910,7 @@ $(document).ready(function(){
         dt=$('#tbl_delivery_invoice').DataTable({
             "dom": '<"toolbar">frtip',
             "bLengthChange":false,
+                "order": [[ 1, "desc" ]],
             "language": {
                 "searchPlaceholder":"Search Purchase Invoice"
             },

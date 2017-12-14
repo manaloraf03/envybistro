@@ -703,6 +703,7 @@ $(document).ready(function(){
         dt=$('#tbl_sales_order').DataTable({
             "dom": '<"toolbar">frtip',
             "bLengthChange":false,
+            "order": [[ 1, "desc" ]],
             "pageLength":15,
             "ajax" : "Sales_order/transaction/list",
             "columns": [

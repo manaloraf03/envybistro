@@ -84,16 +84,16 @@
     <table width="100%" border="0" cellspacing="-1">
         <tr>
             <td style="padding: 4px;" width="50%"><strong>DATE :</strong> <?php echo date_format(new DateTime($journal_info->date_txn),"m/d/Y"); ?></td>
-            <td style="padding: 4px;" width="50%"><strong>REF # :</strong><?php echo $journal_info->ref_no; ?></td>
+            <!-- <td style="padding: 4px;" width="50%"><strong>REF # :</strong><?php echo $journal_info->ref_no; ?></td> -->
         </tr>
         <tr>
-            <td style="padding: 4px;" width="50%"><strong>CHECK # :</strong><?php echo $journal_info->check_no; ?></td>
-            <td style="padding: 4px;" width="50%"><strong>CHECK DATE :</strong> <?php echo $journal_info->check_date; ?></td>
+            <!-- <td style="padding: 4px;" width="50%"><strong>CHECK # :</strong><?php echo $journal_info->check_no; ?></td> -->
+            <!-- <td style="padding: 4px;" width="50%"><strong>CHECK DATE :</strong> <?php echo $journal_info->check_date; ?></td> -->
         </tr>
 
         <tr>
             <td style="padding: 4px;" width="50%"><strong>TXN # :</strong> <?php echo $journal_info->txn_no; ?></td>
-            <td style="padding: 4px;" width="50%"><strong>AMOUNT :</strong> <?php echo $journal_info->amount; ?></td>
+            <!-- <td style="padding: 4px;" width="50%"><strong>AMOUNT :</strong> <?php echo $journal_info->amount; ?></td> -->
         </tr>        
         <tr>
             <td style="padding: 4px;" colspan="2"><strong>PARTICULAR :</strong></td>

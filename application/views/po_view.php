@@ -778,6 +778,7 @@ $(document).ready(function(){
         dt=$('#tbl_purchases').DataTable({
             "dom": '<"toolbar">frtip',
             "bLengthChange":false,
+                "order": [[ 2, "desc" ]],
             "pageLength":15,
             "ajax" : "Purchases/transaction/list",
             "columns": [

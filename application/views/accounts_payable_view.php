@@ -732,6 +732,7 @@
             dt=$('#tbl_account_payables').DataTable({
                 "dom": '<"toolbar">frtip',
                 "bLengthChange":false,
+                    "order": [[ 1, "desc" ]],
                 "ajax" : "Account_payables/transaction/list",
                 "columns": [
                     {

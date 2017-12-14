@@ -785,6 +785,7 @@ $(document).ready(function(){
         dt=$('#tbl_service_journal').DataTable({
             "dom": '<"toolbar">frtip',
             "bLengthChange":false,
+                "order": [[ 1, "desc" ]],
             "ajax" : "Service_journal/transaction/list",
             "columns": [
                 {

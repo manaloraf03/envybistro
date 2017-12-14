@@ -76,7 +76,7 @@ GROUP BY n.supplier_id HAVING total_balance > 0
             di.dr_invoice_no,
             s.*,
             di.date_delivered,
-            di.total_after_discount
+            di.total_after_tax
             FROM 
             delivery_invoice AS di
             LEFT JOIN suppliers AS s ON s.supplier_id = di.`supplier_id`

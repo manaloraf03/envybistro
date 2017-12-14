@@ -323,7 +323,7 @@
                                                        <label class="col-md-2 col-md-offset-1 control-label"><strong>Photo :</strong></label>
                                                        <div class="col-md-5">
                                                            <div class="input-group">
-                                                               <div class="" style="border:1px solid black;height: 230px;width: 210px;vertical-align: middle;margin-bottom: 20px;">
+                                                               <div class="" style="border:0px solid black;height: 230px;width: 210px;vertical-align: middle;margin-bottom: 20px;">
 
                                                                    <div id="div_img_user" style="position:relative;">
                                                                        <img name="img_user" src="assets/img/anonymous-icon.png" style="padding-bottom: 50px; height: 277px; width: 207px;"/>
@@ -878,10 +878,10 @@
         function format ( d ) {
             // `d` is the original data object for the row
             //alert(d.photo_path);
-            return '<br /><table style="margin-left:10%;width: 80%;" style="border:none!important">' +
+            return '<br /><table  style="border:none!important;margin-left:10%;width: 80%;">' +
                     '<thead>' +
                     '</thead>' +
-                    '<tbody style="border:none!important">' +
+                    '<tbody>' +
                     '<tr>' +
                     '<td width="20%" class="child">Name : </td><td width="50%"  class="child"><b>'+ d.user_name+'</b></td>' +
                     '<td rowspan="5" valign="top"  class="child"><div class="avatar"  class="child">'+

@@ -737,6 +737,7 @@ dt_si = $('#tbl_si_list').DataTable({
         dt=$('#tbl_issuances').DataTable({
             "dom": '<"toolbar">frtip',
             "bLengthChange":false,  
+            "order": [[ 1, "desc" ]],
             "ajax" : "Issuances/transaction/list",
             "columns": [
                 {

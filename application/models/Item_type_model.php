@@ -19,7 +19,7 @@ class Item_type_model extends CORE_Model{
               VALUES
                   (1,'Inventory','',TRUE,FALSE),
                   (2,'Non-inventory','',TRUE,FALSE),
-                  (3,'Services','',TRUE,FALSE)
+                  (3,'Consigned','',TRUE,FALSE)
               ON DUPLICATE KEY UPDATE
                   item_types.item_type=VALUES(item_types.item_type),
                   item_types.description=VALUES(item_types.description),

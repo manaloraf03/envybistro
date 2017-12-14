@@ -564,6 +564,7 @@ $(document).ready(function(){
         dt=$('#tbl_issuances').DataTable({
             "dom": '<"toolbar">frtip',
             "bLengthChange":false,
+            "order": [[ 1, "desc" ]],
             "ajax" : "Adjustments/transaction/list",
             "columns": [
                 {

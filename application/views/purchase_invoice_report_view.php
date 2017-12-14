@@ -154,7 +154,7 @@
                                                                         <button class="btn btn-primary pull-left" id="btn_print_detailed"><i class="fa fa-print"></i>&nbsp; Print Report</button>
                                                                         <button class="btn btn-success pull-left" style="margin-left: 5px;" id="btn_export_detailed"><i class="fa fa-file-excel-o"></i>&nbsp; Export</button>
                                                                         <button class="btn btn-success pull-left" style="margin-left: 5px;" id="btn_email_detailed"><i class="fa fa-share"></i>&nbsp; Email</button>                                                                         
-                                                                        <table id="tbl_pi_detailed" class="" cellspacing="0" width="100%">
+                                                                        <table id="tbl_pi_detailed" class="table table-striped" cellspacing="0" width="100%">
                                                                             <thead class="">
                                                                             <tr>
                                                                                 <th>Ref #</th>
@@ -381,7 +381,7 @@
                             { targets:[2],data: "date_delivered" },
                             {
                                 sClass: "numericCol", 
-                                targets:[3],data: "total_after_discount",
+                                targets:[3],data: "total_after_tax",
                                 render: function(data,type,full,meta){
                                     return accounting.formatNumber(data,2);
                                 }

@@ -274,7 +274,7 @@
             <label class="col-md-2 col-md-offset-1 control-label"><strong>Photo :</strong></label>
             <div class="col-md-5">
                 <div class="input-group">
-                    <div class="" style="border:1px solid black;height: 230px;width: 210px;vertical-align: middle;">
+                    <div class="" style="border:0px solid black;height: 230px;width: 210px;vertical-align: middle;">
 
                         <div id="div_img_user" style="position:relative;">
                             <img name="img_user" src="<?php echo $user_info->photo_path; ?>" style="object-fit: fill; !important; height: 100%;width: 100%;" />

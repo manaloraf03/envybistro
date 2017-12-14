@@ -786,6 +786,7 @@ $(document).ready(function(){
         dt=$('#tbl_sales_invoice').DataTable({
             "dom": '<"toolbar">frtip',
             "bLengthChange":false,
+            "order": [[ 1, "desc" ]],
             "ajax" : "Sales_invoice/transaction/list_with_count",
             "language": {
                 "searchPlaceholder":"Search Invoice"
