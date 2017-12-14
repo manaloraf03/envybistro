@@ -200,16 +200,17 @@ class Suppliers_model extends CORE_Model {
     function get_supplier_payment($supplier_id){
 
 $sql="SELECT
-      unpaid.dr_invoice_no, 
+      unpaid.journal_id, 
       paid.receipt_no,
       unpaid.invoice_date,
+      unpaid.dr_invoice_no,
       paid.total_paid,
       paid.date_paid,
       paid.check_no
       FROM
 
       (SELECT 
-      dr_invoice_id, 
+      journal_id, 
       date_delivered as invoice_date,
       dr_invoice_no,
       total_after_tax
@@ -229,7 +230,7 @@ $sql="SELECT
       WHERE is_active=TRUE AND is_deleted=FALSE AND supplier_id = $supplier_id
       GROUP BY dr_invoice_id) AS paid
 
-      ON paid.dr_invoice_id = unpaid.dr_invoice_id
+      ON paid.dr_invoice_id = unpaid.journal_id
       having paid.total_paid > 0";
       return $this->db->query($sql)->result();
 

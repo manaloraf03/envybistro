@@ -150,7 +150,7 @@
                                                     <span class="input-group-addon">
                                                         <i class="fa fa-code"></i>
                                                     </span>
-                                                    <input type="text" name="account_no" class="form-control" placeholder="Account No" data-    error-msg="Account number is required!" required>
+                                                    <input type="text" name="account_no" id="account_no" class="form-control" placeholder="Account No" data-error-msg="Account number is required!" required>
                                                 </div>
                                             </div>
                                         </div>
@@ -161,14 +161,14 @@
                                                                 <span class="input-group-addon">
                                                                     <i class="fa fa-calendar-o"></i>
                                                                 </span>
-                                                    <input type="text" name="account_title" class="form-control" placeholder="Account Title" data-error-msg="Account title is required!" required>
+                                                    <input type="text" name="account_title" id="account_title" class="form-control" placeholder="Account Title" data-error-msg="Account title is required!" required>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="col-md-2 control-label"><strong>Description :</strong></label>
                                             <div class="col-md-9">
-                                                <textarea name="description" class="form-control"></textarea>
+                                                <textarea name="description" id="account_description" class="form-control"></textarea>
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -186,7 +186,7 @@
                                             <label class="col-md-2 control-label"><strong>Parent Account :</strong></label>
                                             <div class="col-md-9">
                                                 <select name="parent_account" id="cbo_parent_account">
-                                                    <option value="0">No parent acccount</option>
+                                                    <option value="0">No parent account</option>
                                                     <?php foreach($parents as $account){ ?>
                                                         <option value="<?php echo $account->account_id; ?>"><?php echo $account->account_title; ?></option>
                                                     <?php } ?>
@@ -343,6 +343,7 @@ $(document).ready(function(){
         dt=$('#tbl_accounts').DataTable({
             "dom": '<"toolbar">frtip',
             "bLengthChange":false,
+                "order": [[ 1, "desc" ]],
             "ajax" : "Account_titles/transaction/list",
             "columns": [
                 {
@@ -478,6 +479,12 @@ $(document).ready(function(){
         $('#btn_new').click(function(){
             _txnMode="new";
             $('#account_add_title').text('New Account Information');
+            $('#account_title').val('');
+            $('#account_description').val('');
+            $('#account_no').val('');
+            _cboClasses.select2('val',null);
+            _cboTypes.select2('val',1);
+            _cboParentAccounts.select2('val',0);
             showList(false);
         });
 
