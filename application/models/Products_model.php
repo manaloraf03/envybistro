@@ -962,8 +962,8 @@ function product_list($account,$as_of_date=null,$product_id=null){
 
              (SELECT sii.product_id,SUM(sii.inv_qty) as SalesOUtQty FROM sales_invoice si
              INNER JOIN sales_invoice_items  sii ON sii.sales_invoice_id =  si.sales_invoice_id
-             WHERE si.date_invoice<='$as_of_date' 
-             AND si.is_deleted = 0
+
+             WHERE  si.is_deleted = 0 ".($as_of_date==null?"":" AND si.date_invoice<='".$as_of_date."'")."
              GROUP BY sii.product_id) siQout ON siQout.product_id=pQ.product_id
 
              ":" 

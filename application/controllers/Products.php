@@ -72,7 +72,7 @@ class Products extends CORE_Controller
                 $a_i=$account_integration->get_list();
                 $account =$a_i[0]->sales_invoice_inventory;
 
-                $response['data']=$m_products->product_list($account);
+                $response['data']=$m_products->product_list(1);
                 // $response['data']=$this->response_rows(array('products.is_deleted'=>FALSE));
                 echo json_encode($response);
                 break;

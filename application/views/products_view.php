@@ -79,6 +79,7 @@ $(document).ready(function(){
             "dom": '<"toolbar">frtip',
             "bLengthChange":false,
             "pageLength":15,
+            "order": [[ 1, "asc" ]],
             "ajax" : "Products/transaction/list",
             "columns": [
                 {
@@ -92,7 +93,8 @@ $(document).ready(function(){
                 { targets:[2],data: "product_desc" },
                 { targets:[3],data: "category_name" },
                 {
-                    targets:[4],data: "on_hand",
+                    targets:[4],data: "CurrentQty"
+                    ,
                     render: function (data, type, full, meta) {
                         if(data=="na"){
                             return parseFloat(data);
