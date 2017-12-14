@@ -64,13 +64,14 @@
 					$m_journal_accounts=$this->Journal_account_model;
 
 					$is_not_equal = 0;
+					$item_count = 0;
 					foreach ($items_finalize as $item) {
 
 						if($item->is_equal == '0'){
 							$is_not_equal++;
 						}else{
 
-
+							$item_count++;
 							if($item->ar_guest_id == 0){ // means checkout only
 								$customer_id = $item->guest_id;
 								$customer_name = $item->guest_name; 
@@ -138,9 +139,26 @@
 
 						}
 
-                $response['stat']="success";
-                $response['title']="Success!";
-                $response['msg']="Hotel System Sales Successfully Integrated.";
+						if($item_count > 0 && $is_not_equal > 0){
+			                $response['stat']="info";
+			                $response['title']=$item_count." Record(s) Successfully saved!";
+			                $response['msg']="Other ".$is_not_equal." Transactions were not posted due to imbalanced debit and credit amounts";
+						}
+						else if($item_count == 0 && $is_not_equal > 0){
+			                $response['stat']="error";
+			                $response['title']="No Record(s) saved!";
+			                $response['msg']=$is_not_equal." Transaction(s) not posted due to imbalanced debit and credit amounts";
+						}
+						else if($item_count > 0 && $is_not_equal == 0){
+			                $response['stat']="success";
+			                $response['title']=$item_count." Record(s) Successfully saved!";
+			                $response['msg']="Transactions were posted to Accounting";
+						}else{
+		                $response['stat']="error";
+		                $response['title']="No Transaction Saved !";
+		                $response['msg']="No Hotel transaction record was found .";	
+						}
+
 
 					echo json_encode($response);
 				break;

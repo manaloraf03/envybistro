@@ -81,8 +81,13 @@
 					$m_journal_accounts=$this->Journal_account_model;
 
 					$is_not_equal = 0;
+					$item_count = 0;
 					foreach ($items_finalize as $item) {
+						if($item->is_equal == '0'){
+							$is_not_equal++;
+						}else{
 
+						$item_count++;
 						$m_journal->book_type = 'SJE';
 						$m_journal->is_sales = 1;
 						$m_journal->department_id = $department_id;
@@ -119,12 +124,28 @@
 
 					}
 
-
+			}
 						
+						if($item_count > 0 && $is_not_equal > 0){
+			                $response['stat']="info";
+			                $response['title']=$item_count." Record(s) Successfully saved!";
+			                $response['msg']="Other ".$is_not_equal." Transactions were not posted due to imbalanced debit and credit amounts";
+						}
+						else if($item_count == 0 && $is_not_equal > 0){
+			                $response['stat']="error";
+			                $response['title']="No Record(s) saved!";
+			                $response['msg']=$is_not_equal." Transaction(s) not posted due to imbalanced debit and credit amounts";
+						}
+						else if($item_count > 0 && $is_not_equal == 0){
+			                $response['stat']="success";
+			                $response['title']=$item_count." Record(s) Successfully saved!";
+			                $response['msg']="Transactions were posted to Accounting";
+						}else{
+		                $response['stat']="error";
+		                $response['title']="No Transaction Saved !";
+		                $response['msg']="No POS transaction record was found .";	
+						}
 
-                $response['stat']="success";
-                $response['title']="Success!";
-                $response['msg']="Point of Sales System Successfully Integrated.";
 
 					echo json_encode($response);
 				break;

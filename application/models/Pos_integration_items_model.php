@@ -110,7 +110,7 @@ ref_no  FROM pos_integration_items pii
 WHERE  pii.is_posted = FALSE AND pii.sales_date <= '$sales_date') as main) as x
 ON x.pos_integration_items_id = pos.pos_integration_items_id
 
-WHERE pos.is_posted = FALSE AND is_equal = TRUE AND x.sales_date <= '$sales_date'
+WHERE pos.is_posted = FALSE AND x.sales_date <= '$sales_date'
 " ;
        return $this->db->query($sql)->result();
 }
