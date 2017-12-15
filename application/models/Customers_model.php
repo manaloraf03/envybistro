@@ -246,42 +246,42 @@ class Customers_model extends CORE_Model{
 
     function get_customer_invoice($customer_id){
         $sql="SELECT
-            report.sales_inv_no,
+           report.sales_inv_no,
             report.date_invoice,
-            report.total_after_tax AS amount,
+            report.total_after_discount AS amount,
             report.remarks
             FROM 
             /*  SQL BELOW SHOWS DETAILED REPORT, ABOVE SQL IS USED TO SHOW THE FIELDS NEEDED IN THE FRONT END */
             (SELECT
             unpaid.sales_inv_no,
             unpaid.date_invoice,
-            unpaid.sales_invoice_id,
-            unpaid.total_after_tax,
+            unpaid.journal_id,
+            unpaid.total_after_discount,
 
             IFNULL(paid.payment_amount,0) as payment_amount,
-            IFNULL(unpaid.total_after_tax - paid.payment_amount,0) AS total,
+            IFNULL(unpaid.total_after_discount - paid.payment_amount,0) AS total,
 
-            (CASE WHEN unpaid.total_after_tax = paid.payment_amount THEN 'paid' ELSE 'unpaid' END) AS remarks
+            (CASE WHEN unpaid.total_after_discount = paid.payment_amount THEN 'paid' ELSE 'unpaid' END) AS remarks
             FROM
             (SELECT
-            sales_invoice_id,
+            journal_id,
             sales_inv_no,
             date_invoice,
-            total_after_tax
+            total_after_discount
             FROM sales_invoice
             WHERE is_active=TRUE AND is_deleted=FALSE AND customer_id = $customer_id) AS unpaid
 
             LEFT JOIN
 
             (SELECT 
-            sales_invoice_id,
+            receivable_payments_list.journal_id,
             SUM(payment_amount) AS payment_amount 
             FROM receivable_payments_list
             INNER JOIN receivable_payments ON receivable_payments.payment_id = receivable_payments_list.payment_id
-            WHERE is_active=TRUE AND is_deleted=FALSE
-            GROUP BY sales_invoice_id AND customer_id = $customer_id) AS paid
+            WHERE is_active=TRUE AND is_deleted=FALSE AND customer_id = $customer_id
+            GROUP BY receivable_payments_list.journal_id ) AS paid
 
-            ON paid.sales_invoice_id = unpaid.sales_invoice_id ) as report";
+            ON paid.journal_id = unpaid.journal_id ) as report";
 
 
         return $this->db->query($sql)->result();
@@ -292,12 +292,12 @@ class Customers_model extends CORE_Model{
 
 
 
+
 function get_customer_payment($customer_id){
 
     $sql="SELECT 
         receipt_no,
         date_paid,
-        sales_inv_no,
         total_paid_amount,
         check_no
          FROM
@@ -308,6 +308,7 @@ function get_customer_payment($customer_id){
         sales_invoice_id,
         total_paid_amount,
         check_no,
+        customer_id,
         is_active,
         is_deleted
         FROM receivable_payments as rp
@@ -321,16 +322,10 @@ function get_customer_payment($customer_id){
         receivable_payments_list
         GROUP BY payment_id) as paid
         ON rp.payment_id = paid.payment_id ) AS report
-
-
-        LEFT JOIN 
-
-        (SELECT sales_invoice_id,sales_inv_no,customer_id FROM sales_invoice
-        WHERE is_active = TRUE AND is_deleted = FALSE) AS si
-
-        ON si.sales_invoice_id = report.sales_invoice_id 
-
-        WHERE report.is_active = TRUE AND report.is_deleted = FALSE AND si.customer_id = $customer_id
+        
+        
+        
+        WHERE report.is_active = TRUE AND report.is_deleted = FALSE AND report.customer_id = $customer_id
 
         ";
 
@@ -340,6 +335,53 @@ function get_customer_payment($customer_id){
 
 }
 
+// function get_customer_payment($customer_id){
+
+//     $sql="SELECT 
+//         receipt_no,
+//         date_paid,
+//         sales_inv_no,
+//         total_paid_amount,
+//         check_no
+//          FROM
+
+//         (SELECT 
+//         receipt_no,
+//         date_paid,
+//         sales_invoice_id,
+//         total_paid_amount,
+//         check_no,
+//         is_active,
+//         is_deleted
+//         FROM receivable_payments as rp
+
+//         LEFT JOIN 
+
+//         (SELECT 
+//         sales_invoice_id,
+//         payment_id
+//         FROM
+//         receivable_payments_list
+//         GROUP BY payment_id) as paid
+//         ON rp.payment_id = paid.payment_id ) AS report
+
+
+//         LEFT JOIN 
+
+//         (SELECT sales_invoice_id,sales_inv_no,customer_id FROM sales_invoice
+//         WHERE is_active = TRUE AND is_deleted = FALSE) AS si
+
+//         ON si.sales_invoice_id = report.sales_invoice_id 
+
+//         WHERE report.is_active = TRUE AND report.is_deleted = FALSE AND si.customer_id = $customer_id
+
+//         ";
+
+//         return $this->db->query($sql)->result();
+
+
+
+// }
 // get sales invoice count associated with Customer
 function get_sales_invoice_count($sales_invoice_id){
                 $sql="

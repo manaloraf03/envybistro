@@ -147,7 +147,7 @@
 
                                         <th>OR No </th>
                                         <th>Date Paid</th>
-                                        <th>Invoice No.</th>
+<!--                                         <th>Invoice No.</th> -->
                                         <th style="text-align: right;">Invoice Paid</th>
                                         <th>Check Number</th>
                                
@@ -162,7 +162,7 @@
                                         <tr>
                                             <td><?php echo $item_payment->receipt_no; ?></td>
                                             <td><?php echo $item_payment->date_paid; ?></td>
-                                            <td><?php echo $item_payment->sales_inv_no; ?></td>
+<!--                                             <td><?php echo $item_payment->sales_inv_no; ?></td> -->
                                             <td style="text-align: right;"><?php echo number_format($item_payment->total_paid_amount,2); ?></td>
                                             <td><?php echo $item_payment->check_no; ?></td>
 
@@ -172,7 +172,7 @@
                                         </tr>
                                     <?php } ?>
                                     <tr>
-                                    <td colspan="3" style="text-align: right;">Total Paid Amount</td>
+                                    <td colspan="2" style="text-align: right;">Total Paid Amount</td>
                                     <td style="text-align: right;"><?php echo number_format($total,2); ?></td>
                                     <td></td>
                                     </tr>
