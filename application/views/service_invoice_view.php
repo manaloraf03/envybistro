@@ -130,6 +130,7 @@
                     <th>Department</th>
                     <th>Remarks</th>
                     <th><center>Action</center></th>
+                    <th></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -651,6 +652,8 @@ $(document).ready(function(){
         dt=$('#tbl_service_invoice').DataTable({
             "dom": '<"toolbar">frtip',
             "bLengthChange":false,
+                "order": [[ 8, "desc" ]],
+
             "ajax" : "Service_invoice/transaction/list-invoice",
             "language": {
                 "searchPlaceholder":"Search Invoice"
@@ -676,7 +679,9 @@ $(document).ready(function(){
                         var btn_trash='<button class="btn btn-danger btn-sm" name="remove_info" style="margin-right:0px;" data-toggle="tooltip" data-placement="top" title="Move to trash"><i class="fa fa-trash-o"></i> </button>';
                         return '<center>'+btn_edit+"&nbsp;"+btn_trash+'</center>';
                     }
-                }
+                },
+                { visible:false, targets:[8],data: "service_invoice_id" }
+
             ]
         });
 

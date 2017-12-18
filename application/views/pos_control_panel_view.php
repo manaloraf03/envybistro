@@ -122,6 +122,7 @@
                                                 <thead class="">
                                                     <th></th>
                                                     <th>Sales Date</th>
+                                                    <th>Cashier</th>
                                                     <th>Debit Amount</th>
                                                     <th>Credit Amount</th>
                                                     <th>Reference No.</th>
@@ -227,12 +228,13 @@ $(document).ready(function(){
                     "defaultContent": ""
                 },
                 { targets:[1],data: "sales_date" },
-                { sClass: 'right-align' , targets:[2],data: "dr_amount" ,render: $.fn.dataTable.render.number( ',', '.', 2 ) },
-                { sClass: 'right-align' , targets:[3],data: "cr_amount",render: $.fn.dataTable.render.number( ',', '.', 2 ) },
+                { targets:[2],data: "cashier" },
+                { sClass: 'right-align' , targets:[3],data: "dr_amount" ,render: $.fn.dataTable.render.number( ',', '.', 2 ) },
+                { sClass: 'right-align' , targets:[4],data: "cr_amount",render: $.fn.dataTable.render.number( ',', '.', 2 ) },
 
-                { targets:[4],data: "ref_no" },
+                { targets:[5],data: "ref_no" },
                                 {
-                    targets:[5],data: null,
+                    targets:[6],data: null,
                     render: function (data, type, full, meta){
                         var _attribute='';
                         //console.log(data.is_email_sent);

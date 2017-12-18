@@ -160,6 +160,7 @@
                     <th>Remarks</th>
                     <th>Adjustment</th>
                     <th><center>Action</center></th>
+                    <th></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -586,7 +587,8 @@ $(document).ready(function(){
 
                         return '<center>'+btn_edit+'&nbsp;'+btn_trash+'</center>';
                     }
-                }
+                },
+            { visible:false, targets:[8],data: "adjustment_id" }
             ]
 
         });

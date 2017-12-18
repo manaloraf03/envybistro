@@ -187,6 +187,7 @@
                     <th>Status</th>
                     <th>Sent</th>
                     <th><center>Action</center></th>
+                    <th></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -829,6 +830,7 @@ $(document).ready(function(){
                         return '<center>'+btn_edit+'&nbsp;'+btn_message+'&nbsp;'+btn_trash+'</center>';
                     }
                 },
+            { visible:false, targets:[8],data: "purchase_order_id" }
             ]
         });
 

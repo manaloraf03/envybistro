@@ -12,7 +12,23 @@ class Pos_integration_items_model extends CORE_Model{
         parent::__construct();
     }
 
+function cashier_list(){
+$sql="SELECT distinct cashier FROM pos_integration_items";
+        return $this->db->query($sql)->result();
+}
 
+
+function bar_sales_report_list($cashier=null,$from=null,$to){
+$sql="SELECT *,
+DATE_FORMAT(pos_integration_items.sales_date,'%m/%d/%Y')as sales_date FROM pos_integration_items 
+WHERE is_posted = TRUE
+".($cashier==null?"":" AND cashier='".$cashier."'")."
+
+AND sales_date BETWEEN '".$from."' and '".$to."' 
+ORDER BY sales_date ASC
+";
+        return $this->db->query($sql)->result();
+}
 
 function get_pos_entries_journal($item_id){
 
@@ -82,6 +98,7 @@ FROM
 
 (SELECT pii.pos_integration_items_id,
 pii.sales_date,
+pii.cashier,
 (IFNULL(pii.cash_amount,0) + IFNULL(pii.check_amount,0) + IFNULL(pii.card_amount,0) + IFNULL(pii.gc_amount,0)) dr_amount,
 IFNULL(pii.total,0) as cr_amount,
 ref_no  FROM pos_integration_items pii
