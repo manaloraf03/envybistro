@@ -239,12 +239,14 @@ GROUP BY n.supplier_id HAVING total_balance > 0
         $sql="SELECT
             di.*,
             s.*,
-            (IFNULL(di.total_after_tax,0) - IFNULL(di.total_tax_amount,0)) AS net_of_vat
+            (IFNULL(di.total_after_tax,0) - IFNULL(di.total_tax_amount,0)) AS net_of_vat,
+            (di.total_after_tax/ 1.12) as invoice_non_vat,
+            (di.total_after_tax-(di.total_after_tax/ 1.12)) as invoice_vat
             FROM
             `delivery_invoice` AS di
             LEFT JOIN suppliers AS s ON s.`supplier_id`=di.`supplier_id`
             WHERE di.is_deleted=FALSE AND di.is_active=TRUE
-            AND di.date_delivered BETWEEN '$startDate' AND '$endDate'
+            AND di.date_delivered BETWEEN '$startDate' AND '$endDate' 
             AND s.tax_type_id=2";
 
             return $this->db->query($sql)->result();

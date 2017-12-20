@@ -113,8 +113,10 @@
 		                    						<th>Supplier</th>
 		                    						<th>Invoice / OR #</th>
                                                     <th>Reference #</th>                                        
-		                    						<th>Invoice Amount</th>
-		                    						<th>VAT Input</th>
+		                    						<th>Gross</th>
+                                                    <th>Vat</th>
+                                                    <th>Non Vat</th>
+		                    						<th>Vat Total</th>
 		                    						<th>Net of VAT</th>
 		                    					</thead>
 		                    					<tbody>
@@ -262,12 +264,22 @@
                             return accounting.formatNumber(data,2); 
                         }  
                     }, 
-                    { className: "text-right", "searchable": false,targets:[4],data: "total_tax_amount",
+                    { className: "text-right", "searchable": false,targets:[4],data: "invoice_vat",
+                        render: function(data){ 
+                            return accounting.formatNumber(data,2); 
+                        }  
+                    },                     
+                    { className: "text-right", "searchable": false,targets:[5],data: "invoice_non_vat",
+                        render: function(data){ 
+                            return accounting.formatNumber(data,2); 
+                        }  
+                    }, 
+                    { className: "text-right", "searchable": false,targets:[6],data: "total_tax_amount",
                     	render: function(data){ 
                             return accounting.formatNumber(data,2); 
                         }   
                     }, 
-                    { className: "text-right", "searchable": false,targets:[5],data: "net_of_vat", 
+                    { className: "text-right", "searchable": false,targets:[7],data: "net_of_vat", 
                         render: function(data){ 
                             return accounting.formatNumber(data,2); 
                         }  
