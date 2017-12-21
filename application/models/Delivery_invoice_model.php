@@ -236,18 +236,36 @@ GROUP BY n.supplier_id HAVING total_balance > 0
 
 
     function get_vat_relief($startDate,$endDate) {
-        $sql="SELECT
+        $sql="SELECT main.* FROM (      SELECT
             di.*,
-            s.*,
-            (IFNULL(di.total_after_tax,0) - IFNULL(di.total_tax_amount,0)) AS net_of_vat,
-            (di.total_after_tax/ 1.12) as invoice_non_vat,
-            (di.total_after_tax-(di.total_after_tax/ 1.12)) as invoice_vat
+            s.supplier_name,s.tin_no,
+            (IFNULL(dr_taxable.dr_taxable,0) - IFNULL(di.total_tax_amount,0)) AS net_of_vat,
+            IFNULL(dr_non_taxable.dr_non_taxable,0) AS invoice_non_vat,
+            dr_taxable.dr_taxable as dr_taxable
             FROM
             `delivery_invoice` AS di
             LEFT JOIN suppliers AS s ON s.`supplier_id`=di.`supplier_id`
+            LEFT JOIN (SELECT dr_invoice_id, 
+                            SUM(IFNULL(core.dr_line_total_price,0)) as dr_taxable
+                            FROM(SELECT * FROM delivery_invoice_items dii
+
+                            WHERE dii.dr_tax_rate > 0 AND dii.dr_tax_amount > 0) as core
+                            GROUP BY dr_invoice_id) as dr_taxable
+            ON dr_taxable.dr_invoice_id = di.dr_invoice_id
+
+            LEFT JOIN (SELECT dr_invoice_id, 
+                        SUM(IFNULL(core.dr_line_total_price,0)) as dr_non_taxable
+                        FROM(SELECT * FROM delivery_invoice_items dii
+
+                        WHERE dii.dr_tax_rate = 0 AND dii.dr_tax_amount = 0) as core
+                        GROUP BY dr_invoice_id) as dr_non_taxable
+
+            ON dr_non_taxable.dr_invoice_id = di.dr_invoice_id
+            
+            
             WHERE di.is_deleted=FALSE AND di.is_active=TRUE
             AND di.date_delivered BETWEEN '$startDate' AND '$endDate' 
-            AND s.tax_type_id=2";
+            AND s.tax_type_id=2) main";
 
             return $this->db->query($sql)->result();
     }

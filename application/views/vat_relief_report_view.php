@@ -114,8 +114,8 @@
 		                    						<th>Invoice / OR #</th>
                                                     <th>Reference #</th>                                        
 		                    						<th>Gross</th>
-                                                    <th>Vat</th>
-                                                    <th>Non Vat</th>
+                                                    <th>Non Vatable</th>
+                                                    <th>Invoice Vatable</th>
 		                    						<th>Vat Total</th>
 		                    						<th>Net of VAT</th>
 		                    					</thead>
@@ -263,16 +263,16 @@
 	                    render: function(data){ 
                             return accounting.formatNumber(data,2); 
                         }  
+                    },               
+                    { className: "text-right", "searchable": false,targets:[4],data: "invoice_non_vat",
+                        render: function(data){ 
+                            return accounting.formatNumber(data,2); 
+                        }  
                     }, 
-                    { className: "text-right", "searchable": false,targets:[4],data: "invoice_vat",
+                    { className: "text-right", "searchable": false,targets:[5],data: "dr_taxable",
                         render: function(data){ 
                             return accounting.formatNumber(data,2); 
-                        }  
-                    },                     
-                    { className: "text-right", "searchable": false,targets:[5],data: "invoice_non_vat",
-                        render: function(data){ 
-                            return accounting.formatNumber(data,2); 
-                        }  
+                        }   
                     }, 
                     { className: "text-right", "searchable": false,targets:[6],data: "total_tax_amount",
                     	render: function(data){ 
