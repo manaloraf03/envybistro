@@ -92,7 +92,7 @@
 						$m_journal->is_sales = 1;
 						$m_journal->department_id = $department_id;
 						$m_journal->customer_id = $customer_id;
-						$m_journal->ref_no=$item->ref_no;
+						// $m_journal->ref_no=$item->ref_no; // in sales journal will return as a receivable collection in the collection entry
 						$m_journal->remarks ='X Reading Identifier: '.$item->ref_no.', Sales Date: '.$item->sales_date.', Cashier: '.$item->cashier;
 						$m_journal->pos_integration_id=$item->pos_integration_items_id;
 

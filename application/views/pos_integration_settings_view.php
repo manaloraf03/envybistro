@@ -192,6 +192,19 @@
                                 </select>
                             </div>
                         </div>
+                        <h4><span style="margin-left: 1%"><strong><i class="fa fa-gear"></i> Tax Account</strong></span></h4>
+
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label"> * Tax Account :</label>
+                            <div class="col-md-7">
+                                <select name="tax" class="cbo_accounts" data-error-msg="Tax Account is required." required>
+                                    <?php foreach($accounts as $account){ ?>
+                                        <option value="<?php echo $account->account_id; ?>" <?php echo ($current_accounts->tax==$account->account_id?'selected':''); ?>  ><?php echo $account->account_title; ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                        </div>
                         <br>
                         <div class=" col-lg-offset-3">
                             <button id="btn_save_supplier_accounts" type="button" class="btn btn-primary" style="font-family: tahoma;text-transform: none;"><span class=""></span> Save Changes</button>

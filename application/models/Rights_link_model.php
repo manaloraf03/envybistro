@@ -88,8 +88,11 @@ class Rights_link_model extends CORE_Model{
                                           (78,'15','15-2','Hotel Integration Settings'),
                                           (79,'4','4-7','Menu Management'),
                                           (80,'16','16-1','POS Integration Settings'),
-                                          (81,'16','16-2','Hotel Control Panel'),
-                                          (81,'8','8-5','Bar Sales Report')
+                                          (81,'16','16-2','Pos Control Panel'),
+                                          (82,'8','8-5','Bar Sales Report'),
+                                          (83,'12','12-6','Product List Detailed'),
+                                          (84,'12','12-7','Pick-list (Reorder)')
+
 
 
 

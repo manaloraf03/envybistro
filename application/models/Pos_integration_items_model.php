@@ -77,9 +77,20 @@ UNION ALL
 SELECT (SELECT income_sales from pos_integration) as account_id,
 '' as memo,
 0 as dr_amount,
-total as cr_amount
+(IFNULL(total,0)- IFNULL(tax_amount,0)) as cr_amount
 from pos_integration_items
-WHERE pos_integration_items_id = $item_id) as main
+WHERE pos_integration_items_id = $item_id
+
+
+UNION ALL
+
+SELECT (SELECT tax from pos_integration) as account_id,
+'' as memo,
+0 as dr_amount,
+tax_amount as cr_amount
+from pos_integration_items
+WHERE pos_integration_items_id = $item_id
+) as main
  
 LEFT JOIN account_titles ac ON ac.account_id = main.account_id
 

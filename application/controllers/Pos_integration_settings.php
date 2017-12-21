@@ -27,7 +27,7 @@ class Pos_integration_settings extends CORE_Controller
         $data['_switcher_settings'] = $this->load->view('template/elements/switcher', '', TRUE);
         $data['_side_bar_navigation'] = $this->load->view('template/elements/side_bar_navigation', '', TRUE);
         $data['_top_navigation'] = $this->load->view('template/elements/top_navigation', '', TRUE);
-        $data['title'] = 'Hotel Integration';
+        $data['title'] = 'POS Integration';
 
         $data['accounts'] = $this->Account_title_model->get_list(array('is_deleted'=>FALSE));
         $current_accounts= $this->Pos_integration_model->get_list();
@@ -60,6 +60,7 @@ class Pos_integration_settings extends CORE_Controller
                 $m_integration->asset_check=$this->input->post('asset_check',TRUE);
                 $m_integration->asset_gc=$this->input->post('asset_gc',TRUE);
                 $m_integration->income_sales=$this->input->post('income_sales',TRUE);
+                $m_integration->tax=$this->input->post('tax',TRUE);
 
                 $m_integration->save();
 

@@ -105,7 +105,8 @@ class Customers_model extends CORE_Model{
                 LEFT JOIN sales_invoice si ON si.sales_inv_no = ji.ref_no AND ji.is_sales=1
                 LEFT JOIN service_invoice serv_inv ON serv_inv.service_invoice_no = ji.ref_no AND ji.is_sales=0
                 WHERE
-                ji.is_deleted=FALSE
+                ji.is_deleted=FALSE AND
+                ji.pos_integration_id = 0 AND ji.hotel_integration_id = 0 /* Added this to filter out those which came from the other systems : Hotel and POS */
                 AND ji.is_active=TRUE
                 AND ji.book_type = 'SJE'
                 AND ji.customer_id = $customer_id

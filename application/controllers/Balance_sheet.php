@@ -445,7 +445,7 @@ class Balance_sheet extends CORE_Controller
                                 // Raise error message
                             $response['title']='Try Again!';
                             $response['stat']='error';
-                            $response['msg']='Please check the Email Address of your Supplier or your Internet Connection.';
+                            $response['msg']='Please check the Email Address  or your Internet Connection.';
 
                             echo json_encode($response);
                             } else {

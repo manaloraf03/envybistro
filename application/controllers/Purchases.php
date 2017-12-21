@@ -606,7 +606,7 @@ class Purchases extends CORE_Controller
                             $this->email->to($to);
                             $this->email->subject($subject);
                             $this->email->message($message);
-                            $this->email->attach($content, 'attachment', $file_name , 'application/pdf');
+                            $this->email->attach($content, 'attachment', $pdfFilePath , 'application/pdf');
                             $this->email->set_mailtype("html");
                             // Ready to send email and check whether the email was successfully sent
                             if (!$this->email->send()) {

@@ -588,7 +588,7 @@ $(document).ready(function(){
             _section_id.select2('val',null);
             _menu_id.select2('val',0);
             $('#is_tax_exempt').attr('checked', false);
-            $('#pos_is_tax_exempt').attr('checked', false);
+            $('#pos_is_vatable').attr('checked', false);
             $('#pos_is_manual_pricing').attr('checked', false);
             $('#pos_is_salable').attr('checked', false);
 
@@ -642,7 +642,7 @@ $(document).ready(function(){
             _menu_id.select2('val',data.menu_id);
 
             $('#is_tax_exempt').prop('checked', (data.is_tax_exempt==1?true:false));
-            $('#pos_is_tax_exempt').prop('checked', (data.pos_is_tax_exempt==1?true:false));
+            $('#pos_is_vatable').prop('checked', (data.pos_is_vatable==1?true:false));
             $('#pos_is_salable').prop('checked', (data.pos_is_salable==1?true:false));
             $('#pos_is_manual_pricing').prop('checked', (data.pos_is_manual_pricing==1?true:false));
 
@@ -772,7 +772,7 @@ $(document).ready(function(){
         var _data=$('#frm_product').serializeArray();
        // _data.push({name : "is_tax_exempt" ,value : _isTaxExempt});
 $('#is_tax_exempt').prop("checked") ?  _data.push({name : "is_tax_exempt" , value : '1'   }) : _data.push({name : "is_tax_exempt" , value : '0'   });
-$('#pos_is_tax_exempt').prop("checked") ?  _data.push({name : "pos_is_tax_exempt" , value : '1'   }) : _data.push({name : "pos_is_tax_exempt" , value : '0'   });
+$('#pos_is_vatable').prop("checked") ?  _data.push({name : "pos_is_vatable" , value : '1'   }) : _data.push({name : "pos_is_vatable" , value : '0'   });
 $('#pos_is_salable').prop("checked") ?  _data.push({name : "pos_is_salable" , value : '1'   }) : _data.push({name : "pos_is_salable" , value : '0'   });
 $('#pos_is_manual_pricing').prop("checked") ?  _data.push({name : "pos_is_manual_pricing" , value : '1'   }) : _data.push({name : "pos_is_manual_pricing" , value : '0'   });
         return $.ajax({
@@ -787,7 +787,7 @@ $('#pos_is_manual_pricing').prop("checked") ?  _data.push({name : "pos_is_manual
     var updateProduct=function(){
         var _data=$('#frm_product').serializeArray();
 $('#is_tax_exempt').prop("checked") ?  _data.push({name : "is_tax_exempt" , value : '1'   }) : _data.push({name : "is_tax_exempt" , value : '0'   });
-$('#pos_is_tax_exempt').prop("checked") ?  _data.push({name : "pos_is_tax_exempt" , value : '1'   }) : _data.push({name : "pos_is_tax_exempt" , value : '0'   });
+$('#pos_is_vatable').prop("checked") ?  _data.push({name : "pos_is_vatable" , value : '1'   }) : _data.push({name : "pos_is_vatable" , value : '0'   });
 $('#pos_is_salable').prop("checked") ?  _data.push({name : "pos_is_salable" , value : '1'   }) : _data.push({name : "pos_is_salable" , value : '0'   });
 $('#pos_is_manual_pricing').prop("checked") ?  _data.push({name : "pos_is_manual_pricing" , value : '1'   }) : _data.push({name : "pos_is_manual_pricing" , value : '0'   });
         _data.push({name : "product_id" ,value : _selectedID});
@@ -1497,7 +1497,7 @@ $('#pos_is_manual_pricing').prop("checked") ?  _data.push({name : "pos_is_manual
                                                         <h2> POS</h2>
                                                             <div class="col-sm-4">
                                                                 <div class="form-group" style="margin-bottom:0px;">
-                                                                    <label class=""><b class="required">*</b> Section :</label>
+                                                                    <label class=""> Section :</label>
                                                                     <select name="section_id" id="section_id" >
                                                                             <option value="2">Kitchen</option>
                                                                             <option value="1">Bar</option>
@@ -1506,8 +1506,8 @@ $('#pos_is_manual_pricing').prop("checked") ?  _data.push({name : "pos_is_manual
                                                                 </div>
 
                                                                 <div class="form-group" style="margin-bottom:0px;">
-                                                                    <label class=""><b class="required">*</b> Menu :</label>
-                                                                    <select name="menu_id" id="menu_id" data-error-msg="Menu is required." required>
+                                                                    <label class=""> Menu :</label>
+                                                                    <select name="menu_id" id="menu_id" >
                                                                     <option value="menu">[ Create Menu ]</option>
                                                                         <?php
                                                                         foreach($refmenu as $menu)
@@ -1553,7 +1553,7 @@ $('#pos_is_manual_pricing').prop("checked") ?  _data.push({name : "pos_is_manual
                                                                         <label class="" for="pos_is_salable" style="text-align: left;"><input type="checkbox" name="pos_is_manual_pricing" id="pos_is_salable" style="transform: scale(2.0);">  &nbsp;&nbsp;Salable?</label>
                                                                 </div>
                                                                 <div class="form-group" style="margin-bottom:0px;text-align: left;">
-                                                                        <label class="" for="pos_is_tax_exempt" style="text-align: left;"><input type="checkbox" name="pos_is_tax_exempt" id="pos_is_tax_exempt" style="transform: scale(2.0);">  &nbsp;&nbsp;is Vatable? (POS)</label>
+                                                                        <label class="" for="pos_is_vatable" style="text-align: left;"><input type="checkbox" name="pos_is_vatable" id="pos_is_vatable" style="transform: scale(2.0);">  &nbsp;&nbsp;is Vatable? (POS)</label>
                                                                 </div>
                                                             </div>
                                                         </div>

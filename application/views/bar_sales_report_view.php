@@ -147,7 +147,7 @@
                                                         <th>Cash</th>
                                                         <th>Check</th>
                                                         <th>Card</th>
-                                                        <th>GC</th>
+                                                        <th>Gift Check</th>
                                                         
                                                     </tr>
                                                     </thead>

@@ -199,6 +199,8 @@
                         </li>
                         <li class="<?php echo (in_array('12',$this->session->parent_rights)?'':'hidden'); ?>"><a href="#/"><i class="ti ti-view-list-alt"></i><span>List</span></a>
                             <ul class="acc-menu">
+                                <li class="<?php echo (in_array('12-7',$this->session->user_rights)?'':'hidden'); ?>"><a href="Pick_list">Reorder Product (Pick-list)</a></li>
+                                <li class="<?php echo (in_array('12-6',$this->session->user_rights)?'':'hidden'); ?>"><a href="Product_list_report">Product List Report</a></li>
                                 <li class="<?php echo (in_array('12-1',$this->session->user_rights)?'':'hidden'); ?>"><a href="Voucher_registry_report">Voucher Registry Report</a></li>
                                 <li class="<?php echo (in_array('12-2',$this->session->user_rights)?'':'hidden'); ?>"><a href="Check_registry_report">Check Registry Report</a></li>
                                 <li class="<?php echo (in_array('12-3',$this->session->user_rights)?'':'hidden'); ?>"><a href="Collection_list_report">Collection List Report</a></li>

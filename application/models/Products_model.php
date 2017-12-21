@@ -884,18 +884,35 @@ class Products_model extends CORE_Model {
         return $this->db->query($sql)->result();
 
     }
+/*Code below(product_list) is used in :
+
+Product Listing in all Invoices
+Product Inventory
+Product List Report Detailed
+Product Pick List
 
 
-function product_list($account,$as_of_date=null,$product_id=null){
-    $sql="SELECT 
+*/
+
+function product_list($account,$as_of_date=null,$product_id=null,$supplier_id=null,$category_id=null,$item_type_id=null,$pick_list=null){
+    $sql="SELECT main.*
+             ".($pick_list==TRUE?" 
+                    ,(main.product_ideal - main.CurrentQty) as recommended_qty 
+             ":" ")."
+
+
+
+    FROM (
+
+            SELECT 
                 rp.product_type,
                 s.supplier_name,
                 it.item_type,
                 account_titles.account_title,
                 core.*,
-                tax_types.*,
-
-
+                tax_types.tax_type,
+                tax_types.tax_rate,
+                
 
 
 
@@ -1028,10 +1045,19 @@ function product_list($account,$as_of_date=null,$product_id=null){
                 LEFT JOIN account_titles ON account_titles.account_id=core.income_account_id
                 LEFT JOIN tax_types ON tax_types.tax_type_id=core.tax_type_id
 
-                ORDER BY core.product_desc
+                WHERE core.is_active = TRUE
+                ".($supplier_id==null?"":" AND core.supplier_id='".$supplier_id."'")."
+                ".($category_id==null?"":" AND core.category_id='".$category_id."'")."
+                ".($item_type_id==null?"":" AND core.item_type_id='".$item_type_id."'")."
+
+
+                ORDER BY core.product_desc) as main
                 
 
 
+             ".($pick_list==TRUE?" 
+                 WHERE main.CurrentQty < main.product_warn
+             ":" ")."
 
 
     ";

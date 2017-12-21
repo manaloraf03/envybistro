@@ -146,7 +146,7 @@ class Products extends CORE_Controller
                 }
 
                $m_products->section_id =$this->get_numeric_value($section_id);
-               $m_products->pos_is_tax_exempt =$this->get_numeric_value($this->input->post('pos_is_tax_exempt',TRUE));
+               $m_products->pos_is_vatable =$this->get_numeric_value($this->input->post('pos_is_vatable',TRUE));
                $m_products->pos_is_manual_pricing =$this->get_numeric_value($this->input->post('pos_is_manual_pricing',TRUE));
                $m_products->pos_is_salable =$this->get_numeric_value($this->input->post('pos_is_salable',TRUE));
 
@@ -218,7 +218,7 @@ class Products extends CORE_Controller
                 }
 
                $m_products->section_id =$this->get_numeric_value($section_id);
-               $m_products->pos_is_tax_exempt =$this->get_numeric_value($this->input->post('pos_is_tax_exempt',TRUE));
+               $m_products->pos_is_vatable =$this->get_numeric_value($this->input->post('pos_is_vatable',TRUE));
                $m_products->pos_is_manual_pricing =$this->get_numeric_value($this->input->post('pos_is_manual_pricing',TRUE));
                $m_products->pos_is_salable =$this->get_numeric_value($this->input->post('pos_is_salable',TRUE));
 
