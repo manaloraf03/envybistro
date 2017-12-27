@@ -52,7 +52,7 @@
             <th>Unit</th>
             <th>Category</th>
             <th>Supplier</th>
-            <th>Minumun Stock</th>
+            <th>Minumum Stock</th>
             <th>Actual Stock</th>
             <th>Recommended Order</th>
     	</thead>

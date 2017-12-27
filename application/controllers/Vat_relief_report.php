@@ -226,8 +226,8 @@
 	    		$excel->getActiveSheet()->setCellValue('A'.$i,'TOTAL:');
 	    		$excel->getActiveSheet()->getStyle('A'.$i)->getFont()->setBold(TRUE);
                 $excel->getActiveSheet()->setCellValue('C'.$i,number_format($sum_invoice_amt,2));
-                $excel->getActiveSheet()->setCellValue('D'.$i,number_format($sum_vatable_amount,2));
-                $excel->getActiveSheet()->setCellValue('E'.$i,number_format($sum_net_vat,2));
+                $excel->getActiveSheet()->setCellValue('D'.$i,number_format($sum_net_vat,2));
+                $excel->getActiveSheet()->setCellValue('E'.$i,number_format($sum_vatable_amount,2));
                 $excel->getActiveSheet()->setCellValue('F'.$i,number_format($sum_of_vat,2));
                 $excel->getActiveSheet()->setCellValue('G'.$i,number_format($sum_of_net_vat,2));
 
@@ -423,8 +423,8 @@
                 $excel->getActiveSheet()->setCellValue('A'.$i,'TOTAL:');
                 $excel->getActiveSheet()->getStyle('A'.$i)->getFont()->setBold(TRUE);
                 $excel->getActiveSheet()->setCellValue('C'.$i,number_format($sum_invoice_amt,2));
-                $excel->getActiveSheet()->setCellValue('D'.$i,number_format($sum_vatable_amount,2));
-                $excel->getActiveSheet()->setCellValue('E'.$i,number_format($sum_net_vat,2));
+                $excel->getActiveSheet()->setCellValue('D'.$i,number_format($sum_net_vat,2));
+                $excel->getActiveSheet()->setCellValue('E'.$i,number_format($sum_vatable_amount,2));
                 $excel->getActiveSheet()->setCellValue('F'.$i,number_format($sum_of_vat,2));
                 $excel->getActiveSheet()->setCellValue('G'.$i,number_format($sum_of_net_vat,2));
 

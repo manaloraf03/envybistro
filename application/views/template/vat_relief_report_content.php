@@ -88,8 +88,8 @@
 			<tr>
 				<td  colspan=2><strong>TOTAL :</strong></td>
                 <td  align="right"><?php echo number_format($sum_invoice_amt,2) ?></td>
-                <td  align="right"><?php echo number_format($sum_vatable_amount,2) ?></td>
-				<td  align="right"><?php echo number_format($sum_non_vatable,2) ?></td>
+                <td  align="right"><?php echo number_format($sum_non_vatable,2) ?></td>
+				<td  align="right"><?php echo number_format($sum_vatable_amount,2) ?></td>
 				<td  align="right"><?php echo number_format($sum_vat_input,2) ?></td>
 				<td  align="right"><?php echo number_format($sum_net_vat,2) ?></td>
 			</tr>
