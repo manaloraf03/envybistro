@@ -1052,9 +1052,9 @@
         var validateRequiredFields=function(f){
             var stat=true;
             $('div.form-group').removeClass('has-error');
-            $('input[required],textarea[required],select[required]',f).each(function(){
+            $('input[required],textarea[required],select[required],select',f).each(function(){
                     if($(this).is('select')){
-                        if($(this).val()==0){
+                        if($(this).val()==0 || $(this).val() == null){
                         showNotification({title:"Error!",stat:"error",msg:$(this).data('error-msg')});
                         $(this).closest('div.form-group').addClass('has-error');
                         $(this).focus();
