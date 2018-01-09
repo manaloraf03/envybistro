@@ -378,7 +378,7 @@
                                                                     <th>Terms </th>
                                                                     <th>Posted by </th>
                                                                     <th style="text-align: center;"> <i class="fa fa-paperclip"></i></th>
-                                                                    <th><center>Action</center></th>
+                                                                    <th style="width: 15%!important"><center>Action</center></th>
                                                                 </thead>
                                                                 <tbody>
                                                                 </tbody>

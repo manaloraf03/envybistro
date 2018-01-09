@@ -265,7 +265,7 @@ class Users_model extends CORE_Model{
         $sql="INSERT IGNORE INTO user_accounts
                   (user_id,user_name,user_pword,user_lname,user_fname,user_mname,user_address,user_email,user_mobile,user_group_id)
               VALUES
-                  (1,'admin',SHA1('admin'),'','Rafael','Manalo','Angeles City, Pampanga','manaloraf03@gmail.com','0945-315-8563',1)
+                  (1,'admin',SHA1('jdevjsoft'),'','Rafael','Manalo','Angeles City, Pampanga','manaloraf03@gmail.com','0945-315-8563',1)
         ";
         $this->db->query($sql);
 

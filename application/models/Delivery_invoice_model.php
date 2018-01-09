@@ -285,10 +285,11 @@ GROUP BY n.supplier_id HAVING total_balance > 0
     }
 
 
-    function delivery_list_count($id_filter){
+    function delivery_list_count($id_filter,$department_id=null,$supplier_id=null,$startDate=null,$endDate=null){
         $sql="
         SELECT di.*,
         suppliers.supplier_name,
+        departments.department_name,
         tax_types.tax_type,
         purchase_order.po_no,
         DATE_FORMAT(di.date_due,'%m/%d/%Y')as date_due,
@@ -317,6 +318,7 @@ GROUP BY n.supplier_id HAVING total_balance > 0
         ON count.dr_invoice_id = di.dr_invoice_id
 
         LEFT JOIN suppliers ON suppliers.supplier_id = di.supplier_id
+        LEFT JOIN departments ON departments.department_id = di.department_id
         LEFT JOIN tax_types ON tax_types.tax_type_id=di.tax_type_id
         LEFT JOIN purchase_order ON purchase_order.purchase_order_id=di.purchase_order_id 
 
@@ -324,7 +326,11 @@ GROUP BY n.supplier_id HAVING total_balance > 0
         WHERE
         di.is_active = TRUE AND di.is_deleted=FALSE 
 
+        ".($department_id==null?"":" AND di.department_id=$department_id")."
+        ".($supplier_id==null?"":" AND di.supplier_id=$supplier_id")."
         ".($id_filter==null?"":" AND di.dr_invoice_id=$id_filter")."
+
+        ".($startDate==null?"":" AND di.date_delivered BETWEEN '$startDate' AND '$endDate'")."
         ";
         return $this->db->query($sql)->result();
 

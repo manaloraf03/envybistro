@@ -37,7 +37,7 @@ class Purchase_history extends CORE_Controller {
         );
 
 
-        (in_array('8-5',$this->session->user_rights)? 
+        (in_array('2-6',$this->session->user_rights)? 
         $this->load->view('purchase_history_view', $data)
         :redirect(base_url('dashboard')));
         
