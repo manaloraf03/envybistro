@@ -792,11 +792,16 @@ $(document).ready(function(){
                 },
                 
                 {
-                    targets:[1],
+                    targets:[1], data:null,
                     render: function (data, type, full, meta){
-                        var btn_email='<button id="btn_email" class="btn-primary btn btn-sm" style="margin-left:-15px;" data-toggle="tooltip" data-placement="top"><i class="fa fa-share"></i> <span class="display" style="display:none;"></span></button> ';
-
-                        return '<center>'+btn_email+'</center>';
+                        var btn_email='<button id="btn_email" class="btn-primary btn btn-sm " style="margin-left:-15px;" data-toggle="tooltip" data-placement="top"><i class="fa fa-share"></i> <span class="display" style="display:none;"></span></button> ';
+                        var btn_disabled='<button id="btn_email" class="btn-primary btn btn-sm disabled" style="margin-left:-15px;" data-toggle="tooltip" data-placement="top"><i class="fa fa-share"></i> <span class="display" style="display:none;"></span></button> ';
+                        if(data.approval_id =="1"){
+                            return '<center>'+btn_email+'</center>';
+                        }else{
+                            return '<center>'+btn_disabled+'</center>';
+                            
+                        } 
                     }
                 },
                 { targets:[2],data: "po_no" },
@@ -1095,6 +1100,8 @@ $(document).ready(function(){
                 "beforeSend": showSpinningProgress(btn)
             }).done(function(response){
                 showNotification(response);
+                dt.row(_selectRowObj).data(response.row_updated[0]).draw(false);
+
     
             });
         });

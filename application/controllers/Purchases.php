@@ -617,25 +617,20 @@ class Purchases extends CORE_Controller
 
                             echo json_encode($response);
                             } else {
+                            $m_purchases->is_email_sent=1;
+                            $m_purchases->modify($filter_value);
                                 // Show success notification or other things here
                             $response['title']='Success!';
                             $response['stat']='success';
                             $response['msg']='Email Sent successfully.';
+                            $response['row_updated'] =$this->row_response($filter_value);
 
                             echo json_encode($response);
                             }
                     break;
             }
 
-
-
-
-
-
-
-
     }
-
 
 
     function row_response($filter_value){
