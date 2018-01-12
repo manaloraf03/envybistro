@@ -1,6 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Product History</title>
+  <style>
+    body {
+      font-family: 'Segoe UI',sans-serif;
+      font-size: 12px;
+    }
+    table, th, td { border-color: white; }
+    tr { border-bottom: none !important; }
+
+    .report-header {
+      font-size: 22px;
+    }
+        .right-align{
+            text-align: right;
+        }
+        @media print {
+      @page { margin: 0; size: landscape; }
+      body { margin: 1.0cm; }
+}
+  </style>
+  <script>
+    (function(){
+      window.print();
+    })();
+  </script>
+</head>
+<body>
+       <table width="100%">
+        <tr>
+            <td width="10%"><img src="<?php echo base_url().$company_info->logo_path; ?>" style="height: 90px; width: 120px; text-align: left;"></td>
+            <td width="90%" class="">
+                <span style="font-size: 20px;" class="report-header"><strong><?php echo $company_info->company_name; ?></strong></span><br>
+                <span><?php echo $company_info->company_address; ?></span><br>
+                <span><?php echo $company_info->landline.'/'.$company_info->mobile_no; ?></span><br>
+                <span><?php echo $company_info->email_address; ?></span>
+            </td>
+        </tr>
+    </table><hr>
+    <div>
+        <h3><strong>Product History</strong></h3>
+    </div>
 
 
-<div style="padding:1%;" id="journal_review_<?php echo $product_info->product_id; ?>" data-parent-id="<?php echo $product_info->product_id; ?>" >
+<div style="padding:1%;">
+<table>
+  <tr>
+    <td>Product Name:</td>
+    <td><?php echo $product_info->product_desc ?></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+
+</table>
 
    <center>
        <table width="100%"  style="border-collapse: collapse;">
@@ -40,13 +105,6 @@
        <br /><br />
 
    </center>
-
-     <a href="Products/transaction/history-product?id=<?php  echo $product_id?>&type=print" class="btn btn-success btn-sm" name=""  target="_blank" data-toggle="tooltip" data-placement="top" title="Print History" style="margin-right:-5px;"><i class="fa fa-print"></i> Print</a>
-&nbsp;
-     <a href="Products/Export?product_id=<?php  echo $product_id?>" class="btn btn-success btn-sm" name=""   data-toggle="tooltip" data-placement="top" title="Export To Excel" style="margin-right:-5px;"><i class="fa fa-file-excel-o"></i> Export</a>
-&nbsp;
-<!--     <button class="btn btn-success btn btn-sm" style="" name="btn_email" style="text-transform: none; font-family: Tahoma, Georgia, Serif; " title="Send to Email" ><i class="fa fa-share"></i> Email
-    </button> -->
 </div>
 
 <style>
@@ -54,27 +112,10 @@
       border: none!important;
   }
 
-/*  tr:nth-child(even){
-      background: #414141 !important;
-      border: none!important;
-  }
-
-  tr:hover {
-      transition: .4s;
-      background: #414141 !important;
-      color: white;
-  }
-
-  tr:hover .btn {
-      border-color: #494949!important;
-      border-radius: 0!important;
-      -webkit-box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.75);
-      -moz-box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.75);
-      box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.75);
-  }*/
 </style>
 
-
+</body>
+</html>
 
 
 

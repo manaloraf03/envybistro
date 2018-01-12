@@ -29,6 +29,7 @@ class Products extends CORE_Controller
         $this->load->model('Users_model');
         $this->load->model('Account_integration_model');
         $this->load->model('Menu_model');
+        $this->load->model('Company_model');
 
     }
 
@@ -103,9 +104,9 @@ class Products extends CORE_Controller
                 $m_products->set('date_created','NOW()');
                 $m_products->created_by_user = $this->session->user_id;
 
-                $m_products->product_code = $this->input->post('product_code', TRUE);
-                $m_products->product_desc = $this->input->post('product_desc', TRUE);
-                $m_products->product_desc1 = $this->input->post('product_desc1', TRUE);
+                $m_products->product_code = trim($this->input->post('product_code', TRUE));
+                $m_products->product_desc = trim($this->input->post('product_desc', TRUE));
+                $m_products->product_desc1 = trim($this->input->post('product_desc1', TRUE));
                 $m_products->size = $this->input->post('size', TRUE);
                 $m_products->supplier_id = $this->input->post('supplier_id', TRUE);
                 $m_products->category_id = $this->input->post('category_id', TRUE);
@@ -391,6 +392,10 @@ class Products extends CORE_Controller
                 break;
 
             case 'history-product':
+                $m_company=$this->Company_model;
+                $company_info = $m_company->get_list();
+                $data['company_info']=$company_info[0];
+
                 $account_integration =$this->Account_integration_model;
                 $a_i=$account_integration->get_list();
 
@@ -407,12 +412,25 @@ class Products extends CORE_Controller
                     $date = date('Y-m-d',strtotime($as_of_date));
                 }
 
+                $data['product_id'] = $product_id;
                 $m_products=$this->Products_model;
                 $data['products']=$m_products->get_product_history($product_id,$department_id,$date,1);
                 $data['product_id']=$product_id;
                 //$this->load->view('Template/product_history_menus',$data);
 
-                $this->load->view('template/product_history',$data);
+
+                $product_info = $m_products->product_list(1,null,$product_id);
+                $data['product_info'] = $product_info[0];
+                $type=$this->input->get('type');
+                $data['type'] = $type;
+                if($type == NULL){
+                    $this->load->view('template/product_history',$data);
+                }else if($type == 'print'){
+                    $this->load->view('template/product_history_content',$data);
+                }
+
+
+
                 break;
                 
             // case 'export-product-history':
@@ -539,8 +557,138 @@ class Products extends CORE_Controller
 
 
 
+function Export(){
+
+            $m_company_info = $this->Company_model;
+            $company_info=$m_company_info->get_list();
+
+                $product_id=$this->input->get('product_id');
+                $department_id=($this->input->get('depid')==null||$this->input->get('depid')==0?0:$this->input->get('depid'));
+                $as_of_date=$this->input->get('date');
+
+                if($as_of_date==null){
+                    $date = null;
+                }else{
+                    $date = date('Y-m-d',strtotime($as_of_date));
+                }
+
+                $data['product_id'] = $product_id;
+                $m_products=$this->Products_model;
+                $products=$m_products->get_product_history($product_id,$department_id,$date,1);
+                $data['product_id']=$product_id;
+                //$this->load->view('Template/product_history_menus',$data);
 
 
+                $product_info = $m_products->product_list(1,null,$product_id);
+                $data['product_info'] = $product_info[0];
+
+            $excel=$this->excel;
+
+            $excel->setActiveSheetIndex(0);
+            ob_start();
+          
+            $excel->getActiveSheet()->setCellValue('A1',$company_info[0]->company_name)
+                                    ->setCellValue('A2',$company_info[0]->company_address)
+                                    ->setCellValue('A3',$company_info[0]->email_address)
+                                    ->setCellValue('A4',$company_info[0]->mobile_no)
+                                    ->setCellValue('A6','Product History')
+                                    ->setCellValue('A7','As of '.date("F j, Y, g:i a"));
+
+
+          $excel->getActiveSheet()->setCellValue('A9','Product Description')->getStyle('A9')->getFont()->setBold(TRUE)
+          ->getActiveSheet()->setCellValue('B9',$product_info[0]->product_desc)
+
+          ->setCellValue('A10','Other Description')->getStyle('A10')->getFont()->setBold(TRUE)
+          ->getActiveSheet()->setCellValue('B10',$product_info[0]->product_desc1)
+
+          ->setCellValue('A11','Category')->getStyle('A11')->getFont()->setBold(TRUE)
+          ->getActiveSheet()->setCellValue('B11',$product_info[0]->category_name)
+
+          ->setCellValue('A12','Supplier')->getStyle('A12')->getFont()->setBold(TRUE)
+          ->getActiveSheet()->setCellValue('B12',$product_info[0]->supplier_name)
+
+          ->setCellValue('A13','Unit')->getStyle('A13')->getFont()->setBold(TRUE)
+          ->getActiveSheet()->setCellValue('B13',$product_info[0]->unit_name)
+
+          ->setCellValue('A14','Tax')->getStyle('A14')->getFont()->setBold(TRUE)
+          ->getActiveSheet()->setCellValue('B14',$product_info[0]->tax_type.'('.$product_info[0]->tax_rate.' %)')
+
+          ->setCellValue('C9','Purchase Cost')->getStyle('C9')->getFont()->setBold(TRUE)
+          ->getActiveSheet()->setCellValue('D9',number_format($product_info[0]->purchase_cost,2))->getStyle('D9')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT)
+
+          ->getActiveSheet()->setCellValue('C10','Sale Price')->getStyle('C10')->getFont()->setBold(TRUE)
+          ->getActiveSheet()->setCellValue('D10',number_format($product_info[0]->sale_price,2))->getStyle('D10')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT)
+
+          ->getActiveSheet()->setCellValue('C11','Discounted Price')->getStyle('C11')->getFont()->setBold(TRUE)
+          ->getActiveSheet()->setCellValue('D11',number_format($product_info[0]->discounted_price,2))->getStyle('D11')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT)
+
+          ->getActiveSheet()->setCellValue('C12','Dealer Price')->getStyle('C12')->getFont()->setBold(TRUE)
+          ->getActiveSheet()->setCellValue('D12',number_format($product_info[0]->dealer_price,2))->getStyle('D12')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT)
+
+          ->getActiveSheet()->setCellValue('C13','Distributor Price')->getStyle('C13')->getFont()->setBold(TRUE)
+          ->getActiveSheet()->setCellValue('D13',number_format($product_info[0]->distributor_price,2))->getStyle('D13')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT)
+
+          ->getActiveSheet()->setCellValue('C14','Public Price')->getStyle('C14')->getFont()->setBold(TRUE)
+          ->getActiveSheet()->setCellValue('D14',number_format($product_info[0]->public_price,2))->getStyle('D14')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT)
+
+          ->getActiveSheet()->setCellValue('A15','Warning QTY')->getStyle('A15')->getFont()->setBold(TRUE)
+          ->getActiveSheet()->setCellValue('B15',$product_info[0]->product_warn)->getStyle('B15')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT)
+
+          ->getActiveSheet()->setCellValue('C15','Ideal Qty')->getStyle('C15')->getFont()->setBold(TRUE)
+          ->getActiveSheet()->setCellValue('D15',$product_info[0]->product_ideal)->getStyle('D15')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT)
+
+
+
+        ->getActiveSheet()->setCellValue('A18','Transaction Date')->getStyle('A18')->getFont()->setBold(TRUE)
+        ->getActiveSheet()->setCellValue('B18','Reference')->getStyle('B18')->getFont()->setBold(TRUE)
+        ->getActiveSheet()->setCellValue('C18','Transaction Type')->getStyle('C18')->getFont()->setBold(TRUE)
+        ->getActiveSheet()->setCellValue('D18','Description')->getStyle('D18')->getFont()->setBold(TRUE)
+        ->getActiveSheet()->setCellValue('E18','In')->getStyle('E18')->getFont()->setBold(TRUE)
+        ->getActiveSheet()->setCellValue('F18','Out')->getStyle('F18')->getFont()->setBold(TRUE)
+        ->getActiveSheet()->setCellValue('G18','Balance')->getStyle('G18')->getFont()->setBold(TRUE);
+
+$i=18;
+
+
+                        foreach ($products as $product) {
+                                $i++;
+
+
+                                $excel->getActiveSheet()->setCellValue('A'.$i,$product->txn_date);
+                                $excel->getActiveSheet()->setCellValue('B'.$i,$product->ref_no);
+                                $excel->getActiveSheet()->setCellValue('C'.$i,$product->type);
+                                $excel->getActiveSheet()->setCellValue('D'.$i,$product->Description);
+                                $excel->getActiveSheet()->setCellValue('E'.$i,$product->in_qty);
+                                $excel->getActiveSheet()->setCellValue('F'.$i,$product->out_qty);
+                                $excel->getActiveSheet()->setCellValue('G'.$i,$product->balance);
+
+                            }
+
+                        
+
+foreach(range('A','D') as $columnID) {
+    $excel->getActiveSheet()->getColumnDimension($columnID)
+        ->setAutoSize(true);
+}
+            // Redirect output to a client’s web browser (Excel2007)
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            header('Content-Disposition: attachment;filename="Product History of '.trim($product_info[0]->product_desc).' '.date("F j, Y g.i a").'.xlsx"');
+            header('Cache-Control: max-age=0');
+            // If you're serving to IE 9, then the following may be needed
+            header('Cache-Control: max-age=1');
+
+            // If you're serving to IE over SSL, then the following may be needed
+            header ('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
+            header ('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT'); // always modified
+            header ('Cache-Control: cache, must-revalidate'); // HTTP/1.1
+            header ('Pragma: public'); // HTTP/1.0
+
+            $objWriter = PHPExcel_IOFactory::createWriter($excel, 'Excel2007');
+            $objWriter->save('php://output');
+
+
+
+}
 
 
 }

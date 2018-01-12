@@ -548,6 +548,8 @@ $(document).ready(function(){
                 }).done(function(response){
                     row.child( response,'no-padding' ).show();
 
+                    var parent_tab_pane=$('#journal_review_'+ d.product_id);
+                     reInitializeChildElements(parent_tab_pane);
                     // Add to the 'open' array
                     if ( idx === -1 ) {
                         detailRows.push( tr.attr('id') );
@@ -1048,6 +1050,31 @@ $('#pos_is_manual_pricing').prop("checked") ?  _data.push({name : "pos_is_manual
 
 
 
+        var reInitializeChildElements=function(parent){
+            var _data = Array();
+            var _dataParentID=parent.data('parent-id');
+            var btn=parent.find('button[name="btn_email"]');
+        
+            parent.on('click','button[name="btn_email"]',function(){
+                alert(_dataParentID);
+                
+            showNotification({title:"Sending!",stat:"info",msg:"Please wait for a few seconds."});
+
+            _data.push({name : "product_id" ,value :  _dataParentID });
+            $.ajax({
+                "dataType":"json",
+                "type":"POST",
+                "url":"Annual_income_statement/Email/email",
+                "data":_data,
+                "beforeSend": showSpinningProgress(btn)
+            }).done(function(response){
+                showNotification(response);
+                showSpinningProgress(btn);
+
+            });
+            });
+
+        };
 
 
 
