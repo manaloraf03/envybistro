@@ -1072,7 +1072,7 @@ $(document).ready(function(){
                         var btn_check_print='<button class="btn btn-success btn-sm" name="print_check" style="margin-right:0px;text-transform: none;" data-toggle="tooltip" data-placement="top" title="Move to trash"><i class="fa fa-print"></i> Print Check</button>';
 
 
-                        return '<center>'+btn_edit+"&nbsp;"+btn_check_print+"&nbsp;"+btn_cancel+'</center>';
+                        return '<center>'+btn_check_print+"&nbsp;"+btn_cancel+'</center>';
                     }
                 }
             ]

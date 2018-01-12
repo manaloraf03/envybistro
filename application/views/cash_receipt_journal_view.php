@@ -825,7 +825,7 @@ $(document).ready(function(){
                         var btn_trash='<button class="btn btn-red btn-sm" name="cancel_info" style="margin-right:0px;" data-toggle="tooltip" data-placement="top" title="Cancel Journal"><i class="fa fa-times"></i> </button>';
 
                         /*return '<center>'+btn_edit+'&nbsp;'+btn_trash+'</center>';*/
-                        return '<center>'+btn_edit+'&nbsp;'+btn_trash+'</center>';
+                        return '<center>'+btn_trash+'</center>';
                     }
                 },
                 { visible:false, targets:[8],data: "journal_id" }
