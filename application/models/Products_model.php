@@ -197,7 +197,7 @@ class Products_model extends CORE_Model {
                 FROM
                 (SELECT
 
-                (ai.date_adjusted) as txn_date,
+                (ai.date_created) as txn_date,
                 ai.adjustment_code as ref_no,
                 ('Adjustment In')as type,
                 '' as Description,
@@ -218,7 +218,7 @@ class Products_model extends CORE_Model {
 
                 SELECT
 
-                (ai.date_adjusted) as txn_date,
+                (ai.date_created) as txn_date,
                 ai.adjustment_code as ref_no,
                 ('Adjustment Out')as type,
                 '' as Description,
@@ -240,7 +240,7 @@ class Products_model extends CORE_Model {
 
                 SELECT
 
-                di.date_delivered as txn_date,
+                di.date_created as txn_date,
                 di.dr_invoice_no as ref_no,
                 ('Purchase Invoice') as type,
                 CONCAT(IFNULL(s.supplier_name,''),' (Supplier)') as Description,
@@ -263,7 +263,7 @@ class Products_model extends CORE_Model {
                  UNION ALL
                 
                 SELECT 
-                si.date_invoice as txn_date,
+                si.date_created as txn_date,
                 si.sales_inv_no as ref_no,
                 ('Sales Invoice') as type,
                 CONCAT(IFNULL(c.customer_name,''),' (Customer)') as Description,
@@ -291,7 +291,7 @@ class Products_model extends CORE_Model {
 
                 SELECT
 
-                ii.date_issued as txn_date,
+                ii.date_created as txn_date,
                 ii.slip_no as ref_no,
                 'Issuance' as type,
                 ii.issued_to_person as Description,
@@ -306,7 +306,9 @@ class Products_model extends CORE_Model {
                 AND iit.product_id=$product_id ".($as_of_date==null?"":" AND ii.date_issued<='".$as_of_date."'")."
 
 
-                ) as m ORDER BY m.txn_date ASC) as n  LEFT JOIN products as p ON n.product_id=p.product_id";
+                ) as m ORDER BY m.txn_date ASC) as n  LEFT JOIN products as p ON n.product_id=p.product_id 
+                ORDER BY n.txn_date ASC
+                ";
 
         return $this->db->query($sql)->result();
     }
