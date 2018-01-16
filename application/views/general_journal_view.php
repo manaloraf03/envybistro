@@ -119,7 +119,7 @@
 
 <ol class="breadcrumb" style="margin-bottom: 0px;">
     <li><a href="dashboard">Dashboard</a></li>
-    <li><a href="Cash_receipt">General Journal</a></li>
+    <li><a href="General_journal">General Journal</a></li>
 </ol>
 
 <div class="container-fluid">

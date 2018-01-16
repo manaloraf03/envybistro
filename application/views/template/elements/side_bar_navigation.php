@@ -111,12 +111,12 @@
                                 <li class="<?php echo (in_array('10-2',$this->session->user_rights)?'':'hidden'); ?>"><a href="Depreciation_expense">Depreciation Expense Report</a></li>
                             </ul>
                         </li>
-                        <li class="<?php echo (in_array('15',$this->session->parent_rights)?'':'hidden'); ?>"><a href="#/"><i class="ti ti-layout-tab-v"></i><span>Hotel Integration</span></a>
+<!--                         <li class="<?php echo (in_array('15',$this->session->parent_rights)?'':'hidden'); ?>"><a href="#/"><i class="ti ti-layout-tab-v"></i><span>Hotel Integration</span></a>
                             <ul class="acc-menu">
                                 <li class="<?php echo (in_array('15-1',$this->session->user_rights)?'':'hidden'); ?>"><a href="Hotel_control_panel">Control Panel</a></li>
                                 <li class="<?php echo (in_array('15-2',$this->session->user_rights)?'':'hidden'); ?>"><a href="Hotel_integration">Settings</a></li>
                             </ul>
-                        </li>
+                        </li> -->
                         <li class="<?php echo (in_array('16',$this->session->parent_rights)?'':'hidden'); ?>"><a href="#/"><i class="ti ti-money"></i><span>POS Integration</span></a>
                             <ul class="acc-menu">
                                 <li class="<?php echo (in_array('16-2',$this->session->user_rights)?'':'hidden'); ?>"><a href="Pos_control_panel">Control Panel</a></li>
