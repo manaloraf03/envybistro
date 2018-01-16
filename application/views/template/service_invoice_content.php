@@ -80,7 +80,7 @@
             <tbody>
             <?php foreach($item_info as $item){ ?>
                 <tr>
-                    <td width="12%"  class="left" style="text-align: center;height: 30px;padding: 6px;"><?php echo number_format($item->service_qty,0); ?></td>
+                    <td width="12%"  class="left" style="text-align: center;height: 30px;padding: 6px;"><?php echo number_format($item->service_qty,2); ?></td>
                     <td width="50%"   class="left" style="text-align: left;height: 30px;padding: 6px;"><?php echo $item->service_desc; ?></td>
 
                     <td width="12%"  class="left" style="text-align: center;height: 30px;padding: 6px;"><?php echo $item->service_unit_name; ?></td>

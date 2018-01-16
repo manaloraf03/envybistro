@@ -388,7 +388,7 @@ class Products extends CORE_Controller
                 $data['product_id']=$product_id;
                 //$this->load->view('Template/product_history_menus',$data);
 
-                $this->load->view('template/product_history',$data);
+                $this->load->view('template/product_history_inventory',$data);
                 break;
 
             case 'history-product':

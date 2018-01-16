@@ -1,6 +1,6 @@
 
 
-<div style="padding:1%;" id="journal_review_<?php echo $product_info->product_id; ?>" data-parent-id="<?php echo $product_info->product_id; ?>" >
+<div style="padding:1%;" >
 
    <center>
        <table width="100%"  style="border-collapse: collapse;">
@@ -41,12 +41,7 @@
 
    </center>
 
-     <a href="Products/transaction/history-product?id=<?php  echo $product_id?>&type=print" class="btn btn-success btn-sm" name=""  target="_blank" data-toggle="tooltip" data-placement="top" title="Print History" style="margin-right:-5px;"><i class="fa fa-print"></i> Print</a>
-&nbsp;
-     <a href="Products/Export?product_id=<?php  echo $product_id?>" class="btn btn-success btn-sm" name=""   data-toggle="tooltip" data-placement="top" title="Export To Excel" style="margin-right:-5px;"><i class="fa fa-file-excel-o"></i> Export</a>
-&nbsp;
-<!--     <button class="btn btn-success btn btn-sm" style="" name="btn_email" style="text-transform: none; font-family: Tahoma, Georgia, Serif; " title="Send to Email" ><i class="fa fa-share"></i> Email
-    </button> -->
+
 </div>
 
 <style>

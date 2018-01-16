@@ -1274,7 +1274,7 @@ $(document).ready(function(){
     };
     var newRowItem=function(d){
         return '<tr>'+
-        '<td width="10%"><input name="qty[]" type="text" class="number form-control" value="'+ d.inv_qty+'"></td>'+
+        '<td width="10%"><input name="qty[]" type="text" class="numeric form-control" value="'+accounting.formatNumber(d.inv_qty,2)+'"></td>'+
         '<td width="5%">'+ d.service_unit+'</td>'+
         '<td width="10%">'+d.service_desc+'</td>'+
         '<td width="11%"><input name="service_price[]" type="text" class="numeric form-control" value="'+accounting.formatNumber(d.service_price,2)+'" style="text-align:right;"></td>'+
