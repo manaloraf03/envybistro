@@ -112,6 +112,10 @@
 			                    		<div class="container-fluid group-box">
 			                    			<button class="btn btn-primary pull-left" style="margin-right: 5px; margin-top: 10px; margin-bottom: 10px;" id="btn_print"  data-toggle="modal" data-target="#salesInvoice" data-placement="left" title="Print" ><i class="fa fa-print"></i> Print Report
                                             </button>
+                                            <button class="btn btn-success pull-left" style="margin-right: 5px; margin-top: 10px; margin-bottom: 10px;" id="btn_export"  data-toggle="modal" data-target="#salesInvoice" data-placement="left" title="Export" ><i class="fa fa-file-excel-o"></i> Export Report
+                                            </button>
+                                            <button class="btn btn-success pull-left" style="margin-right: 5px; margin-top: 10px; margin-bottom: 10px;" id="btn_email"  data-toggle="modal" data-target="#salesInvoice" data-placement="left" title="Email" ><i class="fa fa-share"></i> Email Report
+                                            </button>
 		                    				<table id="tbl_voucher_registry" class="table table-striped" cellspacing="0" width="100%" style="background-color: transparent !important;";>
 		                    					<thead>
                                                 <tr>   
@@ -256,6 +260,43 @@
         	$('#btn_print').on('click', function() {
         		window.open('Collection_list_report/transaction/report?start='+ $('#startDate').val() +'&end='+ $('#endDate').val());
         	});
+
+            $('#btn_export').on('click', function() {
+                window.open('Collection_list_report/transaction/export?start='+ $('#startDate').val() +'&end='+ $('#endDate').val(),'_self');
+            });
+
+            $('#btn_email').on('click', function() {
+                showNotification({title:"Sending!",stat:"info",msg:"Please wait for a few seconds."});
+
+                var btn=$(this);
+            
+                $.ajax({
+                    "dataType":"json",
+                    "type":"POST",
+                    "url":'Collection_list_report/transaction/email?start='+ $('#startDate').val() +'&end='+ $('#endDate').val(),
+                    "beforeSend": showSpinningProgress(btn)
+                }).done(function(response){
+                    showNotification(response);
+                    showSpinningProgress(btn);
+
+                });
+            });
+
+            var showSpinningProgress=function(e){
+                $(e).toggleClass('disabled');
+                $(e).find('span').toggleClass('glyphicon glyphicon-refresh spinning');
+            };
+
+
+            var showNotification=function(obj){
+                PNotify.removeAll(); //remove all notifications
+                new PNotify({
+                    title:  obj.title,
+                    text:  obj.msg,
+                    type:  obj.stat
+                });
+            };
+
         }();
 
         function initializeDataTable(){

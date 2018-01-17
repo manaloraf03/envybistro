@@ -191,6 +191,10 @@
                 <button class="btn btn-primary pull-left" style="margin-right: 5px; margin-top: 0; margin-bottom: 10px;" id="btn_print" style="text-transform: none; font-family: Tahoma, Georgia, Serif; ">
                     <i class="fa fa-print"></i> Print Report
                 </button>
+                <button class="btn btn-success pull-left" style="margin-right: 5px; margin-top: 0; margin-bottom: 10px;" id="btn_export"  data-toggle="modal" data-target="#salesInvoice" data-placement="left" title="Export" ><i class="fa fa-file-excel-o"></i> Export Report
+                </button>
+                <button class="btn btn-success pull-left" style="margin-right: 5px; margin-top: 0; margin-bottom: 10px;" id="btn_email"  data-toggle="modal" data-target="#salesInvoice" data-placement="left" title="Email" ><i class="fa fa-share"></i> Email Report
+                </button>
             <table id="tbl_delivery_invoice" class="table table-striped" cellspacing="0" width="100%">
                 <thead>
                 <tr>
@@ -293,6 +297,43 @@ $(document).ready(function(){
         $('#btn_print').click(function(){
             window.open('Open_sales/transaction/report');
         });
+
+        $('#btn_export').on('click', function() {
+            window.open('Open_sales/transaction/export','_self');
+        });
+
+        $('#btn_email').on('click', function() {
+            showNotification({title:"Sending!",stat:"info",msg:"Please wait for a few seconds."});
+
+            var btn=$(this);
+        
+            $.ajax({
+                "dataType":"json",
+                "type":"POST",
+                "url":'Open_sales/transaction/email',
+                "beforeSend": showSpinningProgress(btn)
+            }).done(function(response){
+                showNotification(response);
+                showSpinningProgress(btn);
+
+            });
+        });
+
+        var showSpinningProgress=function(e){
+            $(e).toggleClass('disabled');
+            $(e).find('span').toggleClass('glyphicon glyphicon-refresh spinning');
+        };
+
+
+        var showNotification=function(obj){
+            PNotify.removeAll(); //remove all notifications
+            new PNotify({
+                title:  obj.title,
+                text:  obj.msg,
+                type:  obj.stat
+            });
+        };
+
     }();
 
 
