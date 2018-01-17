@@ -155,27 +155,6 @@ $(document).ready(function(){
             window.open('Purchase_monitoring/transaction/report?supplier_id='+$('#product_id').val()+'&start_date='+$('#start_date').val()+'&end_date='+$('#end_date').val());
         });
 
-            $('#btn_export').on('click', function() {
-                window.open('Purchase_monitoring/transaction/export?supplier_id='+$('#product_id').val()+'&start_date='+$('#start_date').val()+'&end_date='+$('#end_date').val(),"_self");
-            });
-
-            $('#btn_email').on('click', function() {
-                showNotification({title:"Sending!",stat:"info",msg:"Please wait for a few seconds."});
-
-                var btn=$(this);
-            
-                $.ajax({
-                    "dataType":"json",
-                    "type":"POST",
-                    "url":'Purchase_monitoring/transaction/email?supplier_id='+$('#product_id').val()+'&start_date='+$('#start_date').val()+'&end_date='+$('#end_date').val(),
-                    "beforeSend": showSpinningProgress(btn)
-                }).done(function(response){
-                    showNotification(response);
-                    showSpinningProgress(btn);
-
-                });
-            });
-
         // $('#btn_excel').click(function(){
         //     window.open('Pick_list/transaction/excel?sup='+$('#new_supplier').val()+'&cat='+$('#product_id').val());
         // });
@@ -341,14 +320,6 @@ $(document).ready(function(){
                                                 <div class="row">
                                                     <div class="col-sm-2">
                                                         <button class="btn btn-primary pull-left" style="margin-right: 5px; margin-top: 10px; margin-bottom: 10px;" id="btn_print" style="text-transform: none; font-family: Tahoma, Georgia, Serif; " title="Print" ><i class="fa fa-print"></i> Print Report
-                                                        </button>
-                                                    </div>
-                                                    <div class="col-sm-2">
-                                                        <button class="btn btn-success pull-left" style="margin-right: 5px; margin-top: 10px; margin-bottom: 10px;" id="btn_export" title="Export" ><i class="fa fa-file-excel-o"></i> Export Report
-                                                        </button>
-                                                    </div>
-                                                    <div class="col-sm-2">
-                                                        <button class="btn btn-success pull-left" style="margin-right: 5px; margin-top: 10px; margin-bottom: 10px;" id="btn_email" title="Email" ><i class="fa fa-share"></i> Email Report
                                                         </button>
                                                     </div>
                                                    <!--  <div class="col-sm-2">
