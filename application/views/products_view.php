@@ -63,9 +63,9 @@
 
 $(document).ready(function(){
     var dt; var _txnMode; var _selectedID; var _selectRowObj; var _cboItemTypes; var _selectedProductType; var _isTaxExempt=0;
-    var _cboSupplier; var _cboCategory; var _cboTax; var _cboInventory; var _cboMeasurement; var _cboCredit; var _cboDebit;
+    var _cboSupplier; var _cboCategory; var _cboSupplier; var _cboTax; var _cboInventory; var _cboMeasurement; var _cboCredit; var _cboDebit;
     var _cboTaxGroup;
-    var _section_id; var _menu_id;
+    
     /*$(document).ready(function(){
         $('#modal_filter').modal('show');
         showList(false);
@@ -79,7 +79,6 @@ $(document).ready(function(){
             "dom": '<"toolbar">frtip',
             "bLengthChange":false,
             "pageLength":15,
-            "order": [[ 1, "asc" ]],
             "ajax" : "Products/transaction/list",
             "columns": [
                 {
@@ -127,23 +126,6 @@ $(document).ready(function(){
 
         });
 
-        var showPanelActive = function(p){
-            if (p == 'list'){
-                $('#product_list_panel').show();
-                $('#product_entry_panel').hide();
-                $('#btn_save_product').hide();
-                $('#btn_cancel_product').hide();
-            }
-            else if (p == 'entry'){
-                $('#product_list_panel').hide();
-                $('#product_entry_panel').show();
-                $('#btn_save_product').show();
-                $('#btn_cancel_product').show();
-            }
-        }
-
-        showPanelActive('list');
-
         $('.numeric').autoNumeric('init',{mDec:2});
 
         $('#mobile_no').keypress(validateNumber);
@@ -152,16 +134,6 @@ $(document).ready(function(){
 
         _cboSupplier=$('#new_supplier').select2({
             placeholder: "Please select supplier.",
-            allowClear: false
-        });
-
-        _section_id=$('#section_id').select2({
-            placeholder: "Please select Section.",
-            allowClear: false
-        });
-
-        _menu_id=$('#menu_id').select2({
-            placeholder: "Please select Menu.",
             allowClear: false
         });
 
@@ -203,7 +175,7 @@ $(document).ready(function(){
          
                 $modal.modal('show');
                 _cboCategory.select2('val',null);
-                // $('#modal_create_product').modal('toggle');
+                $('#modal_create_product').modal('toggle');
                 //clearFieldsModal($('#frm_category_group'));
                 clearFieldsCategory($('#frm_category_group'));
             }
@@ -211,7 +183,7 @@ $(document).ready(function(){
 
         $('#btn_close_category_group').click(function(){
             $('#modal_category_group').modal('toggle');
-            // $('#modal_create_product').modal('show');
+            $('#modal_create_product').modal('show');
             //clearFields($('#frm_unit_group'));
 
         });
@@ -224,7 +196,7 @@ $(document).ready(function(){
             if($(this).val() === 'unt'){
                 _cboMeasurement.select2('val',null);
                 $modal.modal('show');
-                // $('#modal_create_product').modal('toggle');
+                $('#modal_create_product').modal('toggle')
                 //clearFieldsModal($('#frm_unit_group'));
                 clearFieldsUnit($('#frm_unit_group'));
             }
@@ -232,7 +204,7 @@ $(document).ready(function(){
 
         $('#btn_close_unit_group').click(function(){
             $('#modal_unit_group').modal('toggle');
-            // $('#modal_create_product').modal('show');
+            $('#modal_create_product').modal('show');
             //clearFields($('#frm_unit_group'));
         });
         // END HERE
@@ -243,7 +215,7 @@ $(document).ready(function(){
             if($(this).val() === 'prodtype'){
 
                 $modal.modal('show');
-                // $('#modal_create_product').modal('toggle');
+                $('#modal_create_product').modal('toggle');
                 //clearFieldsModal($('#frm_product_type'));
                 clearFieldsProductType($('#frm_product_type'));
             }
@@ -251,19 +223,10 @@ $(document).ready(function(){
 
         $('#btn_close_product_type').click(function(){
             $('#modal_product_type').modal('toggle');
-            // $('#modal_create_product').modal('show');
+            $('#modal_create_product').modal('show');
             //clearFields($('#frm_product_type'));
 
         });
-
-        $('#btn_cancel_menu').click(function(){
-            $('#modal_menu').modal('toggle');
-            // $('#modal_create_product').modal('show');
-            //clearFields($('#frm_product_type'));
-
-        });
-
-
         // END HERE
 
         // NEW SUPPLIER
@@ -272,62 +235,51 @@ $(document).ready(function(){
             if($(this).val() === 'sup'){
                 _cboSupplier.select2('val',null);
                 $modal.modal('show');
-                // $('#modal_create_product').modal('toggle')
+                $('#modal_create_product').modal('toggle')
                 //clearFieldsModal($('#frm_unit_group'));
                 clearFieldsModal($('#frm_suppliers_new'));
             }
         });
 
-        $("#menu_id").on("change", function () {        
-            $modal = $('#modal_menu');
-            if($(this).val() === 'menu'){
-                _menu_id.select2('val',null);
-                $modal.modal('show');
-                // $('#modal_create_product').modal('toggle');
-                clearFieldsModal($('#frm_menu'));
-            }
-        });
-
-
         $('#btn_close_new_supplier').click(function(){
             $('#modal_new_supplier').modal('toggle');
-            // $('#modal_create_product').modal('show');
+            $('#modal_create_product').modal('show');
             //clearFields($('#frm_product_type'));
 
         });
         // END HERE
 
-        // $('#new_supplier').select2({
-        //     dropdownParent: $('#modal_create_product')
-        // });
+        $('#new_supplier').select2({
+            dropdownParent: $('#modal_create_product')
+        });
 
-        // $('#product_category').select2({
-        //     dropdownParent: $('#modal_create_product')
-        // });
+        $('#product_category').select2({
+            dropdownParent: $('#modal_create_product')
+        });
 
-        // $('#cbo_tax').select2({
-        //     dropdownParent: $('#modal_create_product')
-        // });
+        $('#cbo_tax').select2({
+            dropdownParent: $('#modal_create_product')
+        });
 
-        // $('#cbo_item_type').select2({
-        //     dropdownParent: $('#modal_create_product')
-        // });
+        $('#cbo_item_type').select2({
+            dropdownParent: $('#modal_create_product')
+        });
 
-        // $('#product_unit').select2({
-        //     dropdownParent: $('#modal_create_product')
-        // });
+        $('#product_unit').select2({
+            dropdownParent: $('#modal_create_product')
+        });
 
-        // $('#income_account_id').select2({
-        //     dropdownParent: $('#modal_create_product')
-        // });
+        $('#income_account_id').select2({
+            dropdownParent: $('#modal_create_product')
+        });
 
-        // $('#expense_account_id').select2({
-        //     dropdownParent: $('#modal_create_product')
-        // });
+        $('#expense_account_id').select2({
+            dropdownParent: $('#modal_create_product')
+        });
 
-        // $('#cbo_tax_group').select2({
-        //     dropdownParent: $('#modal_new_supplier')
-        // });
+        $('#cbo_tax_group').select2({
+            dropdownParent: $('#modal_new_supplier')
+        });
 
 
         /*_product_unit=$("#product_unit").select2({
@@ -384,7 +336,7 @@ $(document).ready(function(){
             }).done(function(response){
                 showNotification(response);
                 $('#modal_category_group').modal('hide');
-                // $('#modal_create_product').modal('show');
+                $('#modal_create_product').modal('show');
 
                 var _group=response.row_added[0];
                 $('#product_category').append('<option value="'+_group.category_id+'" selected>'+_group.category_name+'</option>');
@@ -395,38 +347,6 @@ $(document).ready(function(){
             });
         }
     });
-
-    $('#btn_save_menu').click(function(){
-
-        var btn=$(this);
-
-        if(validateRequiredFields($('#frm_menu'))){
-            var data=$('#frm_menu').serializeArray();
-
-            $.ajax({
-                "dataType":"json",
-                "type":"POST",
-                "url":"Menu/transaction/create",
-                "data":data,
-                "beforeSend" : function(){
-                    showSpinningProgress(btn);
-                }
-            }).done(function(response){
-                showNotification(response);
-                $('#modal_menu').modal('hide');
-                // $('#modal_create_product').modal('show');
-
-                var _group=response.row_added[0];
-                $('#menu_id').append('<option value="'+_group.menu_id+'" selected>'+_group.menu_name+'</option>');
-                $('#menu_id').select2('val',_group.menu_id);
-
-            }).always(function(){
-                showSpinningProgress(btn);
-            });
-        }
-    });
-
-
 
     $('#btn_create_unit_group').click(function(){
 
@@ -446,7 +366,7 @@ $(document).ready(function(){
             }).done(function(response){
                 showNotification(response);
                 $('#modal_unit_group').modal('hide');
-                // $('#modal_create_product').modal('show');
+                $('#modal_create_product').modal('show');
 
                 var _group=response.row_added[0];
                 $('#product_unit').append('<option value="'+_group.unit_id+'" selected>'+_group.unit_name+'</option>');
@@ -476,7 +396,7 @@ $(document).ready(function(){
             }).done(function(response){
                 showNotification(response);
                 $('#modal_product_type').modal('hide');
-                // $('#modal_create_product').modal('show');
+                $('#modal_create_product').modal('show');
 
                 var _group=response.row_added[0];
                 $('#product_type_modal').append('<option value="'+_group.refproduct_id+'" selected>'+_group.product_type+'</option>');
@@ -507,7 +427,7 @@ $(document).ready(function(){
             }).done(function(response){
                 showNotification(response);
                 $('#modal_new_supplier').modal('hide');
-                // $('#modal_create_product').modal('show');
+                $('#modal_create_product').modal('show');
 
                 var _suppliers=response.row_added[0];
                 $('#new_supplier').append('<option value="'+_suppliers.supplier_id+'" selected>'+_suppliers.supplier_name+'</option>');
@@ -559,26 +479,10 @@ $(document).ready(function(){
                 });
             }
         } );
-        var showPanelActive = function(p){
-            if (p == 'list'){
-                $('#product_list_panel').show();
-                $('#product_entry_panel').hide();
-                $('#btn_save_product').hide();
-                $('#btn_cancel_product').hide();
-            }
-            else if (p == 'entry'){
-                $('#product_list_panel').hide();
-                $('#product_entry_panel').show();
-                $('#btn_save_product').show();
-                $('#btn_cancel_product').show();
-            }
-        }
-
-        showPanelActive('list');
 
         $('#btn_new').click(function(){
             _txnMode="new";
-
+            $('#modal_create_product').modal('show');
             clearFields($('#frm_product'));
             _cboCategory.select2('val',null);
             _cboSupplier.select2('val',null);
@@ -587,24 +491,13 @@ $(document).ready(function(){
             _cboMeasurement.select2('val',null);
             _cboCredit.select2('val',0);
             _cboDebit.select2('val',0);
-            _section_id.select2('val',null);
-            _menu_id.select2('val',0);
             $('#is_tax_exempt').attr('checked', false);
-            $('#pos_is_vatable').attr('checked', false);
-            $('#pos_is_manual_pricing').attr('checked', false);
-            $('#pos_is_salable').attr('checked', false);
-
-            showPanelActive('entry');
-        });
-
-       $('#btn_cancel_product').click(function(){
-            showPanelActive('list');
         });
 
         $('#tbl_products tbody').on('click','button[name="edit_info"]',function(){
             _txnMode="edit";
-            showPanelActive('entry');
-            // $('#modal_create_product').modal('show');
+
+            $('#modal_create_product').modal('show');
             _selectRowObj=$(this).closest('tr');
             var data=dt.row(_selectRowObj).data();
             _selectedID=data.product_id;
@@ -635,26 +528,14 @@ $(document).ready(function(){
 
             _cboTaxGroup.select2('val',data.tax_type_id);
 
-            if(data.section_id == 0){
-            _section_id.select2('val', 2);
-
-            }else if(data.section_id == 1){
-            _section_id.select2('val', 1);
-            }
-            _menu_id.select2('val',data.menu_id);
-
             $('#is_tax_exempt').prop('checked', (data.is_tax_exempt==1?true:false));
-            $('#pos_is_vatable').prop('checked', (data.pos_is_vatable==1?true:false));
-            $('#pos_is_salable').prop('checked', (data.pos_is_salable==1?true:false));
-            $('#pos_is_manual_pricing').prop('checked', (data.pos_is_manual_pricing==1?true:false));
-
 
         });
 
 
-        // $('input[name="purchase_cost"],input[name="markup_percent"],input[name="sale_price"]').keyup(function(){
-        //     reComputeSRP();
-        // });
+        $('input[name="purchase_cost"],input[name="markup_percent"],input[name="sale_price"]').keyup(function(){
+            reComputeSRP();
+        });
 
         $('#tbl_products tbody').on('click','button[name="remove_info"]',function(){
             $('#modal_confirmation').modal('show');
@@ -674,22 +555,20 @@ $(document).ready(function(){
             });
         });
 
-
         $('#btn_cancel').click(function(){
             showList(true);
         });
 
-        $('#btn_save_product').click(function(){
+        $('#btn_save').click(function(){
             if(validateRequiredFields($('#frm_product'))){
                 if(_txnMode=="new"){
                     createProduct().done(function(response){
                         showNotification(response);
                         dt.row.add(response.row_added[0]).draw();
                         clearFields($('#frm_product'))
-                        // showList(true);
-                                    showPanelActive('list');
+                        showList(true);
                     }).always(function(){
-                        // $('#modal_create_product').modal('toggle');
+                        $('#modal_create_product').modal('toggle');
                         showSpinningProgress($('#btn_save'));
                     });
                     return;
@@ -698,9 +577,8 @@ $(document).ready(function(){
                     updateProduct().done(function(response){
                         showNotification(response);
                         dt.row(_selectRowObj).data(response.row_updated[0]).draw();
-                                    showPanelActive('list');
                     }).always(function(){
-                        // $('#modal_create_product').modal('toggle');
+                        $('#modal_create_product').modal('toggle');
                         showSpinningProgress($('#btn_save'));
                     });
                     return;
@@ -740,7 +618,12 @@ $(document).ready(function(){
                 }
             });
         });
+
+
     })();
+
+    
+
 
     var validateRequiredFields=function(f){
         var stat=true;
@@ -773,10 +656,7 @@ $(document).ready(function(){
     var createProduct=function(){
         var _data=$('#frm_product').serializeArray();
        // _data.push({name : "is_tax_exempt" ,value : _isTaxExempt});
-$('#is_tax_exempt').prop("checked") ?  _data.push({name : "is_tax_exempt" , value : '1'   }) : _data.push({name : "is_tax_exempt" , value : '0'   });
-$('#pos_is_vatable').prop("checked") ?  _data.push({name : "pos_is_vatable" , value : '1'   }) : _data.push({name : "pos_is_vatable" , value : '0'   });
-$('#pos_is_salable').prop("checked") ?  _data.push({name : "pos_is_salable" , value : '1'   }) : _data.push({name : "pos_is_salable" , value : '0'   });
-$('#pos_is_manual_pricing').prop("checked") ?  _data.push({name : "pos_is_manual_pricing" , value : '1'   }) : _data.push({name : "pos_is_manual_pricing" , value : '0'   });
+               $('#is_tax_exempt').prop("checked") ?  _data.push({name : "is_tax_exempt" , value : '1'   }) : _data.push({name : "is_tax_exempt" , value : '0'   });
         return $.ajax({
             "dataType":"json",
             "type":"POST",
@@ -788,10 +668,8 @@ $('#pos_is_manual_pricing').prop("checked") ?  _data.push({name : "pos_is_manual
 
     var updateProduct=function(){
         var _data=$('#frm_product').serializeArray();
-$('#is_tax_exempt').prop("checked") ?  _data.push({name : "is_tax_exempt" , value : '1'   }) : _data.push({name : "is_tax_exempt" , value : '0'   });
-$('#pos_is_vatable').prop("checked") ?  _data.push({name : "pos_is_vatable" , value : '1'   }) : _data.push({name : "pos_is_vatable" , value : '0'   });
-$('#pos_is_salable').prop("checked") ?  _data.push({name : "pos_is_salable" , value : '1'   }) : _data.push({name : "pos_is_salable" , value : '0'   });
-$('#pos_is_manual_pricing').prop("checked") ?  _data.push({name : "pos_is_manual_pricing" , value : '1'   }) : _data.push({name : "pos_is_manual_pricing" , value : '0'   });
+        //_data.push({name : "is_tax_exempt" ,value : _isTaxExempt});
+                $('#is_tax_exempt').prop("checked") ?  _data.push({name : "is_tax_exempt" , value : '1'   }) : _data.push({name : "is_tax_exempt" , value : '0'   });
         _data.push({name : "product_id" ,value : _selectedID});
 
         return $.ajax({ 
@@ -1050,6 +928,9 @@ $('#pos_is_manual_pricing').prop("checked") ?  _data.push({name : "pos_is_manual
 
 
 
+
+
+
         var reInitializeChildElements=function(parent){
             var _data = Array();
             var _dataParentID=parent.data('parent-id');
@@ -1075,10 +956,6 @@ $('#pos_is_manual_pricing').prop("checked") ?  _data.push({name : "pos_is_manual
             });
 
         };
-
-
-
-
 
 
 
@@ -1160,11 +1037,11 @@ $('#pos_is_manual_pricing').prop("checked") ?  _data.push({name : "pos_is_manual
         .numeric{
             text-align: right;
         }
-/*
+
         #is_tax_exempt {
             width:23px;
             height:23px;
-        }*/
+        }
 
         #modal_new_supplier {
             padding-left:0px !important;
@@ -1225,7 +1102,7 @@ $('#pos_is_manual_pricing').prop("checked") ?  _data.push({name : "pos_is_manual
 <!--                                             <div class="panel-heading">
                                                 <b style="color: white; font-size: 12pt;"><i class="fa fa-bars"></i>&nbsp; Products</b>
                                             </div> -->
-                                            <div class="panel-body table-responsive" id="product_list_panel">
+                                            <div class="panel-body table-responsive">
                                             <h2 class="h2-panel-heading">Products</h2><hr>
                                                 <button class="btn btn-primary" id="btn_new" style="float: left; text-transform: capitalize;font-family: Tahoma, Georgia, Serif;margin-bottom: 0px !important;" data-toggle="modal" data-target="" data-placement="left" title="Create New product" ><i class="fa fa-plus"></i> Create New Product</button>
                                                 <table id="tbl_products" class="table table-striped" cellspacing="0" width="100%">
@@ -1244,354 +1121,7 @@ $('#pos_is_manual_pricing').prop("checked") ?  _data.push({name : "pos_is_manual
                                                     </tbody>
                                                 </table>
                                             </div>
-
-
-                                            <div class="panel-body table-responsive" id="product_entry_panel">
-                                                <form id="frm_product">
-                                                    <div class="row">
-                                                        <div class="col-lg-4">
-                                                            <div class="form-group" style="margin-bottom:0px;">
-                                                                <label class=""><b class="required">*</b>PLU :</label>
-                                                                    <div class="input-group">
-                                                                        <span class="input-group-addon">
-                                                                            <i class="fa fa-file-code-o"></i>
-                                                                        </span>
-                                                                        <input type="text" name="product_code" id="product_code" class="form-control" value="" data-error-msg="PLU is required." required>
-                                                                    </div>
-                                                            </div>
-
-                                                            <div class="form-group" style="margin-bottom:0px;">
-                                                                    <label class=""><b class="required">*</b> Product Description :</label>
-                                                                    <textarea name="product_desc" id="product_desc"class="form-control" data-error-msg="Product Description is required." required></textarea>
-                                                            </div>
-
-                                                            <div class="form-group" style="margin-bottom:0px;">
-                                                                <label class="">Other Description :</label>
-                                                                <textarea name="product_desc1" id="product_desc1" class="form-control"></textarea>
-                                                            </div>
-
-                                                            <div class="form-group" style="margin-bottom:0px;">
-                                                                <label class=""><b class="required">*</b> Supplier :</label>
-                                                                <select name="supplier_id" id="new_supplier" data-error-msg="Supplier is required." required>
-                                                                    <option value="">Please select supplier</option>
-                                                                    <option value="sup">[ Create Supplier ]</option>
-                                                                    <?php
-                                                                    foreach($suppliers as $row)
-                                                                    {
-                                                                        echo '<option value="'.$row->supplier_id.'">'.$row->supplier_name.'</option>';
-                                                                    }
-                                                                    ?>
-                                                                </select>
-                                                            </div>
-                        <!--                                     
-                                                            <div class="form-group" style="margin-bottom:0px;">
-                                                                    <label class=""><b class="required">*</b> Section :</label>
-                                                                    <select name="section_id" id="section_id" >
-                                                                            <option value="2">Kitchen</option>
-                                                                            <option value="1">Bar</option>
-                                                                    </select>
-
-                                                                </div> -->
-
-                                                            <div class="form-group" style="margin-bottom:0px;">
-                                                                <label class=""><b class="required">*</b> Category :</label>
-                                                                <select name="category_id" id="product_category" data-error-msg="Category is required." required>
-                                                                    <option value="">Please Select...</option>
-                                                                    <option value="cat">[ Create Category ]</option>
-                                                                    <?php
-                                                                    foreach($categories as $row)
-                                                                    {
-                                                                        echo '<option value="'.$row->category_id.'">'.$row->category_name.'</option>';
-                                                                    }
-                                                                    ?>
-                                                                </select>
-                                                            </div>
-
-
-                                                            <div class="form-group" style="margin-bottom:0px;">
-                                                                <label class=""><b class="required">*</b> Tax:</label>
-                                                                <select name="tax_type_id" id="cbo_tax" data-error-msg="Tax Type is required." required>
-                                                                    <option value="">Please Select...</option>
-                                                                    <?php foreach($tax_types as $tax_type) { ?>
-                                                                        <option value="<?php echo $tax_type->tax_type_id; ?>"><?php echo $tax_type->tax_type; ?></option>
-                                                                    <?php    } ?>
-
-
-                                                                </select>
-                                                            </div>
-
-
-
-                                                        </div>
-
-
-
-                                                        <div class="col-lg-4" style="margin:0px;">
-
-
-                                                            <div class="form-group" style="margin-bottom:0px;">
-                                                                <label class=""><b class="required">*</b> Inventory type :</label>
-
-                                                                <select name="item_type_id" id="cbo_item_type" data-error-msg="Inverntory type is required." required>
-                                                                    <option value="">None</option>
-                                                                    <?php foreach($item_types as $item_type){ ?>
-                                                                        <option value="<?php echo $item_type->item_type_id ?>"><?php echo $item_type->item_type; ?></option>
-                                                                    <?php } ?>
-                                                                </select>
-
-                                                            </div>
-
-
-
-                                                            <div class="form-group" style="margin-bottom:0px;">
-                                                                <label class=""><b class="required">*</b> Unit of Measurement :</label>
-                                                                <select name="unit_id" id="product_unit" data-error-msg="Unit is required." required>
-                                                                    <option value="">Please select unit of measurement</option>
-                                                                    <option value="unt">[ Create Unit ]</option>
-                                                                    <?php
-                                                                    foreach($units as $row)
-                                                                    {
-                                                                        echo '<option value="'.$row->unit_id.'">'.$row->unit_name.'</option>';
-                                                                    }
-                                                                    ?>
-                                                                </select>
-
-                                                            </div>
-
-
-                                                            <!-- <div class="form-group" style="margin-bottom:0px;">
-                                                                <label class="">Pack Size :</label>
-                                                                <input type="text" name="size" class="form-control">
-                                                            </div> -->
-
-
-
-
-                                                            <div class="form-group" style="margin-bottom:0px;">
-                                                                <label class="">Suggested Retail Price (SRP) :</label>
-                                                                <div class="input-group">
-                                                                        <span class="input-group-addon">
-                                                                            <i class="fa fa-toggle-off"></i>
-                                                                        </span>
-                                                                    <input type="text" name="sale_price" id="sale_price" class="form-control numeric">
-                                                                </div>
-                                                            </div>
-
-
-                                                            <div class="form-group" style="margin-bottom:0px;">
-                                                                <label class="">Discounted Price :</label>
-                                                                <div class="input-group">
-                                                                        <span class="input-group-addon">
-                                                                            <i class="fa fa-toggle-off"></i>
-                                                                        </span>
-                                                                    <input type="text" name="discounted_price" id="discounted_price" class="form-control numeric">
-                                                                </div>
-                                                            </div>
-
-
-
-                                                            <div class="form-group" style="margin-bottom:0px;">
-                                                                <label class="">Dealer's Price :</label>
-                                                                <div class="input-group">
-                                                                        <span class="input-group-addon">
-                                                                            <i class="fa fa-toggle-off"></i>
-                                                                        </span>
-                                                                    <input type="text" name="dealer_price" id="dealer_price" class="form-control numeric">
-                                                                </div>
-                                                            </div>
-
-
-
-                                                            <div class="form-group" style="margin-bottom:0px;">
-                                                                <label class="">Distributor's Price :</label>
-                                                                <div class="input-group">
-                                                                        <span class="input-group-addon">
-                                                                            <i class="fa fa-toggle-off"></i>
-                                                                        </span>
-                                                                    <input type="text" name="distributor_price" id="distributor_price" class="form-control numeric">
-                                                                </div>
-                                                            </div>
-
-                                                        </div>
-
-
-
-
-                                                        <div class="col-lg-4">
-
-                                                            <div class="form-group" style="margin-bottom:0px;">
-                                                                <label class="">Public Price :</label>
-                                                                <div class="input-group">
-                                                                        <span class="input-group-addon">
-                                                                            <i class="fa fa-toggle-off"></i>
-                                                                        </span>
-                                                                    <input type="text" name="public_price" id="public_price" class="form-control numeric">
-                                                                </div>
-                                                            </div>
-
-
-
-                                                            <div class="form-group" style="margin-bottom:0px;">
-                                                                <label class="">Purchase Cost :</label>
-                                                                <div class="input-group">
-                                                                        <span class="input-group-addon">
-                                                                            <i class="fa fa-toggle-off"></i>
-                                                                        </span>
-                                                                    <input type="text" name="purchase_cost" id="purchase_cost" class="form-control numeric">
-                                                                </div>
-
-                                                            </div>
-
-                                                            <!-- <div class="form-group" style="margin-bottom:0px;">
-                                                                <label class="">Purchase Cost 2 (Viz-Min Area):</label>
-                                                                <div class="input-group">
-                                                                        <span class="input-group-addon">
-                                                                            <i class="fa fa-toggle-off"></i>
-                                                                        </span>
-                                                                    <input type="text" name="purchase_cost_2" class="form-control numeric">
-                                                                </div>
-
-                                                            </div> -->
-
-
-                                                            <div class="form-group" style="margin-bottom:0px;">
-                                                                <label class="">Warning Quantity (Minimum Stock):</label>
-                                                                <div class="input-group">
-                                                                        <span class="input-group-addon">
-                                                                            <i class="fa fa-toggle-off"></i>
-                                                                        </span>
-                                                                    <input type="text" name="product_warn" id="product_warn" class="form-control numeric">
-                                                                </div>
-                                                            </div>
-
-
-                                                            <div class="form-group" style="margin-bottom:0px;">
-                                                                <label class="">Ideal Quantity (Maximum Stock):</label>
-                                                                <div class="input-group">
-                                                                        <span class="input-group-addon">
-                                                                            <i class="fa fa-toggle-off"></i>
-                                                                        </span>
-                                                                    <input type="text" name="product_ideal" id="product_ideal" class="form-control numeric">
-                                                                </div>
-                                                            </div>
-
-
-
-
-
-                                                            <div class="form-group" style="margin-bottom:0px;">
-                                                                        <label class="">Link to Credit Account (Sales):</label>
-
-                                                                        <select name="income_account_id" id="income_account_id" data-error-msg="Link to Account is required." required>
-                                                                            <optgroup label="Please select NONE if this will not be recorded on Journal."></optgroup>
-                                                                            <option value="0">None</option>
-                                                                            <?php foreach($accounts as $account){ ?>
-                                                                                <option value="<?php echo $account->account_id; ?>"><?php echo $account->account_title; ?></option>
-                                                                            <?php } ?>
-                                                                        </select>
-
-                                                            </div>
-
-
-                                                            <div class="form-group" style="margin-bottom:0px;">
-                                                                        <label class="">Link to Debit Account (Purchases): </label>
-
-                                                                        <select name="expense_account_id" id="expense_account_id" data-error-msg="Link to Account is required." required>
-                                                                            <optgroup label="Please select NONE if this will not be recorded on Journal."></optgroup>
-                                                                            <option value="0">None</option>
-                                                                            <?php foreach($accounts as $account){ ?>
-                                                                                <option value="<?php echo $account->account_id; ?>"><?php echo $account->account_title; ?></option>
-                                                                            <?php } ?>
-                                                                        </select>
-                                                            </div>
-                                                            <div class="form-group" style="margin-bottom:0px; vertical-align: middle;text-align: left;">
-                                                                    <label  for="is_tax_exempt" style="text-align: left;vertical-align: middle;"><input type="checkbox" name="is_tax_exempt" class="" id="is_tax_exempt" style="transform: scale(2.0);">  &nbsp;&nbsp;Tax Exempt ?</label>
-
-                                                            </div>
-
-
-
-
-
-                                                        </div>
-
-
-
-                                                    </div>
-                                                    <div class="row">
-
-                                                        <div class="col-sm-12">
-                                                        <h2> POS</h2>
-                                                            <div class="col-sm-4">
-                                                                <div class="form-group" style="margin-bottom:0px;">
-                                                                    <label class=""> Section :</label>
-                                                                    <select name="section_id" id="section_id" >
-                                                                            <option value="2">Kitchen</option>
-                                                                            <option value="1">Bar</option>
-                                                                    </select>
-
-                                                                </div>
-
-                                                                <div class="form-group" style="margin-bottom:0px;">
-                                                                    <label class=""> Menu :</label>
-                                                                    <select name="menu_id" id="menu_id" >
-                                                                    <option value="menu">[ Create Menu ]</option>
-                                                                        <?php
-                                                                        foreach($refmenu as $menu)
-                                                                        {
-                                                                            echo '<option value="'.$menu->menu_id.'">'.$menu->menu_name.'</option>';
-                                                                        }
-                                                                        ?>
-                                                                    </select>
-
-                                                                </div>
-
-                                                            </div>
-                                                            <div class="col-sm-4">
-                                                                <div class="form-group" style="margin-bottom:0px;">
-                                                                    <label class="">POS Cost Price :</label>
-                                                                    <div class="input-group">
-                                                                            <span class="input-group-addon">
-                                                                                <i class="fa fa-toggle-off"></i>
-                                                                            </span>
-                                                                        <input type="text" name="pos_item_cost" id="pos_item_cost" class="form-control numeric">
-                                                                    </div>
-                                                                </div>
-                                                                <div class="form-group" style="margin-bottom:0px;">
-                                                                    <label class="">POS Item Rate (Retail Price) :</label>
-                                                                    <div class="input-group">
-                                                                            <span class="input-group-addon">
-                                                                                <i class="fa fa-toggle-off"></i>
-                                                                            </span>
-                                                                        <input type="text" name="pos_item_rate" id="pos_item_rate" class="form-control numeric">
-                                                                    </div>
-                                                                </div>
-
-
-                                                            </div>
-
-                                                            <div class="col-sm-4"><br>
-                                                            <div class="form-group" style="margin-bottom:0px;text-align: left;">
-                                                                <label class="" for="pos_is_manual_pricing" style="text-align: left;"><input type="checkbox" name="pos_is_manual_pricing"  id="pos_is_manual_pricing" style="transform: scale(2.0);">  &nbsp;&nbsp;is Manual Pricing ?</label>
-                                                            </div>
-                                                            
-                                                            
-                                                                <div class="form-group" style="margin-bottom:0px;text-align: left;">
-                                                                        <label class="" for="pos_is_salable" style="text-align: left;"><input type="checkbox" name="pos_is_manual_pricing" id="pos_is_salable" style="transform: scale(2.0);">  &nbsp;&nbsp;Salable?</label>
-                                                                </div>
-                                                                <div class="form-group" style="margin-bottom:0px;text-align: left;">
-                                                                        <label class="" for="pos_is_vatable" style="text-align: left;"><input type="checkbox" name="pos_is_vatable" id="pos_is_vatable" style="transform: scale(2.0);">  &nbsp;&nbsp;is Vatable? (POS)</label>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </form>
-                                            </div>
-
-                                            <div class="panel-footer" style="text-align: right;">
-                                                <button id="btn_save_product" type="button" class="btn btn-primary" style="background-color:#2ecc71;color:white;"><span></span> Save</button>
-                                                <button id="btn_cancel_product" type="button" class="btn btn-danger">Cancel</button>
-                                            </div>
+                                            <div class="panel-footer"></div>
                                         </div>
                                     </div>
 
@@ -1886,7 +1416,7 @@ $('#pos_is_manual_pricing').prop("checked") ?  _data.push({name : "pos_is_manual
                 </div>
             </div><!---modal-->
 
-            <div id="modal_create_product" class="modal fade"  role="dialog"><!--modal-->
+            <div id="modal_create_product" class="modal fade" tabindex="-1" role="dialog"><!--modal-->
                 <div class="modal-dialog" style="width: 75%;">
                     <div class="modal-content">
                         <div class="modal-header" style="background-color:#2ecc71;">
@@ -1895,20 +1425,296 @@ $('#pos_is_manual_pricing').prop("checked") ?  _data.push({name : "pos_is_manual
                         </div>
 
                         <div class="modal-body">
+                            <form id="frm_product">
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <div class="form-group" style="margin-bottom:0px;">
+                                            <label class=""><b class="required">*</b>PLU :</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">
+                                                        <i class="fa fa-file-code-o"></i>
+                                                    </span>
+                                                    <input type="text" name="product_code" id="product_code" class="form-control" value="" data-error-msg="PLU is required." required>
+                                                </div>
+                                        </div>
 
+                                        <div class="form-group" style="margin-bottom:0px;">
+                                                <label class=""><b class="required">*</b> Product Description :</label>
+                                                <textarea name="product_desc" id="product_desc"class="form-control" data-error-msg="Product Description is required." required></textarea>
+                                        </div>
+
+                                        <div class="form-group" style="margin-bottom:0px;">
+                                            <label class="">Other Description :</label>
+                                            <textarea name="product_desc1" id="product_desc1" class="form-control"></textarea>
+                                        </div>
+
+
+                                        <!-- <div class="form-group" style="margin-bottom:0px;">
+                                                    <label class="">Product Type * :</label>
+                                                    <select name="refproduct_id" id="product_type_modal" class="form-control" data-error-msg="Product type is required." required>
+                                                        <option value="">Please Select...</option>
+                                                        <option value="prodtype">[ Create Product Type ]</option>
+                                                        <?php
+                                                        //foreach($refproduct as $row)
+                                                        {
+                                                            //echo '<option value="'.$row->refproduct_id.'">'.$row->product_type.'</option>';
+                                                        }
+                                                        ?>
+                                                    </select>
+
+                                        </div> -->
+
+
+                                        <div class="form-group" style="margin-bottom:0px;">
+                                            <label class=""><b class="required">*</b> Supplier :</label>
+                                            <select name="supplier_id" id="new_supplier" data-error-msg="Supplier is required." required>
+                                                <option value="">Please select supplier</option>
+                                                <option value="sup">[ Create Supplier ]</option>
+                                                <?php
+                                                foreach($suppliers as $row)
+                                                {
+                                                    echo '<option value="'.$row->supplier_id.'">'.$row->supplier_name.'</option>';
+                                                }
+                                                ?>
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group" style="margin-bottom:0px;">
+                                            <label class=""><b class="required">*</b> Category :</label>
+                                            <select name="category_id" id="product_category" data-error-msg="Category is required." required>
+                                                <option value="">Please Select...</option>
+                                                <option value="cat">[ Create Category ]</option>
+                                                <?php
+                                                foreach($categories as $row)
+                                                {
+                                                    echo '<option value="'.$row->category_id.'">'.$row->category_name.'</option>';
+                                                }
+                                                ?>
+                                            </select>
+                                        </div>
+
+
+                                        <div class="form-group" style="margin-bottom:0px;">
+                                            <label class=""><b class="required">*</b> Tax:</label>
+                                            <select name="tax_type_id" id="cbo_tax" data-error-msg="Tax Type is required." required>
+                                                <option value="">Please Select...</option>
+                                                <?php foreach($tax_types as $tax_type) { ?>
+                                                    <option value="<?php echo $tax_type->tax_type_id; ?>"><?php echo $tax_type->tax_type; ?></option>
+                                                <?php    } ?>
+
+
+                                            </select>
+                                        </div>
+
+
+
+                                    </div>
+
+
+
+                                    <div class="col-lg-4" style="margin:0px;">
+
+
+                                        <div class="form-group" style="margin-bottom:0px;">
+                                            <label class=""><b class="required">*</b> Inventory type :</label>
+
+                                            <select name="item_type_id" id="cbo_item_type" data-error-msg="Inverntory type is required." required>
+                                                <option value="">None</option>
+                                                <?php foreach($item_types as $item_type){ ?>
+                                                    <option value="<?php echo $item_type->item_type_id ?>"><?php echo $item_type->item_type; ?></option>
+                                                <?php } ?>
+                                            </select>
+
+                                        </div>
+
+
+
+                                        <div class="form-group" style="margin-bottom:0px;">
+                                            <label class=""><b class="required">*</b> Unit of Measurement :</label>
+                                            <select name="unit_id" id="product_unit" data-error-msg="Unit is required." required>
+                                                <option value="">Please select unit of measurement</option>
+                                                <option value="unt">[ Create Unit ]</option>
+                                                <?php
+                                                foreach($units as $row)
+                                                {
+                                                    echo '<option value="'.$row->unit_id.'">'.$row->unit_name.'</option>';
+                                                }
+                                                ?>
+                                            </select>
+
+                                        </div>
+
+
+                                        <!-- <div class="form-group" style="margin-bottom:0px;">
+                                            <label class="">Pack Size :</label>
+                                            <input type="text" name="size" class="form-control">
+                                        </div> -->
+
+
+
+
+                                        <div class="form-group" style="margin-bottom:0px;">
+                                            <label class="">Suggested Retail Price (SRP) :</label>
+                                            <div class="input-group">
+                                                    <span class="input-group-addon">
+                                                        <i class="fa fa-toggle-off"></i>
+                                                    </span>
+                                                <input type="text" name="sale_price" id="sale_price" class="form-control numeric">
+                                            </div>
+                                        </div>
+
+
+                                        <div class="form-group" style="margin-bottom:0px;">
+                                            <label class="">Discounted Price :</label>
+                                            <div class="input-group">
+                                                    <span class="input-group-addon">
+                                                        <i class="fa fa-toggle-off"></i>
+                                                    </span>
+                                                <input type="text" name="discounted_price" id="discounted_price" class="form-control numeric">
+                                            </div>
+                                        </div>
+
+
+
+                                        <div class="form-group" style="margin-bottom:0px;">
+                                            <label class="">Dealer's Price :</label>
+                                            <div class="input-group">
+                                                    <span class="input-group-addon">
+                                                        <i class="fa fa-toggle-off"></i>
+                                                    </span>
+                                                <input type="text" name="dealer_price" id="dealer_price" class="form-control numeric">
+                                            </div>
+                                        </div>
+
+
+
+                                        <div class="form-group" style="margin-bottom:0px;">
+                                            <label class="">Distributor's Price :</label>
+                                            <div class="input-group">
+                                                    <span class="input-group-addon">
+                                                        <i class="fa fa-toggle-off"></i>
+                                                    </span>
+                                                <input type="text" name="distributor_price" id="distributor_price" class="form-control numeric">
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+
+
+
+                                    <div class="col-lg-4">
+
+                                        <div class="form-group" style="margin-bottom:0px;">
+                                            <label class="">Public Price :</label>
+                                            <div class="input-group">
+                                                    <span class="input-group-addon">
+                                                        <i class="fa fa-toggle-off"></i>
+                                                    </span>
+                                                <input type="text" name="public_price" id="public_price" class="form-control numeric">
+                                            </div>
+                                        </div>
+
+
+
+                                        <div class="form-group" style="margin-bottom:0px;">
+                                            <label class="">Purchase Cost :</label>
+                                            <div class="input-group">
+                                                    <span class="input-group-addon">
+                                                        <i class="fa fa-toggle-off"></i>
+                                                    </span>
+                                                <input type="text" name="purchase_cost" id="purchase_cost" class="form-control numeric">
+                                            </div>
+
+                                        </div>
+
+                                        <!-- <div class="form-group" style="margin-bottom:0px;">
+                                            <label class="">Purchase Cost 2 (Viz-Min Area):</label>
+                                            <div class="input-group">
+                                                    <span class="input-group-addon">
+                                                        <i class="fa fa-toggle-off"></i>
+                                                    </span>
+                                                <input type="text" name="purchase_cost_2" class="form-control numeric">
+                                            </div>
+
+                                        </div> -->
+
+
+                                        <div class="form-group" style="margin-bottom:0px;">
+                                            <label class="">Warning Quantity :</label>
+                                            <div class="input-group">
+                                                    <span class="input-group-addon">
+                                                        <i class="fa fa-toggle-off"></i>
+                                                    </span>
+                                                <input type="text" name="product_warn" id="product_warn" class="form-control numeric">
+                                            </div>
+                                        </div>
+
+
+                                        <div class="form-group" style="margin-bottom:0px;">
+                                            <label class="">Ideal Quantity :</label>
+                                            <div class="input-group">
+                                                    <span class="input-group-addon">
+                                                        <i class="fa fa-toggle-off"></i>
+                                                    </span>
+                                                <input type="text" name="product_ideal" id="product_ideal" class="form-control numeric">
+                                            </div>
+                                        </div>
+
+
+
+
+
+                                        <div class="form-group" style="margin-bottom:0px;">
+                                                    <label class="">Link to Credit Account (Sales):</label>
+
+                                                    <select name="income_account_id" id="income_account_id" data-error-msg="Link to Account is required." required>
+                                                        <optgroup label="Please select NONE if this will not be recorded on Journal."></optgroup>
+                                                        <option value="0">None</option>
+                                                        <?php foreach($accounts as $account){ ?>
+                                                            <option value="<?php echo $account->account_id; ?>"><?php echo $account->account_title; ?></option>
+                                                        <?php } ?>
+                                                    </select>
+
+                                        </div>
+
+
+                                        <div class="form-group" style="margin-bottom:0px;">
+                                                    <label class="">Link to Debit Account (Purchases):</label>
+
+                                                    <select name="expense_account_id" id="expense_account_id" data-error-msg="Link to Account is required." required>
+                                                        <optgroup label="Please select NONE if this will not be recorded on Journal."></optgroup>
+                                                        <option value="0">None</option>
+                                                        <?php foreach($accounts as $account){ ?>
+                                                            <option value="<?php echo $account->account_id; ?>"><?php echo $account->account_title; ?></option>
+                                                        <?php } ?>
+                                                    </select>
+                                        </div>
+                                        <div class="form-group" style="margin-bottom:0px;">
+                                                <label class="">Tax Exempt ?</label><br>
+                                                <input type="checkbox" name="is_tax_exempt" class="form-control" id="is_tax_exempt">
+
+                                        </div>
+
+
+
+
+
+                                    </div>
+
+
+
+                                </div>
+                            </form>
                         </div>
-
-
-
-
 
                         <div class="modal-footer">
                             <button id="btn_save" type="button" class="btn btn-primary" style="background-color:#2ecc71;color:white;"><span></span> Save</button>
                             <button id="btn_cancel" type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
                         </div>
-                    </div>
+                    </div><!---content---->
                 </div>
-            </div>
+            </div><!---modal-->
 
 
 
@@ -1958,60 +1764,7 @@ $('#pos_is_manual_pricing').prop("checked") ?  _data.push({name : "pos_is_manual
                 </div>
             </div>
 
-            <div id="modal_menu" class="modal fade" tabindex="-1" role="dialog">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h4 id="" class="" style="color: white;">New Menu</h4>
-                        </div>
-                        <div class="modal-body">
-                            <form id="frm_menu" role="form" class="form-horizontal row-border">
-                                <div class="form-group">
-                                    <label class="col-md-4 control-label"><strong><B> * </B> Menu Code :</strong></label>
-                                    <div class="col-md-8">
-                                        <div class="input-group">
-                                            <span class="input-group-addon">
-                                                <i class="fa fa-code"></i>
-                                            </span>
-                                            <input type="text" name="menu_code" class="form-control" placeholder="" data-error-msg="Menu Code is required!" required>
-                                        </div>
-                                    </div>
-                                </div>
 
-                                <div class="form-group">
-                                    <label class="col-md-4 control-label"><strong><B> * </B> Menu Name :</strong></label>
-                                    <div class="col-md-8">
-                                        <div class="input-group col-md-12">
-                                            <input type="text" name="menu_name" class="form-control" placeholder="" data-error-msg="Menu Name is required!" required>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="col-md-4 control-label"><strong><B> * </B> Description :</strong></label>
-                                    <div class="col-md-8">
-                                        <div class="input-group col-md-12">
-                                            <input type="text" name="menu_desc" class="form-control" placeholder="" data-error-msg="Menu description is required!" required>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-md-4 control-label"><strong><B> * </B> Sort Key :</strong></label>
-                                    <div class="col-md-8">
-                                        <div class="input-group col-md-12">
-                                            <input type="text" name="sort_key" class="form-control" placeholder="" data-error-msg="Sort Key is required!" required>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button id="btn_save_menu" class="btn btn-primary">Save</button>
-                            <button id="btn_cancel_menu" class="btn btn-default">Cancel</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
                 <div id="modal_confirmation" class="modal fade" tabindex="-1" role="dialog"><!--modal-->
                 <div class="modal-dialog modal-sm">

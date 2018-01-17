@@ -29,9 +29,9 @@
                    <td style="border: 1px solid lightgrey;padding: 5px;"><?php echo $product->ref_no; ?></td>
                    <td style="border: 1px solid lightgrey;padding: 5px;"><?php echo $product->type; ?></td>
                    <td style="border: 1px solid lightgrey;padding: 5px;"><?php echo $product->Description; ?></td>
-                   <td style="border: 1px solid lightgrey;padding: 5px;text-align: right;"><?php echo number_format($product->in_qty,2); ?></td>
-                   <td style="border: 1px solid lightgrey;padding: 5px;text-align: right;"><?php echo number_format($product->out_qty,2); ?></td>
-                   <td style="border: 1px solid lightgrey;padding: 5px;text-align: right;font-weight: bolder;"><?php echo number_format($product->balance,2); ?></td>
+                   <td style="border: 1px solid lightgrey;padding: 5px;text-align: right;"><?php echo number_format($product->in_qty,0); ?></td>
+                   <td style="border: 1px solid lightgrey;padding: 5px;text-align: right;"><?php echo number_format($product->out_qty,0); ?></td>
+                   <td style="border: 1px solid lightgrey;padding: 5px;text-align: right;font-weight: bolder;"><?php echo number_format($product->balance,0); ?></td>
                </tr>
                 <?php } ?>
 
@@ -45,9 +45,13 @@
 &nbsp;
      <a href="Products/Export?product_id=<?php  echo $product_id?>" class="btn btn-success btn-sm" name=""   data-toggle="tooltip" data-placement="top" title="Export To Excel" style="margin-right:-5px;"><i class="fa fa-file-excel-o"></i> Export</a>
 &nbsp;
+&nbsp;
+     <button class="btn btn-success btn-sm" name="" id="btn_email" data-toggle="tooltip" data-placement="top" title="Email" style="margin-right:-5px;"><i class="fa fa-share"></i> Email</button>
+&nbsp;
 <!--     <button class="btn btn-success btn btn-sm" style="" name="btn_email" style="text-transform: none; font-family: Tahoma, Georgia, Serif; " title="Send to Email" ><i class="fa fa-share"></i> Email
     </button> -->
 </div>
+
 
 <style>
   tr {
@@ -78,7 +82,59 @@
 
 
 
+<script>
 
+
+
+
+$(document).ready(function(){
+    var dt; 
+
+
+       var bindEventHandlers=function(){
+
+            $('#btn_email').on('click', function() {
+                showNotification({title:"Sending!",stat:"info",msg:"Please wait for a few seconds."});
+
+                var btn=$(this);
+            
+                $.ajax({
+                    "dataType":"json",
+                    "type":"POST",
+                    "url":'Products/Email?product_id=<?php echo $product_id ?>',
+                    "beforeSend": showSpinningProgress(btn)
+                }).done(function(response){
+                    showNotification(response);
+                    showSpinningProgress(btn);
+
+                });
+            });
+
+            var showSpinningProgress=function(e){
+                $(e).toggleClass('disabled');
+                $(e).find('span').toggleClass('glyphicon glyphicon-refresh spinning');
+            };
+
+
+            var showNotification=function(obj){
+                PNotify.removeAll(); //remove all notifications
+                new PNotify({
+                    title:  obj.title,
+                    text:  obj.msg,
+                    type:  obj.stat
+                });
+            };
+
+    }();
+
+
+
+});
+
+
+
+
+</script>
 
 
 
