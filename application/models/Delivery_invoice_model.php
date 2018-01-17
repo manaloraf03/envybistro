@@ -336,6 +336,52 @@ GROUP BY n.supplier_id HAVING total_balance > 0
 
     }
 
+ function purchase_monitoring($product_id,$startDate=null,$endDate=null){
+        $sql="
+        SELECT 
+        dii.product_id,
+        dii.dr_invoice_id,
+        p.product_desc,
+        p.product_code,
+        u.unit_name,
+        dii.dr_price,
+        s.supplier_name,
+        di.dr_invoice_no,
+        di.date_delivered
+        FROM delivery_invoice_items dii 
+
+
+
+        LEFT JOIN units u ON u.unit_id = dii.unit_id
+        LEFT JOIN products p ON p.product_id = dii.product_id
+        LEFT JOIN delivery_invoice di ON di.dr_invoice_id = dii.dr_invoice_id
+        LEFT JOIN suppliers s ON s.supplier_id = di.supplier_id
+
+/* IF product is ALL (null) then WHERE BETWEEN is used , ELSE  WHERE filter of product_id and between dates are used */
+
+        ".($product_id==null?"
+
+            ".($startDate==null?"":" WHERE di.date_delivered BETWEEN '$startDate' AND '$endDate'")."
+
+        ":" WHERE p.product_id=$product_id 
+        
+            ".($startDate==null?"":" AND di.date_delivered BETWEEN '$startDate' AND '$endDate'")."
+
+
+        ")."
+
+
+
+
+
+        ORDER BY di.date_delivered DESC
+        ";
+        return $this->db->query($sql)->result();
+
+    }
+
+
+
 }
 
 

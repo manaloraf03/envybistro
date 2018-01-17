@@ -57,6 +57,7 @@
                                 <li class="<?php echo (in_array('2-1',$this->session->user_rights)?'':'hidden'); ?>"><a href="Purchases">Purchase Order</a></li>
                                 <li class="<?php echo (in_array('2-2',$this->session->user_rights)?'':'hidden'); ?>"><a href="Deliveries">Purchase Invoice</a></li>
                                 <li class="<?php echo (in_array('2-6',$this->session->user_rights)?'':'hidden'); ?>"><a href="Purchase_history">Purchase History</a></li>
+                                <li class="<?php echo (in_array('2-7',$this->session->user_rights)?'':'hidden'); ?>"><a href="Purchase_monitoring">Purchase Monitoring</a></li>
                                 <li class="<?php echo (in_array('2-3',$this->session->user_rights)?'':'hidden'); ?>"><a href="Payable_payments">Record Payment</a></li>
                                 <li class="<?php echo (in_array('2-4',$this->session->user_rights)?'':'hidden'); ?>"><a href="Issuances">Item Issuance</a></li>
                                 <li class="<?php echo (in_array('2-5',$this->session->user_rights)?'':'hidden'); ?>"><a href="Adjustments">Item Adjustment</a></li>
