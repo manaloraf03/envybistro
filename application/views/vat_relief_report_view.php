@@ -102,12 +102,21 @@
 		                    				</div>
 			                    		</div><br>
 			                    		<div class="container-fluid group-box">
-			                    			<button class="btn btn-primary pull-left" style="margin-right: 5px; margin-top: 10px; margin-bottom: 10px;" id="btn_print" style="text-transform: none; font-family: Tahoma, Georgia, Serif; " data-toggle="modal" data-target="#salesInvoice" data-placement="left" title="Print" ><i class="fa fa-print"></i> Print Report
-                                            </button>
-                                            <button class="btn btn-success pull-left" style="margin-right: 5px; margin-top: 10px; margin-bottom: 10px;" id="btn_export" style="text-transform: none; font-family: Tahoma, Georgia, Serif; " data-toggle="modal" data-target="#salesInvoice" data-placement="left" title="Export to Excel" ><i class="fa fa-file-excel-o"></i> Export to Excel
-                                            </button>
-                                            <button class="btn btn-primary btn btn-sm pull-left" style="margin-right: 5px; margin-top: 10px; margin-bottom: 10px;" id="btn_email" style="text-transform: none; font-family: Tahoma, Georgia, Serif; " data-toggle="modal" data-target="#salesInvoice" data-placement="left" title="Send to Email" ><i class="fa fa-share"></i> Email
-                                            </button>
+                                            <div class="row"><center>
+                                                <button class="btn btn-success pull-left" style="margin-right: 5px; margin-top: 10px; margin-bottom: 10px;" id="btn_print" style="text-transform: none; font-family: Tahoma, Georgia, Serif; " data-toggle="modal" data-target="#salesInvoice" data-placement="left" title="Print" ><i class="fa fa-print"></i> Print Report
+                                                </button>
+                                                <button class="btn btn-success pull-left" style="margin-right: 5px; margin-top: 10px; margin-bottom: 10px;" id="btn_export" style="text-transform: none; font-family: Tahoma, Georgia, Serif; " data-toggle="modal" data-target="#salesInvoice" data-placement="left" title="Export to Excel" ><i class="fa fa-file-excel-o"></i> Export to Excel
+                                                </button>
+                                                <button class="btn btn-success btn btn-sm pull-left" style="margin-right: 5px; margin-top: 10px; margin-bottom: 10px;" id="btn_email" style="text-transform: none; font-family: Tahoma, Georgia, Serif; " data-toggle="modal" data-target="#salesInvoice" data-placement="left" title="Send to Email" ><i class="fa fa-share"></i> Email
+                                                </button> 
+                                                <button class="btn btn-primary pull-left" style="margin-right: 5px; margin-top: 10px; margin-bottom: 10px;" id="btn_print_v2" style="text-transform: none; font-family: Tahoma, Georgia, Serif; " data-toggle="modal" data-target="#salesInvoice" data-placement="left" title="2nd Version" ><i class="fa fa-print"></i> Print Report (Detailed)
+                                                </button>
+                                                <button class="btn btn-primary pull-left" style="margin-right: 5px; margin-top: 10px; margin-bottom: 10px;" id="btn_export_v2" style="text-transform: none; font-family: Tahoma, Georgia, Serif; " data-toggle="modal" data-target="#salesInvoice" data-placement="left" title="2nd Version" ><i class="fa fa-file-excel-o"></i> Export to Excel (Detailed)
+                                                </button>
+                                                <button class="btn btn-primary btn btn-sm pull-left" style="margin-right: 5px; margin-top: 10px; margin-bottom: 10px;" id="btn_email_v2" style="text-transform: none; font-family: Tahoma, Georgia, Serif; " data-toggle="modal" data-target="#salesInvoice" data-placement="left" title="2nd Version" ><i class="fa fa-share"></i> Email (Detailed)
+                                                </button> </center>
+                                            </div>
+
 		                    				<table id="tbl_vat_relief" class="table table-striped" width="100%">
 		                    					<thead>
 		                    						<th>Supplier</th>
@@ -217,6 +226,30 @@
                 showSpinningProgress(btn);
 
             });
+            });
+
+            $('#btn_email_v2').on('click', function() {
+            showNotification({title:"Sending!",stat:"info",msg:"Please wait for a few seconds."});
+
+            var btn=$(this);
+        
+            $.ajax({
+                "dataType":"json",
+                "type":"POST",
+                "url":"Vat_relief_report_v2/transaction/email-vat-relief-v2?start="+ $('#startDate').val() +'&end='+ $('#endDate').val(),
+                "beforeSend": showSpinningProgress(btn)
+            }).done(function(response){
+                showNotification(response);
+                showSpinningProgress(btn);
+
+            });
+            });
+            $('#btn_print_v2').on('click', function() {
+                window.open('Vat_relief_report_v2/transaction/report?start='+ $('#startDate').val() +'&end='+ $('#endDate').val());
+            });
+
+            $('#btn_export_v2').on('click', function() {
+                window.open('Vat_relief_report_v2/transaction/export-vat-relief-v2?start='+ $('#startDate').val() +'&end='+ $('#endDate').val());
             });
 
         }();
