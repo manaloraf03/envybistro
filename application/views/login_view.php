@@ -9,7 +9,7 @@
     <meta name="apple-touch-fullscreen" content="yes">
     <meta name="author" content="">
     <?php echo $_def_css_files; ?>
-    <link rel="stylesheet" href="assets/plugins/spinner/dist/ladda-themeless.min.css">
+    <!-- <link rel="stylesheet" href="assets/plugins/spinner/dist/ladda-themeless.min.css"> -->
     <!-- <link rel="stylesheet" type="text/css" href="assets/css/style-blessed3ef7a.css"> -->
 	<!-- animation CSS -->
 	<link href="assets/css/ample-login/animate.css" rel="stylesheet">

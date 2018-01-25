@@ -443,7 +443,7 @@ $(document).ready(function(){
     var initializeControls=function() {
         dt=$('#tbl_services').DataTable({
             "fnInitComplete": function (oSettings, json) {
-                $.unblockUI();
+                // $.unblockUI();
                 },
             "dom": '<"toolbar">frtip',
             "bLengthChange":false,

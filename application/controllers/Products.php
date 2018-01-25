@@ -178,9 +178,9 @@ class Products extends CORE_Controller
                 $m_products->set('date_modified','NOW()');
                 $m_products->modified_by_user = $this->session->user_id;
 
-                $m_products->product_code = $this->input->post('product_code', TRUE);
-                $m_products->product_desc = $this->input->post('product_desc', TRUE);
-                $m_products->product_desc1 = $this->input->post('product_desc1', TRUE);
+                $m_products->product_code = trim($this->input->post('product_code', TRUE));
+                $m_products->product_desc = trim($this->input->post('product_desc', TRUE));
+                $m_products->product_desc1 = trim($this->input->post('product_desc1', TRUE));
                 $m_products->size = $this->input->post('size', TRUE);
                 $m_products->supplier_id = $this->input->post('supplier_id', TRUE);
                 $m_products->category_id = $this->input->post('category_id', TRUE);
