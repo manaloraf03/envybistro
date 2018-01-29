@@ -94,10 +94,15 @@ class Adjustments extends CORE_Controller
                         'adjustment_items.*',
                         'products.product_code',
                         'products.product_desc',
-                        'units.unit_id',
-                        'units.unit_name',
-                        'DATE_FORMAT(adjustment_items.exp_date,"%m/%d/%Y")as expiration'
-                    ),
+                        'DATE_FORMAT(adjustment_items.exp_date,"%m/%d/%Y")as expiration',                            
+                        'products.purchase_cost',
+                            'products.is_bulk',
+                            'products.child_unit_id',
+                            'products.parent_unit_id',
+                            'products.child_unit_desc',
+                            '(SELECT units.unit_name  FROM units WHERE  units.unit_id = products.parent_unit_id) as parent_unit_name',
+                            '(SELECT units.unit_name  FROM units WHERE  units.unit_id = products.child_unit_id) as child_unit_name'),
+  
                     array(
                         array('products','products.product_id=adjustment_items.product_id','left'),
                         array('units','units.unit_id=adjustment_items.unit_id','left')
@@ -155,7 +160,7 @@ class Adjustments extends CORE_Controller
                 $adjust_line_total_price=$this->input->post('adjust_line_total_price',TRUE);
                 $adjust_tax_amount=$this->input->post('adjust_tax_amount',TRUE);
                 $adjust_non_tax_amount=$this->input->post('adjust_non_tax_amount',TRUE);
-
+                $is_parent=$this->input->post('is_parent',TRUE);
                 $m_products=$this->Products_model;
 
                 for($i=0;$i<count($prod_id);$i++){
@@ -171,9 +176,12 @@ class Adjustments extends CORE_Controller
                     $m_adjustment_items->adjust_tax_amount=$this->get_numeric_value($adjust_tax_amount[$i]);
                     $m_adjustment_items->adjust_non_tax_amount=$this->get_numeric_value($adjust_non_tax_amount[$i]);
 
-                    //unit id retrieval is change, because of TRIGGER restriction
-                    $unit_id=$m_products->get_list(array('product_id'=>$prod_id[$i]));
-                    $m_adjustment_items->unit_id=$unit_id[0]->unit_id;
+                        $m_adjustment_items->is_parent=$this->get_numeric_value($is_parent[$i]);
+                        if($is_parent[$i] == '1'){
+                            $m_adjustment_items->set('unit_id','(SELECT parent_unit_id FROM products WHERE product_id='.(int)$prod_id[$i].')');
+                        }else{
+                             $m_adjustment_items->set('unit_id','(SELECT child_unit_id FROM products WHERE product_id='.(int)$prod_id[$i].')');
+                        } 
 
                     $m_adjustment_items->save();
 
@@ -242,7 +250,7 @@ class Adjustments extends CORE_Controller
                 $adjust_line_total_price=$this->input->post('adjust_line_total_price',TRUE);
                 $adjust_tax_amount=$this->input->post('adjust_tax_amount',TRUE);
                 $adjust_non_tax_amount=$this->input->post('adjust_non_tax_amount',TRUE);
-
+                $is_parent=$this->input->post('is_parent',TRUE);
                 $m_products=$this->Products_model;
 
                 for($i=0;$i<count($prod_id);$i++){
@@ -260,8 +268,12 @@ class Adjustments extends CORE_Controller
 
                     //$m_adjustment_items->set('unit_id','(SELECT unit_id FROM products WHERE product_id='.(int)$prod_id[$i].')');
 
-                    $unit_id=$m_products->get_list(array('product_id'=>$prod_id[$i]));
-                    $m_adjustment_items->unit_id=$unit_id[0]->unit_id;
+                    $m_adjustment_items->is_parent=$this->get_numeric_value($is_parent[$i]);
+                    if($is_parent[$i] == '1'){
+                        $m_adjustment_items->set('unit_id','(SELECT parent_unit_id FROM products WHERE product_id='.(int)$prod_id[$i].')');
+                    }else{
+                         $m_adjustment_items->set('unit_id','(SELECT child_unit_id FROM products WHERE product_id='.(int)$prod_id[$i].')');
+                    } 
 
                     $m_adjustment_items->save();
                     // $m_products->on_hand=$m_products->get_product_qty($this->get_numeric_value($prod_id[$i]));

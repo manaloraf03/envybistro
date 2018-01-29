@@ -209,14 +209,18 @@ class Purchases extends CORE_Controller
                             'purchase_order_items.*',
                             'products.product_code',
                             'products.product_desc',
-                            'units.unit_id',
-                            'units.unit_name'
+                            'products.purchase_cost',
+                            'products.is_bulk',
+                            'products.child_unit_id',
+                            'products.parent_unit_id',
+                            'products.child_unit_desc',
+                            '(SELECT units.unit_name  FROM units WHERE  units.unit_id = products.parent_unit_id) as parent_unit_name',
+                            '(SELECT units.unit_name  FROM units WHERE  units.unit_id = products.child_unit_id) as child_unit_name'
                         ),
                         array(
-                            array('products','products.product_id=purchase_order_items.product_id','left'),
-                            array('units','units.unit_id=purchase_order_items.unit_id','left')
+                            array('products','products.product_id=purchase_order_items.product_id','left')
                         ),
-                        'purchase_order_items.po_item_id DESC'
+                        'purchase_order_items.po_item_id ASC'
                     );
 
 
@@ -279,6 +283,7 @@ class Purchases extends CORE_Controller
                     $po_line_total=$this->input->post('po_line_total',TRUE);
                     $tax_amount=$this->input->post('tax_amount',TRUE);
                     $non_tax_amount=$this->input->post('non_tax_amount',TRUE);
+                    $is_parent=$this->input->post('is_parent',TRUE);
 
                     for($i=0;$i<count($prod_id);$i++){
 
@@ -292,8 +297,12 @@ class Purchases extends CORE_Controller
                         $m_po_items->po_line_total=$this->get_numeric_value($po_line_total[$i]);
                         $m_po_items->tax_amount=$this->get_numeric_value($tax_amount[$i]);
                         $m_po_items->non_tax_amount=$this->get_numeric_value($non_tax_amount[$i]);
-
-                        $m_po_items->set('unit_id','(SELECT unit_id FROM products WHERE product_id='.(int)$prod_id[$i].')');
+                        $m_po_items->is_parent=$this->get_numeric_value($is_parent[$i]);
+                        if($is_parent[$i] == '1'){
+                            $m_po_items->set('unit_id','(SELECT parent_unit_id FROM products WHERE product_id='.(int)$prod_id[$i].')');
+                        }else{
+                             $m_po_items->set('unit_id','(SELECT child_unit_id FROM products WHERE product_id='.(int)$prod_id[$i].')');
+                        }                        
                         $m_po_items->save();
                     }
 
@@ -358,21 +367,25 @@ class Purchases extends CORE_Controller
                     $po_line_total=$this->input->post('po_line_total',TRUE);
                     $tax_amount=$this->input->post('tax_amount',TRUE);
                     $non_tax_amount=$this->input->post('non_tax_amount',TRUE);
-
+                    $is_parent=$this->input->post('is_parent',TRUE);
                     for($i=0;$i<count($prod_id);$i++){
 
                         $m_po_items->purchase_order_id=$po_id;
                         $m_po_items->product_id=$this->get_numeric_value($prod_id[$i]);
+                        $m_po_items->po_qty=$this->get_numeric_value($po_qty[$i]);
                         $m_po_items->po_price=$this->get_numeric_value($po_price[$i]);
                         $m_po_items->po_discount=$this->get_numeric_value($po_discount[$i]);
                         $m_po_items->po_line_total_discount=$this->get_numeric_value($po_line_total_discount[$i]);
                         $m_po_items->po_tax_rate=$this->get_numeric_value($po_tax_rate[$i]);
-                        $m_po_items->po_qty=$this->get_numeric_value($po_qty[$i]);
                         $m_po_items->po_line_total=$this->get_numeric_value($po_line_total[$i]);
                         $m_po_items->tax_amount=$this->get_numeric_value($tax_amount[$i]);
                         $m_po_items->non_tax_amount=$this->get_numeric_value($non_tax_amount[$i]);
-
-                        $m_po_items->set('unit_id','(SELECT unit_id FROM products WHERE product_id='.(int)$prod_id[$i].')');
+                        $m_po_items->is_parent=$this->get_numeric_value($is_parent[$i]);
+                        if($is_parent[$i] == '1'){
+                            $m_po_items->set('unit_id','(SELECT parent_unit_id FROM products WHERE product_id='.(int)$prod_id[$i].')');
+                        }else{
+                             $m_po_items->set('unit_id','(SELECT child_unit_id FROM products WHERE product_id='.(int)$prod_id[$i].')');
+                        }                        
                         $m_po_items->save();
                     }
 
@@ -619,18 +632,27 @@ class Purchases extends CORE_Controller
                             } else {
                             $m_purchases->is_email_sent=1;
                             $m_purchases->modify($filter_value);
+ 
                                 // Show success notification or other things here
                             $response['title']='Success!';
                             $response['stat']='success';
                             $response['msg']='Email Sent successfully.';
                             $response['row_updated'] =$this->row_response($filter_value);
-
+ 
                             echo json_encode($response);
                             }
                     break;
             }
 
+
+
+
+
+
+
+
     }
+
 
 
     function row_response($filter_value){

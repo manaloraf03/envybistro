@@ -683,7 +683,7 @@
                     }, 
                     {  
                         className: "text-right", 
-                        "searchable": false,targets:[4],data: "sale_price", 
+                        "searchable": false,targets:[4],data: "inv_price", 
                         render: function(data){ 
                             return accounting.formatNumber(data,2); 
                         }  
@@ -830,7 +830,7 @@
                     }, 
                     {  
                         className: "text-right", 
-                        "searchable": false,targets:[5],data: "sale_price", 
+                        "searchable": false,targets:[5],data: "inv_price", 
                         render: function(data){ 
                             return accounting.formatNumber(data,2); 
                         }  
@@ -978,7 +978,7 @@
                     }, 
                     {  
                         className: "text-right", 
-                        "searchable": false,targets:[5],data: "sale_price", 
+                        "searchable": false,targets:[5],data: "inv_price", 
                         render: function(data){ 
                             return accounting.formatNumber(data,2); 
                         }  

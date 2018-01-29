@@ -187,7 +187,6 @@
                     <th>Status</th>
                     <th>Sent</th>
                     <th><center>Action</center></th>
-                    <th></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -238,7 +237,7 @@
                         <select name="supplier" id="cbo_suppliers" data-error-msg="Supplier is required." required>
                             <option value="0">[ Create New Supplier ]</option>
                             <?php foreach($suppliers as $supplier){ ?>
-                                <option value="<?php echo $supplier->supplier_id; ?>" data-tax-type="<?php echo $supplier->tax_type_id; ?>"><?php echo $supplier->supplier_name; ?></option>
+                                <option value="<?php echo $supplier->supplier_id; ?>" data-tax-type="<?php echo $supplier->tax_type_id; ?>" data-contact-person="<?php echo $supplier->contact_name; ?>"><?php echo $supplier->supplier_name; ?></option>
                             <?php } ?>
                         </select>
                     </div>
@@ -298,18 +297,23 @@
                 <table id="tbl_items" class="table table-striped" cellspacing="0" width="100%" style="font-font:tahoma;">
                     <thead class="">
                     <tr>
-                        <th width="10%">Qty</th>
+                        <th width="5%">Qty</th>
                         <th width="10%">UM</th>
-                        <th width="30%">Item</th>
-                        <th width="20%" style="text-align: right;">Unit Price</th>
-                        <th width="12%" style="text-align: right;">Discount(%)</th>
-                        <th style="display: none;">T.D</th> <!-- total discount -->
-                        <th style="display: none;">Tax %</th>
-                        <th width="11%" style="text-align: right;">Total</th>
-                        <th width="6%" style="display: none;">V.I</th> <!-- vat input -->
-                        <th style="display: none;">N.V</th> <!-- net of vat -->
-                        <th style="display: none;">Item ID</th><!-- product id -->
-                        <th><center>Action</center></th>
+                        <th width="15%">Item</th>
+                        <th width="10%" style="text-align: right;">Unit Price</th>
+                        <th width="10%" style="text-align: right;">Discount(%)</th>
+
+                        <th style="display: none;" width="5%">T.D</th> <!-- total discount -->
+                        <th style="display: none;" width="5%">Tax %</th>
+
+                        <th width="15%" style="text-align: right;">Total</th>
+                        <th width="10%" style="display: none;">V.I</th> <!-- vat input -->
+
+                        <th style="display: none;" width="10%">N.V</th> <!-- net of vat -->
+                        <th style="display: none;" width="10%">Item ID</th><!-- product id -->
+                        <th width="5%"><center>Action</center></th>
+                        <th style="display: none;" width="10%">Bulk Price</th>
+                        <th style="display: none;" width="10%">Retail Price</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -748,20 +752,24 @@
 
 $(document).ready(function(){
     var dt; var _txnMode; var _selectedID; var _selectRowObj; var _cboSuppliers; var _cboTaxType;
-    var _cboDepartments; var _defCostType; var products;
+    var _cboDepartments; var _defCostType; var products; var _line_unit; var changetxn;
 
 
     //_defCostType=1; //Luzon Area Purchase Cost is default, this will change when branch is specified
 
     var oTableItems={
         qty : 'td:eq(0)',
+        unit_value: 'td:eq(1)',
+        unit_identifier : 'td:eq(2)',
         unit_price : 'td:eq(3)',
         discount : 'td:eq(4)',
         total_line_discount : 'td:eq(5)',
         tax : 'td:eq(6)',
         total : 'td:eq(7)',
         vat_input : 'td:eq(8)',
-        net_vat : 'td:eq(9)'
+        net_vat : 'td:eq(9)',
+        bulk_price : 'td:eq(12)',
+        retail_price : 'td:eq(13)'
 
     };
 
@@ -779,8 +787,8 @@ $(document).ready(function(){
         dt=$('#tbl_purchases').DataTable({
             "dom": '<"toolbar">frtip',
             "bLengthChange":false,
-                "order": [[ 2, "desc" ]],
             "pageLength":15,
+            "order": [[ 2, "desc" ]],
             "ajax" : "Purchases/transaction/list",
             "columns": [
                 {
@@ -835,7 +843,6 @@ $(document).ready(function(){
                         return '<center>'+btn_edit+'&nbsp;'+btn_message+'&nbsp;'+btn_trash+'</center>';
                     }
                 },
-            { visible:false, targets:[8],data: "purchase_order_id" }
             ]
         });
 
@@ -876,9 +883,11 @@ $(document).ready(function(){
 
         _cboTaxType=$('#cbo_tax_type').select2({
             placeholder: "Please select tax type.",
-            allopwClear: true
+            alloowClear: true
 
         });
+
+
 
 
         var _cboTaxGroup=$('#cbo_tax_group').select2({
@@ -934,7 +943,7 @@ $(document).ready(function(){
                     '<table class="tt-head"><tr><td width=20%" style="padding-left: 1%;"><b>PLU</b></td><td width="20%" align="left"><b>Description 1</b></td><td width="20%" align="left"><b>Description 2</b></td><td width="10%" align="right" style="padding-right: 2%;"><b>On hand</b><td width="10%" align="right" style="padding-right: 2%;"><b>Cost</b></td></tr></table>'
                 ].join('\n'),
 
-                suggestion: Handlebars.compile('<table class="tt-items"><tr><td width="20%" style="padding-left: 1%">{{product_code}}</td><td width="20%" align="left">{{product_desc}}</td><td width="20%" align="left">{{produdct_desc1}}</td><td width="10%" align="right" style="padding-right: 2%;">{{on_hand}}</td><td width="10%" align="right" style="padding-right: 2%;">{{purchase_cost}}</td></tr></table>')
+                suggestion: Handlebars.compile('<table class="tt-items"><tr><td width="20%" style="padding-left: 1%">{{product_code}}</td><td width="20%" align="left">{{product_desc}}</td><td width="20%" align="left">{{produdct_desc1}}</td><td width="10%" align="right" style="padding-right: 2%;">{{CurrentQty}}</td><td width="10%" align="right" style="padding-right: 2%;">{{purchase_cost}}</td></tr></table>')
 
             }
         }).on('keyup', this, function (event) {
@@ -962,8 +971,9 @@ $(document).ready(function(){
             var total=getFloat(purchase_cost);
             var net_vat=0;
             var vat_input=0;
-
-
+            var bulk_price = 0;
+            var retail_price = 0;
+            var a = ''; // SET a for select class , SETTING a VALUE for a class must have a unit class identifier EX. class="class_1" , class="class_2" 
             if(suggestion.is_tax_exempt=="0"){ //this is not excempted to tax
                 net_vat=total/(1+(getFloat(tax_rate)/100));
                 vat_input=total-net_vat;
@@ -977,13 +987,25 @@ $(document).ready(function(){
                 //}
 
             }
+            bulk_price = suggestion.purchase_cost;
 
+            if(suggestion.is_bulk == 1){
+                retail_price = getFloat(suggestion.purchase_cost) / getFloat(suggestion.child_unit_desc);
+
+            }else if (suggestion.is_bulk== 0){
+                retail_price = 0;
+            }
 
             $('#tbl_items > tbody').append(newRowItem({
                 po_qty : "1",
+                bulk_price: bulk_price,
+                retail_price: retail_price,
                 product_code : suggestion.product_code,
-                unit_id : suggestion.unit_id,
-                unit_name : suggestion.unit_name,
+                is_bulk: suggestion.is_bulk,
+                parent_unit_id : suggestion.parent_unit_id,
+                child_unit_id : suggestion.child_unit_id,
+                child_unit_name : suggestion.child_unit_name,
+                parent_unit_name : suggestion.parent_unit_name,
                 product_id: suggestion.product_id,
                 product_desc : suggestion.product_desc,
                 po_line_total_discount : "0.00",
@@ -994,10 +1016,15 @@ $(document).ready(function(){
                 tax_type_id : null,
                 po_line_total : total,
                 po_non_tax_amount: net_vat,
-                po_tax_amount:vat_input
+                po_tax_amount:vat_input,
+                is_parent: 1 ,// INITIALLY , UNIT USED IS THE PARENT , 1 for PARENT 0 for CHILD
+                a:a
             }));
 
-
+        _line_unit=$('.line_unit'+a).select2({
+             minimumResultsForSearch: -1
+        });
+        changetxn = 'active';
             reInitializeNumeric();
             reComputeTotal();
 
@@ -1101,7 +1128,7 @@ $(document).ready(function(){
             }).done(function(response){
                 showNotification(response);
                 dt.row(_selectRowObj).data(response.row_updated[0]).draw(false);
-
+ 
     
             });
         });
@@ -1245,14 +1272,24 @@ $(document).ready(function(){
                 success : function(response) {
                     var rows=response.data;
                     $('#tbl_items > tbody').html('');
-
+                        a=0;
                     $.each(rows,function(i,value){
+                        var retail_price;
+
+                            if(value.is_bulk == 1){
+                                retail_price = getFloat(value.purchase_cost) / getFloat(value.child_unit_desc);
+
+                            }else if (value.is_bulk == 0){
+                                retail_price = 0;
+                            }
 
                         $('#tbl_items > tbody').append(newRowItem({
                             po_qty : value.po_qty,
                             product_code : value.product_code,
-                            unit_id : value.unit_id,
-                            unit_name : value.unit_name,
+                            child_unit_id : value.child_unit_id,
+                            child_unit_name : value.child_unit_name,
+                            parent_unit_name : value.parent_unit_name,
+                            parent_unit_id : getFloat(value.parent_unit_id),
                             product_id: value.product_id,
                             product_desc : value.product_desc,
                             po_line_total_discount : value.po_line_total_discount,
@@ -1263,11 +1300,25 @@ $(document).ready(function(){
                             tax_type_id : null,
                             po_line_total : value.po_line_total,
                             po_non_tax_amount: value.non_tax_amount,
-                            po_tax_amount:value.tax_amount
-                        }));
-                    });
+                            po_tax_amount:value.tax_amount,
+                            is_bulk: value.is_bulk,
+                            is_parent : value.is_parent,
+                            bulk_price: value.purchase_cost,
+                            retail_price: retail_price,
+                            a:a
 
+                        }));
+                        changetxn = 'inactive';
+                        // SET THE VALUE FOR UNIT (SELECT 2)
+                        _line_unit=$('.line_unit'+a).select2({
+         
+                        });
+                        _line_unit.select2('val',value.unit_id);
+                        a++;
+                    });
+                    reInitializeNumeric();
                     reComputeTotal();
+                    changetxn = 'active';
                 }
             });
 
@@ -1286,12 +1337,26 @@ $(document).ready(function(){
             $('#modal_confirmation').modal('show');
         });
 
+        $('#tbl_items tbody').on('change','select',function(){
+            if(changetxn == 'active'){
+                var row=$(this).closest('tr');
+                var unit_value=row.find(oTableItems.unit_value).find('option:selected').attr("data-unit-identifier"); 
+                if(getFloat(unit_value) == 1 ){
+                    var price=parseFloat(accounting.unformat(row.find(oTableItems.bulk_price).find('input.numeric').val()));
+                }else{
+                    var price=parseFloat(accounting.unformat(row.find(oTableItems.retail_price).find('input.numeric').val()));
+                }
+                $(oTableItems.unit_price,row).find('input').val(price);  
+                $(oTableItems.unit_identifier,row).find('input').val(unit_value); 
+            } 
+
+        $('.number').keyup();
+        });
 
 
         //track every changes on numeric fields
-        $('#tbl_items tbody').on('keyup','input.numeric,input.number',function(){
+        $('#tbl_items tbody').on('keyup ','input.numeric,input.number',function(){
             var row=$(this).closest('tr');
-
             var price=parseFloat(accounting.unformat(row.find(oTableItems.unit_price).find('input.numeric').val()));
             var discount=parseFloat(accounting.unformat(row.find(oTableItems.discount).find('input.numeric').val()));
             var qty=parseFloat(accounting.unformat(row.find(oTableItems.qty).find('input.number').val()));
@@ -1311,9 +1376,9 @@ $(document).ready(function(){
             var vat_input=line_total-net_vat;
 
             $(oTableItems.total,row).find('input.numeric').val(accounting.formatNumber(new_line_total,2)); // line total amount
-            $(oTableItems.total_line_discount,row).find('input.numeric').val(new_discount_price); //line total discount
-            $(oTableItems.net_vat,row).find('input.numeric').val(net_vat); //net of vat
-            $(oTableItems.vat_input,row).find('input.numeric').val(vat_input); //vat input
+            $(oTableItems.total_line_discount,row).find('input.numeric').val(accounting.formatNumber(new_discount_price,2)); //line total discount
+            $(oTableItems.net_vat,row).find('input.numeric').val(accounting.formatNumber(net_vat,2)); //net of vat
+            $(oTableItems.vat_input,row).find('input.numeric').val(accounting.formatNumber(vat_input,2)); //vat input
 
             //console.log(net_vat);
             reComputeTotal();
@@ -1616,19 +1681,26 @@ $(document).ready(function(){
     };
 
     var newRowItem=function(d){
+        if(d.is_bulk == '1'){ 
+            unit = '<td width="5%"><select class="line_unit'+d.a+'" name="unit_id[]"><option value="'+d.parent_unit_id+'" data-unit-identifier="1">'+d.parent_unit_name+'</option><option value="'+d.child_unit_id+'" data-unit-identifier="0" >'+d.child_unit_name+'</option></select></td>';
+        }else{ 
+            unit  = '<td width="5%"><select class="line_unit'+d.a+'" name="unit_id[]" ><option value="'+d.parent_unit_id+'" data-unit-identifier="1">'+d.parent_unit_name+'</option></select></td>';
+        }
         return '<tr>'+
-        '<td width="10%"><input name="po_qty[]" type="text" class="number form-control" value="'+ d.po_qty+'"></td>'+
-        '<td width="5%">'+ d.unit_name+'</td>'+
-        '<td width="30%">'+d.product_desc+'</td>'+
-        '<td width="11%"><input name="po_price[]" type="text" class="numeric form-control" value="'+accounting.formatNumber(d.po_price,2)+'" style="text-align:right;"></td>'+
-        '<td width="11%"><input name="po_discount[]" type="text" class="numeric form-control" value="'+ accounting.formatNumber(d.po_discount,2)+'" style="text-align:right;"></td>'+
-        '<td style="display:none;" width="11%"><input name="po_line_total_discount[]" type="text" class="numeric form-control" value="'+ accounting.formatNumber(d.po_line_total_discount,2)+'" readonly></td>'+
-        '<td width="11%" style="display:none;"><input name="po_tax_rate[]" type="text" class="numeric form-control" value="'+ accounting.formatNumber(d.po_tax_rate,2)+'"></td>'+
-        '<td width="11%" align="right"><input name="po_line_total[]" type="text" class="numeric form-control" value="'+ accounting.formatNumber(d.po_line_total,2)+'" readonly></td>'+
-        '<td width="6%" style="display: none;"><input name="tax_amount[]" type="text" class="numeric form-control" value="'+ d.po_tax_amount+'" readonly></td>'+
-        '<td style="display: none;"><input name="non_tax_amount[]" type="text" class="numeric form-control" value="'+ d.po_non_tax_amount+'" readonly></td>'+
-        '<td style="display: none;"><input name="product_id[]" type="text" class="form-control" value="'+ d.product_id+'" readonly></td>'+
-        '<td align="center"><button type="button" name="remove_item" class="btn btn-red"><i class="fa fa-trash"></i></button></td>'+
+        '<td ><input name="po_qty[]" type="text" class="number form-control" value="'+ d.po_qty+'"></td>'+unit+'<td >'+d.product_desc+' <input type="text" style="display:none;" class="form-control" name="is_parent[]" value="'+d.is_parent+'"></td>'+
+
+        '<td ><input name="po_price[]" type="text" class="numeric form-control" value="'+accounting.formatNumber(d.po_price,2)+'" style="text-align:right;"></td>'+
+        '<td ><input name="po_discount[]" type="text" class="numeric form-control" value="'+ accounting.formatNumber(d.po_discount,2)+'" style="text-align:right;"></td>'+
+        //display:none;
+        '<td style="display: none;" ><input name="po_line_total_discount[]" type="text" class="numeric form-control" value="'+ accounting.formatNumber(d.po_line_total_discount,2)+'" readonly></td>'+
+        '<td style="display: none;"><input name="po_tax_rate[]" type="text" class="numeric form-control" value="'+ accounting.formatNumber(d.po_tax_rate,2)+'"></td>'+
+        '<td  align="right"><input name="po_line_total[]" type="text" class="numeric form-control" value="'+ accounting.formatNumber(d.po_line_total,2)+'" readonly></td>'+
+        '<td  style="display: none;"><input name="tax_amount[]" type="text" class="numeric form-control" value="'+ accounting.formatNumber(d.po_tax_amount,2)+'" readonly></td>'+
+        '<td style="display: none;" ><input name="non_tax_amount[]" type="text" class="numeric form-control" value="'+ accounting.formatNumber(d.po_non_tax_amount,2)+'" readonly></td>'+
+        '<td style="display: none;"  ><input name="product_id[]" type="text" class="form-control" value="'+ d.product_id+'" readonly></td>'+
+        '<td align="center" ><button type="button" name="remove_item" class="btn btn-red"><i class="fa fa-trash"></i></button></td>'+
+        '<td style="display: none;"><input  type="text" class="form-control numeric" value="'+ accounting.formatNumber(d.bulk_price,2)+'" readonly></td>'+
+        '<td style="display: none;"><input type="text" class="form-control numeric" value="'+ accounting.formatNumber(d.retail_price,2)+'" readonly></td>'+
         '</tr>';
     };
 

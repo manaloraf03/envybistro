@@ -1914,12 +1914,14 @@ class Templates extends CORE_Controller {
                     array(
                         'delivery_invoice_items.*',
                         'products.product_desc',
+                        'units.unit_name',
                         'IFNULL(m.po_price,0) AS po_price'
                     ),
 
                     array(
                         array('delivery_invoice','delivery_invoice.dr_invoice_id=delivery_invoice_items.dr_invoice_id','left'),
                         array('products','products.product_id=delivery_invoice_items.product_id','left'),
+                        array('units','units.unit_id=delivery_invoice_items.unit_id','left'),
                         array('(SELECT po_price,purchase_order_id,product_id FROM purchase_order_items as poi WHERE purchase_order_id='.$purchase_info[0]->purchase_order_id.' GROUP BY poi.product_id) as m','m.purchase_order_id=delivery_invoice.purchase_order_id AND delivery_invoice_items.product_id=m.product_id','left')
                     )
 

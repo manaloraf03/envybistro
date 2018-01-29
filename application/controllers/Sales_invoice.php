@@ -171,8 +171,13 @@ class Sales_invoice extends CORE_Controller
                         'sales_invoice_items.*',
                         'products.product_code',
                         'products.product_desc',
-                        'units.unit_id',
-                        'units.unit_name'
+                        'products.sale_price',
+                        'products.is_bulk',
+                        'products.child_unit_id',
+                        'products.parent_unit_id',
+                        'products.child_unit_desc',
+                        '(SELECT units.unit_name  FROM units WHERE  units.unit_id = products.parent_unit_id) as parent_unit_name',
+                        '(SELECT units.unit_name  FROM units WHERE  units.unit_id = products.child_unit_id) as child_unit_name'
                     ),
                     array(
                         array('products','products.product_id=sales_invoice_items.product_id','left'),
@@ -258,6 +263,7 @@ class Sales_invoice extends CORE_Controller
                 $exp_date=$this->input->post('exp_date',TRUE);
                 $batch_no=$this->input->post('batch_no',TRUE);
                 $cost_upon_invoice=$this->input->post('cost_upon_invoice',TRUE);
+                $is_parent=$this->input->post('is_parent',TRUE);
                 
 
                 $m_products=$this->Products_model;
@@ -283,8 +289,14 @@ class Sales_invoice extends CORE_Controller
                     //$m_invoice_items->cost_upon_invoice=$this->get_numeric_value($cost_upon_invoice[$i]);
 
                     //unit id retrieval is change, because of TRIGGER restriction
-                    $unit_id=$m_products->get_list(array('product_id'=>$prod_id[$i]));
-                    $m_invoice_items->unit_id=$unit_id[0]->unit_id;
+                    $m_invoice_items->is_parent=$this->get_numeric_value($is_parent[$i]);
+                    if($is_parent[$i] == '1'){
+                                            $unit_id=$m_products->get_list(array('product_id'=>$prod_id[$i]));
+                                            $m_invoice_items->unit_id=$unit_id[0]->parent_unit_id;
+                    }else{
+                                             $unit_id=$m_products->get_list(array('product_id'=>$prod_id[$i]));
+                                            $m_invoice_items->unit_id=$unit_id[0]->child_unit_id;
+                    }   
 
                     //$on_hand=$m_products->get_product_current_qty($batch_no[$i], $prod_id[$i], date('Y-m-d', strtotime($exp_date[$i])));
 
@@ -388,6 +400,7 @@ class Sales_invoice extends CORE_Controller
                     $exp_date=$this->input->post('exp_date',TRUE);
                     $orig_so_price=$this->input->post('orig_so_price',TRUE);
                     $cost_upon_invoice=$this->input->post('cost_upon_invoice',TRUE);
+                    $is_parent=$this->input->post('is_parent',TRUE);
 
                     $m_products=$this->Products_model;
 
@@ -411,9 +424,14 @@ class Sales_invoice extends CORE_Controller
                         //$m_invoice_items->cost_upon_invoice=$this->get_numeric_value($cost_upon_invoice[$i]);
 
                         //unit id retrieval is change, because of TRIGGER restriction
-                        $unit_id=$m_products->get_list(array('product_id'=>$prod_id[$i]));
-                        $m_invoice_items->unit_id=$unit_id[0]->unit_id;
-
+                        $m_invoice_items->is_parent=$this->get_numeric_value($is_parent[$i]);
+                        if($is_parent[$i] == '1'){
+                                                $unit_id=$m_products->get_list(array('product_id'=>$prod_id[$i]));
+                                                $m_invoice_items->unit_id=$unit_id[0]->parent_unit_id;
+                        }else{
+                                                 $unit_id=$m_products->get_list(array('product_id'=>$prod_id[$i]));
+                                                $m_invoice_items->unit_id=$unit_id[0]->child_unit_id;
+                        }   
                         //$m_invoice_items->set('unit_id','(SELECT unit_id FROM products WHERE product_id='.(int)$prod_id[$i].')');
 
                         //$on_hand=$m_products->get_product_current_qty($batch_no[$i], $prod_id[$i], date('Y-m-d', strtotime($exp_date[$i])));

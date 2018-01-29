@@ -28,9 +28,7 @@ class Products extends CORE_Controller
         $this->load->model('Delivery_invoice_item_model');
         $this->load->model('Users_model');
         $this->load->model('Account_integration_model');
-        $this->load->model('Menu_model');
         $this->load->model('Company_model');
-
     }
 
     public function index() {
@@ -51,8 +49,6 @@ class Products extends CORE_Controller
             )
         );
         $data['refproduct'] = $this->Refproduct_model->get_list(array('refproduct.is_deleted'=>FALSE));
-        $data['refmenu'] = $this->Menu_model->get_list(array('refmenu.is_deleted'=>FALSE));
-
         $data['categories'] = $this->Categories_model->get_list(array('categories.is_deleted'=>FALSE));
         $data['units'] = $this->Units_model->get_list(array('units.is_deleted'=>FALSE));
         $data['item_types'] = $this->Item_type_model->get_list(array('item_types.is_deleted'=>FALSE));
@@ -104,9 +100,9 @@ class Products extends CORE_Controller
                 $m_products->set('date_created','NOW()');
                 $m_products->created_by_user = $this->session->user_id;
 
-                $m_products->product_code = trim($this->input->post('product_code', TRUE));
-                $m_products->product_desc = trim($this->input->post('product_desc', TRUE));
-                $m_products->product_desc1 = trim($this->input->post('product_desc1', TRUE));
+                $m_products->product_code = $this->input->post('product_code', TRUE);
+                $m_products->product_desc = $this->input->post('product_desc', TRUE);
+                $m_products->product_desc1 = $this->input->post('product_desc1', TRUE);
                 $m_products->size = $this->input->post('size', TRUE);
                 $m_products->supplier_id = $this->input->post('supplier_id', TRUE);
                 $m_products->category_id = $this->input->post('category_id', TRUE);
@@ -114,8 +110,16 @@ class Products extends CORE_Controller
                 $m_products->item_type_id = $this->input->post('item_type_id', TRUE);
                 $m_products->income_account_id = $this->input->post('income_account_id', TRUE);
                 $m_products->expense_account_id = $this->input->post('expense_account_id', TRUE);
-                $m_products->unit_id = $this->input->post('unit_id', TRUE);
+                $m_products->parent_unit_id = $this->input->post('parent_unit_id', TRUE);
 
+                $m_products->is_bulk =$this->get_numeric_value($this->input->post('is_bulk',TRUE));
+                if($this->get_numeric_value($this->input->post('is_bulk',TRUE)) == 1){
+                $m_products->child_unit_desc = $this->get_numeric_value($this->input->post('child_unit_desc', TRUE));
+                $m_products->child_unit_id = $this->input->post('child_unit_id', TRUE);  
+                }else{
+                $m_products->child_unit_desc = 0;
+                $m_products->child_unit_id =0;
+                }
                 $m_products->tax_type_id = $this->input->post('tax_type_id', TRUE);
                 //$m_products->is_inventory = $this->input->post('inventory',TRUE);
 
@@ -133,23 +137,6 @@ class Products extends CORE_Controller
                 $m_products->dealer_price =$this->get_numeric_value($this->input->post('dealer_price', TRUE));
                 $m_products->distributor_price =$this->get_numeric_value($this->input->post('distributor_price', TRUE));
                 $m_products->public_price =$this->get_numeric_value($this->input->post('public_price', TRUE));
-
-                //POS INTEGRATIOM
-
-                $m_products->pos_item_cost =$this->get_numeric_value($this->input->post('pos_item_cost', TRUE));
-                $m_products->pos_item_rate =$this->get_numeric_value($this->input->post('pos_item_rate', TRUE));
-                $m_products->menu_id =$this->get_numeric_value($this->input->post('menu_id', TRUE));
-
-                if($this->input->post('section_id',TRUE) == 2){
-                    $section_id = 0;
-                }else{
-                    $section_id = 1;
-                }
-
-               $m_products->section_id =$this->get_numeric_value($section_id);
-               $m_products->pos_is_vatable =$this->get_numeric_value($this->input->post('pos_is_vatable',TRUE));
-               $m_products->pos_is_manual_pricing =$this->get_numeric_value($this->input->post('pos_is_manual_pricing',TRUE));
-               $m_products->pos_is_salable =$this->get_numeric_value($this->input->post('pos_is_salable',TRUE));
 
                 $m_products->save();
 
@@ -178,9 +165,9 @@ class Products extends CORE_Controller
                 $m_products->set('date_modified','NOW()');
                 $m_products->modified_by_user = $this->session->user_id;
 
-                $m_products->product_code = trim($this->input->post('product_code', TRUE));
-                $m_products->product_desc = trim($this->input->post('product_desc', TRUE));
-                $m_products->product_desc1 = trim($this->input->post('product_desc1', TRUE));
+                $m_products->product_code = $this->input->post('product_code', TRUE);
+                $m_products->product_desc = $this->input->post('product_desc', TRUE);
+                $m_products->product_desc1 = $this->input->post('product_desc1', TRUE);
                 $m_products->size = $this->input->post('size', TRUE);
                 $m_products->supplier_id = $this->input->post('supplier_id', TRUE);
                 $m_products->category_id = $this->input->post('category_id', TRUE);
@@ -188,12 +175,20 @@ class Products extends CORE_Controller
                 $m_products->item_type_id = $this->input->post('item_type_id', TRUE);
                 $m_products->income_account_id = $this->input->post('income_account_id', TRUE);
                 $m_products->expense_account_id = $this->input->post('expense_account_id', TRUE);
-                $m_products->unit_id = $this->input->post('unit_id', TRUE);
+                $m_products->parent_unit_id = $this->input->post('parent_unit_id', TRUE);
+                if($this->get_numeric_value($this->input->post('is_bulk',TRUE)) == 1){
+                $m_products->child_unit_desc = $this->get_numeric_value($this->input->post('child_unit_desc', TRUE));
+                $m_products->child_unit_id = $this->input->post('child_unit_id', TRUE);  
+                }else{
+                $m_products->child_unit_desc = 0;
+                $m_products->child_unit_id =0;
+                }
+                $m_products->is_bulk =$this->get_numeric_value($this->input->post('is_bulk',TRUE));
                 $m_products->tax_type_id = $this->input->post('tax_type_id', TRUE);
                 //$m_products->is_inventory = $this->input->post('inventory',TRUE);
 
-                //im not sure, why posted checkbox post value of 0 when checked
-                $m_products->is_tax_exempt =$this->get_numeric_value($this->input->post('is_tax_exempt',TRUE));
+                 //im not sure, why posted checkbox post value of 0 when checked
+               $m_products->is_tax_exempt =$this->get_numeric_value($this->input->post('is_tax_exempt',TRUE));
 
 
                 $m_products->equivalent_points = $this->get_numeric_value($this->input->post('equivalent_points', TRUE));
@@ -207,21 +202,6 @@ class Products extends CORE_Controller
                 $m_products->dealer_price =$this->get_numeric_value($this->input->post('dealer_price', TRUE));
                 $m_products->distributor_price =$this->get_numeric_value($this->input->post('distributor_price', TRUE));
                 $m_products->public_price =$this->get_numeric_value($this->input->post('public_price', TRUE));
-                //POS Integration
-                $m_products->pos_item_cost =$this->get_numeric_value($this->input->post('pos_item_cost', TRUE));
-                $m_products->pos_item_rate =$this->get_numeric_value($this->input->post('pos_item_rate', TRUE));
-                $m_products->menu_id =$this->get_numeric_value($this->input->post('menu_id', TRUE));
-
-                if($this->input->post('section_id',TRUE) == 2){
-                    $section_id = 0;
-                }else{
-                    $section_id = 1;
-                }
-
-               $m_products->section_id =$this->get_numeric_value($section_id);
-               $m_products->pos_is_vatable =$this->get_numeric_value($this->input->post('pos_is_vatable',TRUE));
-               $m_products->pos_is_manual_pricing =$this->get_numeric_value($this->input->post('pos_is_manual_pricing',TRUE));
-               $m_products->pos_is_salable =$this->get_numeric_value($this->input->post('pos_is_salable',TRUE));
 
 
                 $m_products->modify($product_id);
@@ -414,15 +394,28 @@ class Products extends CORE_Controller
 
                 $data['product_id'] = $product_id;
                 $m_products=$this->Products_model;
-                $data['products']=$m_products->get_product_history($product_id,$department_id,$date,1);
+                $data['products_parent']=$m_products->get_product_history_with_child($product_id,$department_id,$date,1,1);
+                $data['products_child']=$m_products->get_product_history_with_child($product_id,$department_id,$date,1,0);
                 $data['product_id']=$product_id;
                 //$this->load->view('Template/product_history_menus',$data);
 
 
                 $product_info = $m_products->product_list(1,null,$product_id);
+
                 $data['product_info'] = $product_info[0];
                 $type=$this->input->get('type');
                 $data['type'] = $type;
+
+                $data['info']=$m_products->get_list(
+                    array('product_id'=>$product_id),
+                    array(
+                        'products.*',
+                            '(SELECT units.unit_name  FROM units WHERE  units.unit_id = products.parent_unit_id) as parent_unit_name',
+                            '(SELECT units.unit_name  FROM units WHERE  units.unit_id = products.child_unit_id) as child_unit_name'
+                            )
+                );
+
+
                 if($type == NULL){
                     $this->load->view('template/product_history',$data);
                 }else if($type == 'print'){
@@ -542,18 +535,18 @@ class Products extends CORE_Controller
         return $this->Products_model->get_list(
             $filter,
 
-            'products.*,categories.category_name,suppliers.supplier_name,refproduct.product_type,units.unit_name,item_types.item_type,account_titles.account_title',
+            'products.*,categories.category_name,suppliers.supplier_name,refproduct.product_type,item_types.item_type,account_titles.account_title',
 
             array(
                 array('suppliers','suppliers.supplier_id=products.supplier_id','left'),
                 array('refproduct','refproduct.refproduct_id=products.refproduct_id','left'),
                 array('categories','categories.category_id=products.category_id','left'),
-                array('units','units.unit_id=products.unit_id','left'),
                 array('item_types','item_types.item_type_id=products.item_type_id','left'),
                 array('account_titles','account_titles.account_id=products.income_account_id','left')
             )
         );
     }
+
 
 
 
@@ -672,7 +665,7 @@ foreach(range('A','D') as $columnID) {
 }
             // Redirect output to a client’s web browser (Excel2007)
             header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-            header('Content-Disposition: attachment;filename="Product History of '.trim($product_info[0]->product_desc).' '.date("F j, Y g.i a").'.xlsx"');
+            header('Content-Disposition: attachment;filename="Product History of '.$product_info[0]->product_desc.' '.date("F j, Y g.i a").'.xlsx"');
             header('Cache-Control: max-age=0');
             // If you're serving to IE 9, then the following may be needed
             header('Cache-Control: max-age=1');

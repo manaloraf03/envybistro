@@ -26,9 +26,14 @@ class Purchase_items_model extends CORE_Model {
                     main.*,
                         (main.po_tax_rate / 100) AS tax_rate_decimal,
                         p.product_code,
-                        p.product_desc,
-                        p.unit_id,
-                        u.unit_name
+                        p.product_desc,                        
+                        p.purchase_cost,
+                        p.parent_unit_id,
+                        p.child_unit_id,
+                        p.child_unit_desc,
+                        p.is_bulk,
+                        (SELECT unit_name FROM units u WHERE u.unit_id = p.parent_unit_id) as parent_unit_name,
+                        (SELECT unit_name FROM units u WHERE u.unit_id = p.child_unit_id) as child_unit_name
                 FROM
                     (SELECT 
                         m.purchase_order_id,
@@ -38,7 +43,9 @@ class Purchase_items_model extends CORE_Model {
                         MAX(m.po_price) AS po_price,
                         MAX(m.po_discount) AS po_discount,
                         MAX(m.po_tax_rate) AS po_tax_rate,
-                        (SUM(m.PoQty) - SUM(m.DrQty)) AS po_qty
+                        (SUM(m.PoQty) - SUM(m.DrQty)) AS po_qty,
+                        MAX(m.unit_id) as unit_id,
+                        MAX(m.is_parent) as is_parent
                 FROM
                     (SELECT 
                     po.purchase_order_id,
@@ -49,7 +56,9 @@ class Purchase_items_model extends CORE_Model {
                         0 AS DrQty,
                         poi.po_price,
                         poi.po_discount,
-                        poi.po_tax_rate
+                        poi.po_tax_rate,
+                        poi.unit_id,
+                        poi.is_parent
                     FROM
                     purchase_order AS po
                     INNER JOIN purchase_order_items AS poi ON po.purchase_order_id = poi.purchase_order_id
@@ -72,7 +81,9 @@ class Purchase_items_model extends CORE_Model {
                         SUM(dii.dr_qty) AS DrQty,
                         0 AS po_price,
                         0 AS po_discount,
-                        0 AS po_tax_rate
+                        0 AS po_tax_rate,
+                        0 as unit_id,
+                        0 as is_parent
                 FROM
                     (delivery_invoice AS di
                 INNER JOIN purchase_order AS po ON di.purchase_order_id = po.purchase_order_id)
@@ -85,7 +96,7 @@ class Purchase_items_model extends CORE_Model {
                 GROUP BY m.po_no , m.product_id
                 HAVING po_qty > 0) AS main
                 LEFT JOIN products AS p ON main.product_id = p.product_id
-                LEFT JOIN units AS u ON p.unit_id = u.unit_id) AS n) AS o";
+                ) AS n) AS o";
 
             return $this->db->query($sql)->result();
     }

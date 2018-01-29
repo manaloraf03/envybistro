@@ -107,7 +107,7 @@ $(document).ready(function(){
                 { targets:[3],data: "product_desc1" },
                 { targets:[4],data: "category_name" },
                 { targets:[5],data: "supplier_name" },
-                { targets:[6],data: "unit_name" },
+                { targets:[6],data: "parent_unit_name" },
                 { targets:[7],data: "item_type" },
                 { targets:[8],data: "tax_rate" },
                 { sClass:'right-align', targets:[9],data: "purchase_cost" , render: $.fn.dataTable.render.number( ',', '.', 2 ) },

@@ -195,7 +195,7 @@ class Pick_list extends CORE_Controller
                 foreach ($data as $data) {
                             $excel->getActiveSheet()->setCellValue('A'.$i,$data->product_code)
                                 ->setCellValue('B'.$i,$data->product_desc)
-                                ->setCellValue('C'.$i,$data->unit_name)
+                                ->setCellValue('C'.$i,$data->parent_unit_name)
                                 ->setCellValue('D'.$i, $data->category_name)
                                 ->setCellValue('E'.$i, $data->supplier_name)
                                 ->setCellValue('F'.$i,number_format($data->product_warn,0))
@@ -330,7 +330,7 @@ class Pick_list extends CORE_Controller
                 foreach ($data as $data) {
                             $excel->getActiveSheet()->setCellValue('A'.$i,$data->product_code)
                                 ->setCellValue('B'.$i,$data->product_desc)
-                                ->setCellValue('C'.$i,$data->unit_name)
+                                ->setCellValue('C'.$i,$data->parent_unit_name)
                                 ->setCellValue('D'.$i, $data->category_name)
                                 ->setCellValue('E'.$i, $data->supplier_name)
                                 ->setCellValue('F'.$i,number_format($data->product_warn,0))

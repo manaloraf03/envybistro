@@ -95,7 +95,7 @@
                 <td><?php echo $product->product_code; ?></td>
                 <td><?php echo $product->product_desc; ?></td>
                 <td><?php echo $product->category_name; ?></td>
-                <td><?php echo $product->unit_name; ?></td>
+                <td><?php echo $product->parent_unit_name; ?></td>
                 <td align="right"><?php echo number_format($product->CurrentQty,2); ?></td>
             </tr>
             <?php } ?>

@@ -32,7 +32,19 @@ ORIGINAL QUERY OF THE FUNCTION
 
 /* END OF EDIT FOR COMPUTATION FOR SALES ORDER AS BUTTON ACCEPT IS CLICKED */          
                 FROM
-                (SELECT main.*,p.purchase_cost, p.size, (main.so_tax_rate/100)as tax_rate_decimal,p.product_code,p.product_desc,p.unit_id,u.unit_name FROM
+                (SELECT main.*,
+                p.purchase_cost,
+                 p.size, (main.so_tax_rate/100)as tax_rate_decimal,
+                 p.product_code,
+                 p.product_desc,
+                 p.sale_price,
+                p.parent_unit_id,
+                p.child_unit_id,
+                p.child_unit_desc,
+                p.is_bulk,
+                (SELECT unit_name FROM units u WHERE u.unit_id = p.parent_unit_id) as parent_unit_name,
+                (SELECT unit_name FROM units u WHERE u.unit_id = p.child_unit_id) as child_unit_name
+                 FROM
 
                 (
                 SELECT
@@ -41,14 +53,27 @@ ORIGINAL QUERY OF THE FUNCTION
                 MAX(m.so_price)as so_price,
                 MAX(m.so_discount)as so_discount,
                 MAX(m.so_tax_rate)as so_tax_rate,
-                (SUM(m.SoQty)-SUM(m.InvQty))as so_qty
+                (SUM(m.SoQty)-SUM(m.InvQty))as so_qty,
+                MAX(m.unit_id) as unit_id,
+                MAX(m.is_parent) as is_parent
 
 
                 FROM
 
                 (
-                    SELECT so.sales_order_id,so.so_no,soi.product_id,so_price as price,SUM(soi.so_qty) as SoQty,0 as InvQty,
-                    soi.so_price,soi.so_discount,soi.so_tax_rate,soi.batch_no,soi.exp_date FROM sales_order as so
+                    SELECT so.sales_order_id,
+                    so.so_no,
+                    soi.product_id,
+                    so_price as price,SUM(soi.so_qty) as SoQty,
+                    0 as InvQty,
+                    soi.so_price,
+                    soi.so_discount,
+                    soi.so_tax_rate,
+                    soi.batch_no,
+                    soi.exp_date,
+                        soi.unit_id,
+                        soi.is_parent
+                    FROM sales_order as so
                     INNER JOIN sales_order_items as soi ON so.sales_order_id=soi.sales_order_id
                     WHERE so.sales_order_id=$sales_order_id AND so.is_active=TRUE AND so.is_deleted=FALSE
                     GROUP BY so.so_no,soi.product_id
@@ -57,8 +82,21 @@ ORIGINAL QUERY OF THE FUNCTION
                     UNION ALL
                     
 
-                    SELECT so.sales_order_id,so.so_no,sii.product_id,orig_so_price as price,0 as SoQty,SUM(sii.inv_qty) as InvQty,
-                    0 as so_price,0 as so_discount,0 as so_tax_rate,sii.batch_no,sii.exp_date FROM (sales_invoice as si
+                    SELECT so.sales_order_id,
+                    so.so_no,
+                    sii.product_id,
+                    orig_so_price as price,
+                    0 as SoQty,
+                    SUM(sii.inv_qty) as InvQty,
+                    0 as so_price,
+                    0 as so_discount,
+                    0 as so_tax_rate,
+                    sii.batch_no,
+                    sii.exp_date,
+                        0 as unit_id,
+                        0 as is_parent
+
+                    FROM (sales_invoice as si
                     INNER JOIN sales_order as so ON si.sales_order_id=so.sales_order_id)
                     INNER JOIN sales_invoice_items as sii ON si.sales_invoice_id=sii.sales_invoice_id
                     WHERE so.sales_order_id=$sales_order_id AND si.is_active=TRUE AND si.is_deleted=FALSE
@@ -69,8 +107,7 @@ ORIGINAL QUERY OF THE FUNCTION
                 )as main
 
 
-                LEFT JOIN products as p ON main.product_id=p.product_id
-                LEFT JOIN units as u ON p.unit_id=u.unit_id)as n) as o";
+                LEFT JOIN products as p ON main.product_id=p.product_id) as n) as o ";
 
         return $this->db->query($sql)->result();
 
@@ -123,7 +160,7 @@ ORIGINAL QUERY OF THE FUNCTION
 
 
                 LEFT JOIN products as p ON main.product_id=p.product_id
-                LEFT JOIN units as u ON p.unit_id=u.unit_id)as n) as o";
+              )as n) as o";
 
 
         return $this->db->query($sql)->result();
@@ -177,7 +214,7 @@ ORIGINAL QUERY OF THE FUNCTION
 
 
                 LEFT JOIN products as p ON main.product_id=p.product_id
-                LEFT JOIN units as u ON p.unit_id=u.unit_id)as n) as o";
+               )as n) as o";
 
 
 

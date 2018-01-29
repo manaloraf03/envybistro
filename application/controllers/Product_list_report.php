@@ -28,7 +28,6 @@ class Product_list_report extends CORE_Controller
         $this->load->model('Delivery_invoice_item_model');
         $this->load->model('Users_model');
         $this->load->model('Account_integration_model');
-        $this->load->model('Menu_model');
         $this->load->model('Company_model');
         $this->load->model('Email_settings_model');
 
@@ -55,7 +54,6 @@ class Product_list_report extends CORE_Controller
             )
         );
         $data['refproduct'] = $this->Refproduct_model->get_list(array('refproduct.is_deleted'=>FALSE));
-        $data['refmenu'] = $this->Menu_model->get_list(array('refmenu.is_deleted'=>FALSE));
 
         $data['categories'] = $this->Categories_model->get_list(array('categories.is_deleted'=>FALSE));
         $data['units'] = $this->Units_model->get_list(array('units.is_deleted'=>FALSE));
@@ -63,7 +61,7 @@ class Product_list_report extends CORE_Controller
         $data['accounts'] = $this->Account_title_model->get_list('is_active= TRUE AND is_deleted = FALSE','account_id,account_title');
         $data['tax_types']=$this->Tax_model->get_list(array('tax_types.is_deleted'=>FALSE));
 
-        (in_array('12-6',$this->session->user_rights)? 
+        (in_array('12-7',$this->session->user_rights)? 
         $this->load->view('product_list_report_view', $data)
         :redirect(base_url('dashboard')));
         
@@ -211,7 +209,7 @@ class Product_list_report extends CORE_Controller
                                 ->setCellValue('C'.$i,$data->product_desc1)
                                 ->setCellValue('D'.$i, $data->category_name)
                                 ->setCellValue('E'.$i, $data->supplier_name)
-                                ->setCellValue('F'.$i,$data->unit_name)
+                                ->setCellValue('F'.$i,$data->parent_unit_name)
                                 ->setCellValue('G'.$i,$data->item_type)
                                 ->setCellValue('H'.$i,$data->tax_rate)
                                 ->setCellValue('I'.$i,number_format($data->purchase_cost,2))
@@ -374,7 +372,7 @@ class Product_list_report extends CORE_Controller
                                 ->setCellValue('C'.$i,$data->product_desc1)
                                 ->setCellValue('D'.$i, $data->category_name)
                                 ->setCellValue('E'.$i, $data->supplier_name)
-                                ->setCellValue('F'.$i,$data->unit_name)
+                                ->setCellValue('F'.$i,$data->parent_unit_name)
                                 ->setCellValue('G'.$i,$data->item_type)
                                 ->setCellValue('H'.$i,$data->tax_rate)
                                 ->setCellValue('I'.$i,number_format($data->purchase_cost,2))

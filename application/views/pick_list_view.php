@@ -103,7 +103,7 @@ $(document).ready(function(){
                 },
                 { targets:[1],data: "product_code" },
                 { targets:[2],data: "product_desc" },
-                { targets:[2],data: "unit_name" },
+                { targets:[2],data: "parent_unit_name" },
                 { targets:[2],data: "category_name" },
                 { targets:[2],data: "supplier_name" },
                 {  sClass:'right-align', targets:[3],data: "product_warn" , render: $.fn.dataTable.render.number( ',', '.', 0 ) },

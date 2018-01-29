@@ -40,7 +40,9 @@
         body {
             overflow-x: hidden;
         }
-
+        .right-align{
+            text-align: right;
+        }
         #tbl_inventory td:nth-child(6){
             text-align: right;
         }
@@ -431,7 +433,7 @@
                     }
                 },
                 "columns": [
-                    {
+                    {   visible:false,
                         "targets": [0],
                         "class":          "details-control",
                         "orderable":      false,
@@ -441,9 +443,9 @@
                     { targets:[1],data: "product_code" },
                     { targets:[2],data: "product_desc" },
                     { targets:[3],data: "category_name" },
-                    { targets:[4],data: "unit_name" },
+                    { targets:[4],data: "parent_unit_name" },
                     {
-                        targets:[5],
+                        targets:[5], sClass:'right-align',
                         data: "CurrentQty",
                         render: function(data, type, full, meta){
                             return '<b>'+accounting.formatNumber(data,2)+'</b>';

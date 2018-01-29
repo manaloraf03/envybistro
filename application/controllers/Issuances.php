@@ -81,12 +81,16 @@ class Issuances extends CORE_Controller
                         'issuance_items.*',
                         'products.product_code',
                         'products.product_desc',
-                        'units.unit_id',
-                        'units.unit_name'
+                            'products.purchase_cost',
+                            'products.is_bulk',
+                            'products.child_unit_id',
+                            'products.parent_unit_id',
+                            'products.child_unit_desc',
+                            '(SELECT units.unit_name  FROM units WHERE  units.unit_id = products.parent_unit_id) as parent_unit_name',
+                            '(SELECT units.unit_name  FROM units WHERE  units.unit_id = products.child_unit_id) as child_unit_name'
                     ),
                     array(
-                        array('products','products.product_id=issuance_items.product_id','left'),
-                        array('units','units.unit_id=issuance_items.unit_id','left')
+                        array('products','products.product_id=issuance_items.product_id','left')
                     ),
                     'issuance_items.issuance_item_id DESC'
                 );
@@ -111,7 +115,6 @@ class Issuances extends CORE_Controller
                 //$m_issuance->customer_id=$this->input->post('customer_id',TRUE);
                 //$m_issuance->address=$this->input->post('address',TRUE);
                 $m_issuance->terms=$this->input->post('terms',TRUE);
-                $m_issuance->is_for_pos =$this->get_numeric_value($this->input->post('is_for_pos',TRUE));
                 $m_issuance->total_discount=$this->get_numeric_value($this->input->post('summary_discount',TRUE));
                 $m_issuance->total_before_tax=$this->get_numeric_value($this->input->post('summary_before_discount',TRUE));
                 $m_issuance->total_tax_amount=$this->get_numeric_value($this->input->post('summary_tax_amount',TRUE));
@@ -131,6 +134,7 @@ class Issuances extends CORE_Controller
                 $issue_non_tax_amount=$this->input->post('issue_non_tax_amount',TRUE);
                 $batch_no=$this->input->post('batch_no',TRUE);
                 $exp_date=$this->input->post('exp_date',TRUE);
+                $is_parent=$this->input->post('is_parent',TRUE);
                 $m_products=$this->Products_model;
                 for($i=0;$i<count($prod_id);$i++){
                     $m_issue_items->issuance_id=$issuance_id;
@@ -146,8 +150,15 @@ class Issuances extends CORE_Controller
                     // $m_issue_items->batch_no=$batch_no[$i];
                     // $m_issue_items->exp_date=date('Y-m-d',strtotime($exp_date[$i]));
                     //unit id retrieval is change, because of TRIGGER restriction
-                    $unit_id=$m_products->get_list(array('product_id'=>$prod_id[$i]));
-                    $m_issue_items->unit_id=$unit_id[0]->unit_id;
+
+                        $m_issue_items->is_parent=$this->get_numeric_value($is_parent[$i]);
+                        if($is_parent[$i] == '1'){
+                            $m_issue_items->set('unit_id','(SELECT parent_unit_id FROM products WHERE product_id='.(int)$prod_id[$i].')');
+                        }else{
+                             $m_issue_items->set('unit_id','(SELECT child_unit_id FROM products WHERE product_id='.(int)$prod_id[$i].')');
+                        } 
+
+
                     //$on_hand=$m_products->get_product_current_qty($batch_no[$i], $prod_id[$i], date('Y-m-d', strtotime($exp_date[$i])));
                     /*if ($this->get_numeric_value($issue_qty[$i]) > $this->get_numeric_value($on_hand)) {
                         $prod_description=$unit_id[0]->product_desc;
@@ -190,8 +201,6 @@ class Issuances extends CORE_Controller
                 $m_issuance->total_before_tax=$this->get_numeric_value($this->input->post('summary_before_discount',TRUE));
                 $m_issuance->total_tax_amount=$this->get_numeric_value($this->input->post('summary_tax_amount',TRUE));
                 $m_issuance->total_after_tax=$this->get_numeric_value($this->input->post('summary_after_tax',TRUE));
-                $m_issuance->is_for_pos =$this->get_numeric_value($this->input->post('is_for_pos',TRUE));
-
                 $m_issuance->modified_by_user=$this->session->user_id;
                 $m_issuance->modify($issuance_id);
                 $m_issue_items=$this->Issuance_item_model;
@@ -211,6 +220,7 @@ class Issuances extends CORE_Controller
                 $issue_non_tax_amount=$this->input->post('issue_non_tax_amount',TRUE);
                 $batch_no=$this->input->post('batch_no',TRUE);
                 $exp_date=$this->input->post('exp_date',TRUE);
+                $is_parent=$this->input->post('is_parent',TRUE);
                 $m_products=$this->Products_model;
                 for($i=0;$i<count($prod_id);$i++){
                     $m_issue_items->issuance_id=$issuance_id;
@@ -226,8 +236,12 @@ class Issuances extends CORE_Controller
                     // $m_issue_items->batch_no=$batch_no[$i];
                     // $m_issue_items->exp_date=date('Y-m-d',strtotime($exp_date[$i]));
                     //unit id retrieval is change, because of TRIGGER restriction
-                    $unit_id=$m_products->get_list(array('product_id'=>$prod_id[$i]));
-                    $m_issue_items->unit_id=$unit_id[0]->unit_id;
+                        $m_issue_items->is_parent=$this->get_numeric_value($is_parent[$i]);
+                        if($is_parent[$i] == '1'){
+                            $m_issue_items->set('unit_id','(SELECT parent_unit_id FROM products WHERE product_id='.(int)$prod_id[$i].')');
+                        }else{
+                             $m_issue_items->set('unit_id','(SELECT child_unit_id FROM products WHERE product_id='.(int)$prod_id[$i].')');
+                        } 
                     //$on_hand=$m_products->get_product_current_qty($batch_no[$i], $prod_id[$i], date('Y-m-d', strtotime($exp_date[$i])));
 
                     //$m_issue_items->set('unit_id','(SELECT unit_id FROM products WHERE product_id='.(int)$prod_id[$i].')');
@@ -292,8 +306,6 @@ class Issuances extends CORE_Controller
                 'issuance_info.issued_to_person',
                 //'customers.customer_name',
                 'issuance_info.date_created',
-                'issuance_info.is_for_pos',
-                'issuance_info.is_received',
                 'DATE_FORMAT(issuance_info.date_issued,"%m/%d/%Y") as date_issued',
                 'issuance_info.terms',
                 'departments.department_id',

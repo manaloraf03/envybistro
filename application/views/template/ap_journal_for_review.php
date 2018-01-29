@@ -202,7 +202,7 @@
                                             <tr style="<?php echo ($purchase_info->po_no != '' && $item->dr_price != $item->po_price ? 'color: #f44336; font-weight: bolder;' : ''); ?>">
                                                 <td><?php echo $item->product_desc; ?></td>
                                                 <td align="right"><?php echo number_format($item->dr_qty,2); ?></td>
-                                                <td>pcs</td>
+                                                <td><?php echo $item->unit_name; ?></td>
                                                 <td align="right"><?php echo number_format($item->dr_price,2); ?></td>
                                                 <td align="right"><?php echo number_format($item->po_price,2); ?></td>
                                                 <td align="right"><?php echo number_format($item->dr_tax_amount,2); ?></td>

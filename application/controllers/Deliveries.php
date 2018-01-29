@@ -119,15 +119,19 @@ class Deliveries extends CORE_Controller
                         'delivery_invoice_items.*',
                         'products.product_code',
                         'products.product_desc',    
-                        'units.unit_id',
-                        'units.unit_name',
-                        'DATE_FORMAT(delivery_invoice_items.exp_date,"%m/%d/%Y")as expiration'
+                        'products.purchase_cost',
+                        'products.is_bulk',
+                        'products.child_unit_id',
+                        'products.parent_unit_id',
+                        'products.child_unit_desc',
+                        '(SELECT units.unit_name  FROM units WHERE  units.unit_id = products.parent_unit_id) as parent_unit_name',
+                        '(SELECT units.unit_name  FROM units WHERE  units.unit_id = products.child_unit_id) as child_unit_name'
                     ),
                     array(
                         array('products','products.product_id=delivery_invoice_items.product_id','left'),
                         array('units','units.unit_id=delivery_invoice_items.unit_id','left')
                     ),
-                    'delivery_invoice_items.dr_invoice_item_id DESC'
+                    'delivery_invoice_items.dr_invoice_item_id ASC'
                 );
 
 
@@ -199,7 +203,7 @@ class Deliveries extends CORE_Controller
                 $dr_non_tax_amount=$this->input->post('dr_non_tax_amount',TRUE);
                 $exp_date= $this->input->post('exp_date',TRUE);
                 $batch_code= $this->input->post('batch_code',TRUE);
-
+                $is_parent=$this->input->post('is_parent',TRUE);
                 $m_products=$this->Products_model;
 
                 for($i=0;$i<count($prod_id);$i++){
@@ -230,9 +234,14 @@ class Deliveries extends CORE_Controller
                     //$m_dr_items->set('unit_id','(SELECT unit_id FROM products WHERE product_id='.(int)$prod_id[$i].')');
 
                     //unit id retrieval is change, because of TRIGGER restriction
-                    $unit_id=$m_products->get_list(array('product_id'=>$prod_id[$i]));
-                    $m_dr_items->unit_id=$unit_id[0]->unit_id;
-
+                    $m_dr_items->is_parent=$this->get_numeric_value($is_parent[$i]);
+                    if($is_parent[$i] == '1'){
+                                            $unit_id=$m_products->get_list(array('product_id'=>$prod_id[$i]));
+                                            $m_dr_items->unit_id=$unit_id[0]->parent_unit_id;
+                    }else{
+                                             $unit_id=$m_products->get_list(array('product_id'=>$prod_id[$i]));
+                                            $m_dr_items->unit_id=$unit_id[0]->child_unit_id;
+                    }   
                     $m_dr_items->save();
 
                     $m_products->on_hand=$m_products->get_product_qty($this->get_numeric_value($prod_id[$i]));
@@ -330,7 +339,7 @@ class Deliveries extends CORE_Controller
                 $dr_non_tax_amount=$this->input->post('dr_non_tax_amount',TRUE);
                 $exp_date = $this->input->post('exp_date',TRUE);
                 $batch_code= $this->input->post('batch_code',TRUE);
-
+                $is_parent=$this->input->post('is_parent',TRUE);
 
                 $m_products=$this->Products_model;
 
@@ -350,10 +359,17 @@ class Deliveries extends CORE_Controller
                     $m_dr_items->batch_no=$batch_code[$i];
                     //$m_dr_items->set('unit_id','(SELECT unit_id FROM products WHERE product_id='.(int)$prod_id[$i].')');
                     //unit id retrieval is change, because of TRIGGER restriction
-                    $unit_id=$m_products->get_list(array('product_id'=>$prod_id[$i]));
-                    $m_dr_items->unit_id=$unit_id[0]->unit_id;
 
+                    $m_dr_items->is_parent=$this->get_numeric_value($is_parent[$i]);
+                    if($is_parent[$i] == '1'){
+                                            $unit_id=$m_products->get_list(array('product_id'=>$prod_id[$i]));
+                                            $m_dr_items->unit_id=$unit_id[0]->parent_unit_id;
+                    }else{
+                                             $unit_id=$m_products->get_list(array('product_id'=>$prod_id[$i]));
+                                            $m_dr_items->unit_id=$unit_id[0]->child_unit_id;
+                    }   
                     $m_dr_items->save();
+
 
                     //$m_products->on_hand=$m_products->get_product_qty($this->get_numeric_value($prod_id[$i]));
                     //$m_products->modify($this->get_numeric_value($prod_id[$i]));

@@ -147,12 +147,15 @@ class Sales_order extends CORE_Controller
                         'products.product_code',
                         'products.product_desc',
                         'products.size',
-                        'units.unit_id',
-                        'units.unit_name'
-                    ),
+                            'products.sale_price',
+                            'products.is_bulk',
+                            'products.child_unit_id',
+                            'products.parent_unit_id',
+                            'products.child_unit_desc',
+                            '(SELECT units.unit_name  FROM units WHERE  units.unit_id = products.parent_unit_id) as parent_unit_name',
+                            '(SELECT units.unit_name  FROM units WHERE  units.unit_id = products.child_unit_id) as child_unit_name'),
                     array(
-                        array('products','products.product_id=sales_order_items.product_id','left'),
-                        array('units','units.unit_id=sales_order_items.unit_id','left')
+                        array('products','products.product_id=sales_order_items.product_id','left')
                     ),
                     'sales_order_items.sales_order_item_id DESC'
                 );
@@ -214,8 +217,8 @@ class Sales_order extends CORE_Controller
 
                 $batch_no=$this->input->post('batch_no',TRUE);
                 $exp_date=$this->input->post('exp_date',TRUE);
-
-
+                $is_parent=$this->input->post('is_parent',TRUE);
+ 
                 for($i=0;$i<count($prod_id);$i++){
 
                     $m_sales_order_items->sales_order_id=$sales_order_id;
@@ -233,7 +236,12 @@ class Sales_order extends CORE_Controller
                     $m_sales_order_items->batch_no=$batch_no[$i];
                     $m_sales_order_items->exp_date=date('Y-m-d', strtotime($exp_date[$i]));
 
-                    $m_sales_order_items->set('unit_id','(SELECT unit_id FROM products WHERE product_id='.(int)$prod_id[$i].')');
+                        $m_sales_order_items->is_parent=$this->get_numeric_value($is_parent[$i]);
+                        if($is_parent[$i] == '1'){
+                            $m_sales_order_items->set('unit_id','(SELECT parent_unit_id FROM products WHERE product_id='.(int)$prod_id[$i].')');
+                        }else{
+                             $m_sales_order_items->set('unit_id','(SELECT child_unit_id FROM products WHERE product_id='.(int)$prod_id[$i].')');
+                        } 
                     $m_sales_order_items->save();
                 }
 
@@ -308,7 +316,7 @@ class Sales_order extends CORE_Controller
                 $so_line_total_price=$this->input->post('so_line_total_price',TRUE);
                 $so_tax_amount=$this->input->post('so_tax_amount',TRUE);
                 $so_non_tax_amount=$this->input->post('so_non_tax_amount',TRUE);
-
+                $is_parent=$this->input->post('is_parent',TRUE);
                 $batch_no=$this->input->post('batch_no',TRUE);
                 $exp_date=$this->input->post('exp_date',TRUE);
 
@@ -328,8 +336,12 @@ class Sales_order extends CORE_Controller
 
                     $m_sales_order_items->batch_no=$batch_no[$i];
                     $m_sales_order_items->exp_date=date('Y-m-d', strtotime($exp_date[$i]));
-
-                    $m_sales_order_items->set('unit_id','(SELECT unit_id FROM products WHERE product_id='.(int)$prod_id[$i].')');
+                        $m_sales_order_items->is_parent=$this->get_numeric_value($is_parent[$i]);
+                        if($is_parent[$i] == '1'){
+                            $m_sales_order_items->set('unit_id','(SELECT parent_unit_id FROM products WHERE product_id='.(int)$prod_id[$i].')');
+                        }else{
+                             $m_sales_order_items->set('unit_id','(SELECT child_unit_id FROM products WHERE product_id='.(int)$prod_id[$i].')');
+                        } 
                     $m_sales_order_items->save();
                 }
 

@@ -49,8 +49,8 @@ class Inventory extends CORE_Controller
                 $account_integration =$this->Account_integration_model;
                 $a_i=$account_integration->get_list();
                 $account =$a_i[0]->sales_invoice_inventory;
-
-                $response['data'] = $m_products->get_product_list_inventory($date,$depid,$account);
+                $response['data']=$m_products->product_list($account,$date,null,null,null,1,null,$depid);
+                // $response['data'] = $m_products->get_product_list_inventory($date,$depid,$account);
 
 
                 echo json_encode($response);
@@ -68,8 +68,8 @@ class Inventory extends CORE_Controller
                 $date = date('Y-m-d',strtotime($this->input->get('date',TRUE)));
                 $depid = $this->input->get('depid',TRUE);
                 $info = $m_department->get_department_list($depid);
-
-                $data['products'] = $m_products->get_product_list_inventory($date,$depid,$account);
+                $data['products']=$m_products->product_list($account,$date,null,null,null,1,null,$depid);
+                // $data['products'] = $m_products->get_product_list_inventory($date,$depid,$account);
                 $data['date'] = date('m/d/Y',strtotime($date));
 
                 if(isset($info[0])){
@@ -99,7 +99,7 @@ class Inventory extends CORE_Controller
                 $depid = $this->input->get('depid',TRUE);
                 $info = $m_department->get_department_list($depid);
 
-                $products = $m_products->get_product_list_inventory($date,$depid,$account);
+                $products=$m_products->product_list($account,$date,null,null,null,1,null,$depid);
                 $data['date'] = date('m/d/Y',strtotime($date));
 
                 if(isset($info[0])){
@@ -191,7 +191,7 @@ class Inventory extends CORE_Controller
                         $excel->getActiveSheet()->setCellValue('A'.$i,$product->product_code);
                         $excel->getActiveSheet()->setCellValue('B'.$i,$product->product_desc);
                         $excel->getActiveSheet()->setCellValue('C'.$i,$product->category_name);
-                        $excel->getActiveSheet()->setCellValue('D'.$i,$product->unit_name);
+                        $excel->getActiveSheet()->setCellValue('D'.$i,$product->parent_unit_name);
 
                         $excel->getActiveSheet()->getStyle('E'.$i)->getNumberFormat()->setFormatCode('###,##0.00;(###,##0.00)');                        
                         $excel->getActiveSheet()->setCellValue('E'.$i,number_format($product->CurrentQty,2));
@@ -240,7 +240,7 @@ class Inventory extends CORE_Controller
                 $depid = $this->input->get('depid',TRUE);
                 $info = $m_department->get_department_list($depid);
 
-                $products = $m_products->get_product_list_inventory($date,$depid,$account);
+                $products=$m_products->product_list($account,$date,null,null,null,1,null,$depid);
                 $data['date'] = date('m/d/Y',strtotime($date));
 
                 if(isset($info[0])){
@@ -333,7 +333,7 @@ class Inventory extends CORE_Controller
                         $excel->getActiveSheet()->setCellValue('A'.$i,$product->product_code);
                         $excel->getActiveSheet()->setCellValue('B'.$i,$product->product_desc);
                         $excel->getActiveSheet()->setCellValue('C'.$i,$product->category_name);
-                        $excel->getActiveSheet()->setCellValue('D'.$i,$product->unit_name);
+                        $excel->getActiveSheet()->setCellValue('D'.$i,$product->parent_unit_name);
 
                         $excel->getActiveSheet()->getStyle('E'.$i)->getNumberFormat()->setFormatCode('###,##0.00;(###,##0.00)');                        
                         $excel->getActiveSheet()->setCellValue('E'.$i,number_format($product->CurrentQty,2));

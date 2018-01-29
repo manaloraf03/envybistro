@@ -63,7 +63,7 @@
          <tr>
              <td><?php echo $data->product_code; ?></td>
              <td><?php echo $data->product_desc; ?></td>
-             <td><?php echo $data->unit_name; ?></td>             
+             <td><?php echo $data->parent_unit_name; ?></td>             
              <td><?php echo $data->category_name; ?></td>
              <td><?php echo $data->supplier_name; ?></td>
              <td class="right-align"><?php echo number_format($data->product_warn,0);  ?></td>

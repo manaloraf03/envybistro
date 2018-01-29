@@ -73,7 +73,7 @@
              <td><?php echo $data->product_desc1; ?></td>
              <td><?php echo $data->category_name; ?></td>
              <td><?php echo $data->supplier_name; ?></td>
-             <td><?php echo $data->unit_name; ?></td>
+             <td><?php echo $data->parent_unit_name; ?></td>
              <td><?php echo $data->item_type; ?></td>
              <td><?php echo $data->tax_rate; ?></td>
              <td class="right-align"><?php echo number_format($data->purchase_cost,2);  ?></td>
