@@ -966,7 +966,7 @@ class Sales_detailed_summary extends CORE_Controller {
                          $excel->getActiveSheet()->setCellValue('C'.$i,$sales_detail->product_code);
                          $excel->getActiveSheet()->setCellValue('D'.$i,$sales_detail->product_desc);
                          $excel->getActiveSheet()->getStyle('E'.$i)->getNumberFormat()->setFormatCode('###,##0.00;(###,##0.00)');
-                         $excel->getActiveSheet()->setCellValue('E'.$i,number_format($sales_detail->sale_price,2));
+                         $excel->getActiveSheet()->setCellValue('E'.$i,number_format($sales_detail->inv_price,2));
                          $excel->getActiveSheet()->setCellValue('F'.$i,$sales_detail->inv_qty);
                          $excel->getActiveSheet()->getStyle('F'.$i)->getFont()->setBold(FALSE);
                          $excel->getActiveSheet()->getStyle('G'.$i)->getNumberFormat()->setFormatCode('###,##0.00;(###,##0.00)');
@@ -1135,7 +1135,7 @@ class Sales_detailed_summary extends CORE_Controller {
                     $excel->getActiveSheet()->getStyle('A'.$i)->getFont()->setBold(FALSE);    
                     $excel->getActiveSheet()->setCellValue('B'.$i,date('Y-m-d', strtotime($sales_detail->date_invoice)));
                     $excel->getActiveSheet()->getStyle('C'.$i)->getNumberFormat()->setFormatCode('###,##0.00;(###,##0.00)');
-                    $excel->getActiveSheet()->setCellValue('C'.$i,number_format($sales_detail->sale_price,2));
+                    $excel->getActiveSheet()->setCellValue('C'.$i,number_format($sales_detail->inv_price,2));
                     $excel->getActiveSheet()->setCellValue('D'.$i,$sales_detail->inv_qty);
                     $excel->getActiveSheet()->getStyle('D'.$i)->getFont()->setBold(FALSE);
                     $excel->getActiveSheet()->getStyle('E'.$i)->getNumberFormat()->setFormatCode('###,##0.00;(###,##0.00)');
@@ -1314,7 +1314,7 @@ class Sales_detailed_summary extends CORE_Controller {
                     $excel->getActiveSheet()->setCellValue('D'.$i,$sales_detail->product_desc);
                     $excel->getActiveSheet()->getStyle('D'.$i)->getFont()->setBold(FALSE);
                     $excel->getActiveSheet()->getStyle('E'.$i)->getNumberFormat()->setFormatCode('###,##0.00;(###,##0.00)');
-                    $excel->getActiveSheet()->setCellValue('E'.$i,number_format($sales_detail->sale_price,2));
+                    $excel->getActiveSheet()->setCellValue('E'.$i,number_format($sales_detail->inv_price,2));
                     $excel->getActiveSheet()->setCellValue('F'.$i,$sales_detail->inv_qty);
                     $excel->getActiveSheet()->getStyle('A'.$i.':F'.$i)->getFont()->setBold(FALSE);
                     $excel->getActiveSheet()->getStyle('G'.$i)->getNumberFormat()->setFormatCode('###,##0.00;(###,##0.00)');
@@ -1532,7 +1532,7 @@ class Sales_detailed_summary extends CORE_Controller {
                          $excel->getActiveSheet()->setCellValue('C'.$i,$sales_detail->product_code);
                          $excel->getActiveSheet()->setCellValue('D'.$i,$sales_detail->product_desc);
                          $excel->getActiveSheet()->getStyle('E'.$i)->getNumberFormat()->setFormatCode('###,##0.00;(###,##0.00)');
-                         $excel->getActiveSheet()->setCellValue('E'.$i,number_format($sales_detail->sale_price,2));
+                         $excel->getActiveSheet()->setCellValue('E'.$i,number_format($sales_detail->inv_price,2));
                          $excel->getActiveSheet()->setCellValue('F'.$i,$sales_detail->inv_qty);
                          $excel->getActiveSheet()->getStyle('F'.$i)->getFont()->setBold(FALSE);
                          $excel->getActiveSheet()->getStyle('G'.$i)->getNumberFormat()->setFormatCode('###,##0.00;(###,##0.00)');
@@ -1646,7 +1646,7 @@ class Sales_detailed_summary extends CORE_Controller {
                     $excel->getActiveSheet()->getStyle('A'.$i)->getFont()->setBold(FALSE);    
                     $excel->getActiveSheet()->setCellValue('B'.$i,date('Y-m-d', strtotime($sales_detail->date_invoice)));
                     $excel->getActiveSheet()->getStyle('C'.$i)->getNumberFormat()->setFormatCode('###,##0.00;(###,##0.00)');
-                    $excel->getActiveSheet()->setCellValue('C'.$i,number_format($sales_detail->sale_price,2));
+                    $excel->getActiveSheet()->setCellValue('C'.$i,number_format($sales_detail->inv_price,2));
                     $excel->getActiveSheet()->setCellValue('D'.$i,$sales_detail->inv_qty);
                     $excel->getActiveSheet()->getStyle('D'.$i)->getFont()->setBold(FALSE);
                     $excel->getActiveSheet()->getStyle('E'.$i)->getNumberFormat()->setFormatCode('###,##0.00;(###,##0.00)');
@@ -1770,7 +1770,7 @@ class Sales_detailed_summary extends CORE_Controller {
                     $excel->getActiveSheet()->setCellValue('D'.$i,$sales_detail->product_desc);
                     $excel->getActiveSheet()->getStyle('D'.$i)->getFont()->setBold(FALSE);
                     $excel->getActiveSheet()->getStyle('E'.$i)->getNumberFormat()->setFormatCode('###,##0.00;(###,##0.00)');
-                    $excel->getActiveSheet()->setCellValue('E'.$i,number_format($sales_detail->sale_price,2));
+                    $excel->getActiveSheet()->setCellValue('E'.$i,number_format($sales_detail->inv_price,2));
                     $excel->getActiveSheet()->setCellValue('F'.$i,$sales_detail->inv_qty);
                     $excel->getActiveSheet()->getStyle('A'.$i.':F'.$i)->getFont()->setBold(FALSE);
                     $excel->getActiveSheet()->getStyle('G'.$i)->getNumberFormat()->setFormatCode('###,##0.00;(###,##0.00)');

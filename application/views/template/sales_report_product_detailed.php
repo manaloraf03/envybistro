@@ -55,7 +55,7 @@
 					<td width="5%"><?php echo date('Y-m-d', strtotime($sales_detail->date_invoice)); ?></td>
 					<td width="5%"><?php echo $sales_detail->product_code; ?></td>
 					<td width="10%"><?php echo $sales_detail->product_desc; ?></td>
-					<td width="5%" align="right"><?php echo number_format($sales_detail->sale_price,2); ?></td>
+					<td width="5%" align="right"><?php echo number_format($sales_detail->inv_price,2); ?></td>
 					<td width="5%" align="center"><?php echo $sales_detail->inv_qty; ?></td>
 					<td width="5%" align="right"><?php echo number_format($sales_detail->total_amount,2); ?></td>
 				</tr>
