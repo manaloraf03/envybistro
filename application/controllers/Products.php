@@ -404,6 +404,7 @@ class Products extends CORE_Controller
 
                 $data['product_info'] = $product_info[0];
                 $type=$this->input->get('type');
+                $inv=$this->input->get('inv');
                 $data['type'] = $type;
 
                 $data['info']=$m_products->get_list(
@@ -419,7 +420,13 @@ class Products extends CORE_Controller
                 if($type == NULL){
                     $this->load->view('template/product_history',$data);
                 }else if($type == 'print'){
-                    $this->load->view('template/product_history_content',$data);
+
+                    if($inv=='parent'){
+                        $this->load->view('template/product_history_content',$data);
+                    }else if($inv=='child'){
+                        $this->load->view('template/product_history_content_child',$data);
+
+                    }
                 }
 
 
@@ -554,7 +561,7 @@ function Export(){
 
             $m_company_info = $this->Company_model;
             $company_info=$m_company_info->get_list();
-
+            $inv = $this->input->get('inv');
                 $product_id=$this->input->get('product_id');
                 $department_id=($this->input->get('depid')==null||$this->input->get('depid')==0?0:$this->input->get('depid'));
                 $as_of_date=$this->input->get('date');
@@ -567,7 +574,10 @@ function Export(){
 
                 $data['product_id'] = $product_id;
                 $m_products=$this->Products_model;
-                $products=$m_products->get_product_history($product_id,$department_id,$date,1);
+                // $products=$m_products->get_product_history($product_id,$department_id,$date,1);
+
+                $products=$m_products->get_product_history_with_child($product_id,$department_id,$date,1,1);
+                $products_child=$m_products->get_product_history_with_child($product_id,$department_id,$date,1,0);
                 $data['product_id']=$product_id;
                 //$this->load->view('Template/product_history_menus',$data);
 
@@ -586,8 +596,7 @@ function Export(){
                                     ->setCellValue('A4',$company_info[0]->mobile_no)
                                     ->setCellValue('A6','Product History')
                                     ->setCellValue('A7','As of '.date("F j, Y, g:i a"));
-
-
+if($inv == 'parent'){
           $excel->getActiveSheet()->setCellValue('A9','Product Description')->getStyle('A9')->getFont()->setBold(TRUE)
           ->getActiveSheet()->setCellValue('B9',$product_info[0]->product_desc)
 
@@ -601,7 +610,7 @@ function Export(){
           ->getActiveSheet()->setCellValue('B12',$product_info[0]->supplier_name)
 
           ->setCellValue('A13','Unit')->getStyle('A13')->getFont()->setBold(TRUE)
-          ->getActiveSheet()->setCellValue('B13',$product_info[0]->unit_name)
+          ->getActiveSheet()->setCellValue('B13',$product_info[0]->parent_unit_name.' (Bulk Unit)')
 
           ->setCellValue('A14','Tax')->getStyle('A14')->getFont()->setBold(TRUE)
           ->getActiveSheet()->setCellValue('B14',$product_info[0]->tax_type.'('.$product_info[0]->tax_rate.' %)')
@@ -625,12 +634,59 @@ function Export(){
           ->getActiveSheet()->setCellValue('D14',number_format($product_info[0]->public_price,2))->getStyle('D14')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT)
 
           ->getActiveSheet()->setCellValue('A15','Warning QTY')->getStyle('A15')->getFont()->setBold(TRUE)
-          ->getActiveSheet()->setCellValue('B15',$product_info[0]->product_warn)->getStyle('B15')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT)
+          ->getActiveSheet()->setCellValue('B15',$product_info[0]->product_warn)->getStyle('B15')
 
           ->getActiveSheet()->setCellValue('C15','Ideal Qty')->getStyle('C15')->getFont()->setBold(TRUE)
-          ->getActiveSheet()->setCellValue('D15',$product_info[0]->product_ideal)->getStyle('D15')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT)
+          ->getActiveSheet()->setCellValue('D15',$product_info[0]->product_ideal)->getStyle('D15')
+          
+        ->getActiveSheet()->setCellValue('A18','Transaction Date')->getStyle('A18')->getFont()->setBold(TRUE)
+        ->getActiveSheet()->setCellValue('B18','Reference')->getStyle('B18')->getFont()->setBold(TRUE)
+        ->getActiveSheet()->setCellValue('C18','Transaction Type')->getStyle('C18')->getFont()->setBold(TRUE)
+        ->getActiveSheet()->setCellValue('D18','Description')->getStyle('D18')->getFont()->setBold(TRUE)
+        ->getActiveSheet()->setCellValue('E18','In')->getStyle('E18')->getFont()->setBold(TRUE)
+        ->getActiveSheet()->setCellValue('F18','Out')->getStyle('F18')->getFont()->setBold(TRUE)
+        ->getActiveSheet()->setCellValue('G18','Balance')->getStyle('G18')->getFont()->setBold(TRUE);
+        }else if ($inv=='child'){
+          $excel->getActiveSheet()->setCellValue('A9','Product Description')->getStyle('A9')->getFont()->setBold(TRUE)
+          ->getActiveSheet()->setCellValue('B9',$product_info[0]->product_desc)
 
+          ->setCellValue('A10','Other Description')->getStyle('A10')->getFont()->setBold(TRUE)
+          ->getActiveSheet()->setCellValue('B10',$product_info[0]->product_desc1)
 
+          ->setCellValue('A11','Category')->getStyle('A11')->getFont()->setBold(TRUE)
+          ->getActiveSheet()->setCellValue('B11',$product_info[0]->category_name)
+
+          ->setCellValue('A12','Supplier')->getStyle('A12')->getFont()->setBold(TRUE)
+          ->getActiveSheet()->setCellValue('B12',$product_info[0]->supplier_name)
+
+          ->setCellValue('A13','Unit')->getStyle('A13')->getFont()->setBold(TRUE)
+          ->getActiveSheet()->setCellValue('B13',$product_info[0]->child_unit_name.' (Retail Unit)')
+
+          ->setCellValue('A14','Tax')->getStyle('A14')->getFont()->setBold(TRUE)
+          ->getActiveSheet()->setCellValue('B14',$product_info[0]->tax_type.'('.$product_info[0]->tax_rate.' %)')
+
+          ->setCellValue('C9','Purchase Cost')->getStyle('C9')->getFont()->setBold(TRUE)
+          ->getActiveSheet()->setCellValue('D9',number_format(($product_info[0]->purchase_cost/$product_info[0]->child_unit_desc),2))->getStyle('D9')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT)
+
+          ->getActiveSheet()->setCellValue('C10','Sale Price')->getStyle('C10')->getFont()->setBold(TRUE)
+          ->getActiveSheet()->setCellValue('D10',number_format(($product_info[0]->sale_price/$product_info[0]->child_unit_desc),2))->getStyle('D10')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT)
+
+          ->getActiveSheet()->setCellValue('C11','Discounted Price')->getStyle('C11')->getFont()->setBold(TRUE)
+          ->getActiveSheet()->setCellValue('D11',number_format(($product_info[0]->discounted_price/$product_info[0]->child_unit_desc),2))->getStyle('D11')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT)
+
+          ->getActiveSheet()->setCellValue('C12','Dealer Price')->getStyle('C12')->getFont()->setBold(TRUE)
+          ->getActiveSheet()->setCellValue('D12',number_format(($product_info[0]->dealer_price/$product_info[0]->child_unit_desc),2))->getStyle('D12')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT)
+
+          ->getActiveSheet()->setCellValue('C13','Distributor Price')->getStyle('C13')->getFont()->setBold(TRUE)
+          ->getActiveSheet()->setCellValue('D13',number_format(($product_info[0]->distributor_price/$product_info[0]->child_unit_desc),2))->getStyle('D13')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT)
+
+          ->getActiveSheet()->setCellValue('C14','Public Price')->getStyle('C14')->getFont()->setBold(TRUE)
+          ->getActiveSheet()->setCellValue('D14',number_format(($product_info[0]->public_price/$product_info[0]->child_unit_desc),2))->getStyle('D14')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT)
+
+          ->getActiveSheet()->setCellValue('A15','Warning QTY')->getStyle('A15')->getFont()->setBold(TRUE)
+          ->getActiveSheet()->setCellValue('B15',$product_info[0]->product_warn.' '.$product_info[0]->parent_unit_name.'(Bulk Unit)')->getStyle('B15')
+          ->getActiveSheet()->setCellValue('C15','Ideal Qty')->getStyle('C15')->getFont()->setBold(TRUE)
+          ->getActiveSheet()->setCellValue('D15',$product_info[0]->product_ideal.' '.$product_info[0]->parent_unit_name.'(Bulk Unit)')->getStyle('D15')
 
         ->getActiveSheet()->setCellValue('A18','Transaction Date')->getStyle('A18')->getFont()->setBold(TRUE)
         ->getActiveSheet()->setCellValue('B18','Reference')->getStyle('B18')->getFont()->setBold(TRUE)
@@ -640,9 +696,20 @@ function Export(){
         ->getActiveSheet()->setCellValue('F18','Out')->getStyle('F18')->getFont()->setBold(TRUE)
         ->getActiveSheet()->setCellValue('G18','Balance')->getStyle('G18')->getFont()->setBold(TRUE);
 
+
+
+        }else{
+
+        }
+
+
+
+
+
+
 $i=18;
 
-
+        if($inv == 'parent'){
                         foreach ($products as $product) {
                                 $i++;
 
@@ -651,11 +718,31 @@ $i=18;
                                 $excel->getActiveSheet()->setCellValue('B'.$i,$product->ref_no);
                                 $excel->getActiveSheet()->setCellValue('C'.$i,$product->type);
                                 $excel->getActiveSheet()->setCellValue('D'.$i,$product->Description);
-                                $excel->getActiveSheet()->setCellValue('E'.$i,$product->in_qty);
-                                $excel->getActiveSheet()->setCellValue('F'.$i,$product->out_qty);
-                                $excel->getActiveSheet()->setCellValue('G'.$i,$product->balance);
+                                $excel->getActiveSheet()->setCellValue('E'.$i,number_format($product->parent_in_qty,2));
+                                $excel->getActiveSheet()->setCellValue('F'.$i,number_format($product->parent_out_qty,2));
+                                $excel->getActiveSheet()->setCellValue('G'.$i,number_format($product->parent_balance,2));
 
                             }
+
+        }else if ($inv=='child'){
+
+                        foreach ($products_child as $product) {
+                                $i++;
+
+
+                                $excel->getActiveSheet()->setCellValue('A'.$i,$product->txn_date);
+                                $excel->getActiveSheet()->setCellValue('B'.$i,$product->ref_no);
+                                $excel->getActiveSheet()->setCellValue('C'.$i,$product->type);
+                                $excel->getActiveSheet()->setCellValue('D'.$i,$product->Description);
+                                $excel->getActiveSheet()->setCellValue('E'.$i,number_format($product->child_in_qty,2));
+                                $excel->getActiveSheet()->setCellValue('F'.$i,number_format($product->child_out_qty,2));
+                                $excel->getActiveSheet()->setCellValue('G'.$i,number_format($product->child_balance,2));
+
+                            }
+
+        }else{
+
+        }
 
                         
 
@@ -665,7 +752,7 @@ foreach(range('A','D') as $columnID) {
 }
             // Redirect output to a client’s web browser (Excel2007)
             header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-            header('Content-Disposition: attachment;filename="Product History of '.$product_info[0]->product_desc.' '.date("F j, Y g.i a").'.xlsx"');
+            header('Content-Disposition: attachment;filename="Product History of '.trim($product_info[0]->product_desc).' '.date("F j, Y g.i a").'.xlsx"');
             header('Cache-Control: max-age=0');
             // If you're serving to IE 9, then the following may be needed
             header('Cache-Control: max-age=1');

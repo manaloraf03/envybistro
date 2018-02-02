@@ -42,9 +42,9 @@
                 <?php } ?>
            </tbody>
        </table>
-   </center>
-
-
+   </center><br>
+<a href="Products/transaction/history-product?id=<?php  echo $product_id?>&type=print&inv=parent" class="btn btn-success btn-sm" name=""  target="_blank" data-toggle="tooltip" data-placement="top" title="Print Bulk Product History" style="margin-right:-5px;"><i class="fa fa-print"></i> Print</a>
+ &nbsp;<a href="Products/Export?product_id=<?php  echo $product_id?>&inv=parent" class="btn btn-success btn-sm" name=""   data-toggle="tooltip" data-placement="top" title="Export To Excel" style="margin-right:-5px;"><i class="fa fa-file-excel-o"></i> Export</a>
 
 </div>
   <div class="tab-pane" id="retail_history_<?php echo $product_info->product_id;  ?>" >
@@ -86,9 +86,10 @@
                   <?php } ?>
              </tbody>
          </table>
-     </center>
-
-  </div>
+     </center><br>
+<a href="Products/transaction/history-product?id=<?php  echo $product_id?>&type=print&inv=child" class="btn btn-success btn-sm" name=""  target="_blank" data-toggle="tooltip" data-placement="top" title="Print Retail Product History" style="margin-right:-5px;"><i class="fa fa-print"></i> Print</a>
+ &nbsp;<a href="Products/Export?product_id=<?php  echo $product_id?>&inv=child" class="btn btn-success btn-sm" name=""   data-toggle="tooltip" data-placement="top" title="Export To Excel" style="margin-right:-5px;"><i class="fa fa-file-excel-o"></i> Export</a>
+  </div><br>
 
 <!--        <a href="Products/transaction/history-product?id=<?php  echo $product_id?>&type=print" class="btn btn-success btn-sm" name=""  target="_blank" data-toggle="tooltip" data-placement="top" title="Print History" style="margin-right:-5px;"><i class="fa fa-print"></i> Print</a>
 &nbsp;

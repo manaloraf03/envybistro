@@ -42,7 +42,7 @@
     <div>
         <h3><strong>Product History</strong></h3>
     </div>
-<b>Unit of Measurement :</b> <?php echo $info[0]->parent_unit_name?><br><br>
+<b>Unit of Measurement :</b> <?php echo $info[0]->child_unit_name?><br><br>
    <center>
        <table width="100%"  style="border-collapse: collapse;">
            <thead>
@@ -65,15 +65,15 @@
                     </tr>
                 <?php } ?>
 
-                <?php foreach($products_parent as $product){ ?>
+                <?php foreach($products_child as $product){ ?>
                <tr>
                    <td style="border: 1px solid lightgrey;padding: 5px;"><?php echo date("M d, Y",strtotime($product->txn_date)); ?></td>
                    <td style="border: 1px solid lightgrey;padding: 5px;"><?php echo $product->ref_no; ?></td>
                    <td style="border: 1px solid lightgrey;padding: 5px;"><?php echo $product->type; ?></td>
                    <td style="border: 1px solid lightgrey;padding: 5px;"><?php echo $product->Description; ?></td>
-                   <td style="border: 1px solid lightgrey;padding: 5px;text-align: right;"><?php echo number_format($product->parent_in_qty,2); ?></td>
-                   <td style="border: 1px solid lightgrey;padding: 5px;text-align: right;"><?php echo number_format($product->parent_out_qty,2); ?></td>
-                   <td style="border: 1px solid lightgrey;padding: 5px;text-align: right;font-weight: bolder;"><?php echo number_format($product->parent_balance,2); ?></td>
+                   <td style="border: 1px solid lightgrey;padding: 5px;text-align: right;"><?php echo number_format($product->child_in_qty,2); ?></td>
+                   <td style="border: 1px solid lightgrey;padding: 5px;text-align: right;"><?php echo number_format($product->child_out_qty,2); ?></td>
+                   <td style="border: 1px solid lightgrey;padding: 5px;text-align: right;font-weight: bolder;"><?php echo number_format($product->child_balance,2); ?></td>
                </tr>
                 <?php } ?>
            </tbody>
