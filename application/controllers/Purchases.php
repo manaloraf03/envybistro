@@ -19,6 +19,7 @@ class Purchases extends CORE_Controller
         $this->load->model('Users_model');
         $this->load->model('Company_model');
         $this->load->model('Email_settings_model');
+        $this->load->model('Trans_model');
 
         
 
@@ -310,6 +311,15 @@ class Purchases extends CORE_Controller
                     $m_purchases->po_no='PO-'.date('Ymd').'-'.$po_id;
                     $m_purchases->modify($po_id);
 
+                $m_trans=$this->Trans_model;
+                $m_trans->user_id=$this->session->user_id;
+                $m_trans->set('trans_date','NOW()');
+                $m_trans->trans_key_id=1; //CRUD
+                $m_trans->trans_type_id=11; // TRANS TYPE
+                $m_trans->trans_log='Created Purchase Order No: PO-'.date('Ymd').'-'.$po_id;
+                $m_trans->save();
+
+
 
                     $m_purchases->commit();
 
@@ -388,6 +398,14 @@ class Purchases extends CORE_Controller
                         }                        
                         $m_po_items->save();
                     }
+                    $po_info=$m_purchases->get_list($po_id,'po_no');
+                    $m_trans=$this->Trans_model;
+                    $m_trans->user_id=$this->session->user_id;
+                    $m_trans->set('trans_date','NOW()');
+                    $m_trans->trans_key_id=2; //CRUD
+                    $m_trans->trans_type_id=11; // TRANS TYPE
+                    $m_trans->trans_log='Updated Purchase Order No: '.$po_info[0]->po_no;
+                    $m_trans->save();
 
                     $m_purchases->commit();
 
@@ -425,7 +443,20 @@ class Purchases extends CORE_Controller
                     $m_purchases->set('date_deleted','NOW()'); //treat NOW() as function and not string, set date of deletion
                     $m_purchases->deleted_by_user=$this->session->user_id; //deleted by user
                     $m_purchases->is_deleted=1;
+
+
+
                     if($m_purchases->modify($purchase_order_id)){
+                    $po_info=$m_purchases->get_list($purchase_order_id,'po_no');
+                    $m_trans=$this->Trans_model;
+                    $m_trans->user_id=$this->session->user_id;
+                    $m_trans->set('trans_date','NOW()');
+                    $m_trans->trans_key_id=3; //CRUD
+                    $m_trans->trans_type_id=11; // TRANS TYPE
+                    $m_trans->trans_log='Deleted Purchase Order No: '.$po_info[0]->po_no;
+                    $m_trans->save();
+
+
                         $response['title']='Success!';
                         $response['stat']='success';
                         $response['msg']='Purchase order successfully deleted.';

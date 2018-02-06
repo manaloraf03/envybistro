@@ -20,6 +20,7 @@ class Sales_invoice extends CORE_Controller
         $this->load->model('Company_model');
         $this->load->model('Salesperson_model');
         $this->load->model('Users_model');
+        $this->load->model('Trans_model');
 
 
     }
@@ -320,7 +321,13 @@ class Sales_invoice extends CORE_Controller
                 $m_customers=$this->Customers_model;
                 $m_customers->recalculate_customer_receivable($this->input->post('customer',TRUE));
                 //******************************************************************************************
-
+                $m_trans=$this->Trans_model;
+                $m_trans->user_id=$this->session->user_id;
+                $m_trans->set('trans_date','NOW()');
+                $m_trans->trans_key_id=1; //CRUD
+                $m_trans->trans_type_id=17; // TRANS TYPE
+                $m_trans->trans_log='Created Sales Invoice No: SAL-INV-'.date('Ymd').'-'.$sales_invoice_id;
+                $m_trans->save();
 
                 $m_invoice->commit();
 
@@ -454,7 +461,14 @@ class Sales_invoice extends CORE_Controller
                     $m_customers=$this->Customers_model;
                     $m_customers->recalculate_customer_receivable($this->input->post('customer',TRUE));
                     //******************************************************************************************
-
+                        $sal_info=$m_invoice->get_list($sales_invoice_id,'sales_inv_no');
+                        $m_trans=$this->Trans_model;
+                        $m_trans->user_id=$this->session->user_id;
+                        $m_trans->set('trans_date','NOW()');
+                        $m_trans->trans_key_id=2; //CRUD
+                        $m_trans->trans_type_id=17; // TRANS TYPE
+                        $m_trans->trans_log='Updated Sales Invoice No: '.$sal_info[0]->sales_inv_no;
+                        $m_trans->save();
 
                     $m_invoice->commit();
 
@@ -551,6 +565,14 @@ class Sales_invoice extends CORE_Controller
 
                 }
 
+                $sal_info=$m_invoice->get_list($sales_invoice_id,'sales_inv_no');
+                $m_trans=$this->Trans_model;
+                $m_trans->user_id=$this->session->user_id;
+                $m_trans->set('trans_date','NOW()');
+                $m_trans->trans_key_id=3; //CRUD
+                $m_trans->trans_type_id=17; // TRANS TYPE
+                $m_trans->trans_log='Deleted Sales Invoice No: '.$sal_info[0]->sales_inv_no;
+                $m_trans->save();
 
                 $response['title']='Success!';
                 $response['stat']='success';

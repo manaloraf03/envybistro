@@ -15,6 +15,7 @@ class Adjustments extends CORE_Controller
         $this->load->model('Products_model');
         $this->load->model('Refproduct_model');
         $this->load->model('Users_model');
+        $this->load->model('Trans_model');
 
     }
 
@@ -193,7 +194,13 @@ class Adjustments extends CORE_Controller
                 $m_adjustment->adjustment_code='ADJ-'.date('Ymd').'-'.$adjustment_id;
                 $m_adjustment->modify($adjustment_id);
 
-
+                $m_trans=$this->Trans_model;
+                $m_trans->user_id=$this->session->user_id;
+                $m_trans->set('trans_date','NOW()');
+                $m_trans->trans_key_id=1; //CRUD
+                $m_trans->trans_type_id=15; // TRANS TYPE
+                $m_trans->trans_log='Created Adjustment No: ADJ-'.date('Ymd').'-'.$adjustment_id;
+                $m_trans->save();
 
                 $m_adjustment->commit();
 
@@ -284,6 +291,15 @@ class Adjustments extends CORE_Controller
                     $m_products->on_hand=$m_products->get_product_qty($this->get_numeric_value($tmp_prod_id[$p]->product_id));
                     $m_products->modify($this->get_numeric_value($tmp_prod_id[$p]->product_id));
                 }
+                $adj_info=$m_adjustment->get_list($adjustment_id,'adjustment_code');
+                $m_trans=$this->Trans_model;
+                $m_trans->user_id=$this->session->user_id;
+                $m_trans->set('trans_date','NOW()');
+                $m_trans->trans_key_id=2; //CRUD
+                $m_trans->trans_type_id=15; // TRANS TYPE
+                $m_trans->trans_log='Updated Adjustment No: '.$adj_info[0]->adjustment_code;
+                $m_trans->save();
+
 
                 $m_adjustment->commit();
 
@@ -327,7 +343,14 @@ class Adjustments extends CORE_Controller
                     $m_products->on_hand=$m_products->get_product_qty($prod_id_adjustment);
                     $m_products->modify($prod_id_adjustment);
                 }
-
+                $adj_info=$m_adjustment->get_list($adjustment_id,'adjustment_code');
+                $m_trans=$this->Trans_model;
+                $m_trans->user_id=$this->session->user_id;
+                $m_trans->set('trans_date','NOW()');
+                $m_trans->trans_key_id=3; //CRUD
+                $m_trans->trans_type_id=15; // TRANS TYPE
+                $m_trans->trans_log='Deleted Adjustment No: '.$adj_info[0]->adjustment_code;
+                $m_trans->save();
                 //end update product on_hand after Adjustment is deleted...
 
                 $response['title']='Success!';

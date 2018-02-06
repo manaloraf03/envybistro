@@ -27,6 +27,7 @@ class Login extends CORE_Controller {
         $this->load->model('Company_model');
         $this->load->model('Suppliers_model');
         $this->load->model('Email_settings_model');
+        $this->load->model('Trans_model');
 
     }
 
@@ -234,6 +235,14 @@ class Login extends CORE_Controller {
 
                         $token_id = $tktToken;
 
+                        $m_trans=$this->Trans_model;
+                        $m_trans->user_id=$this->session->user_id;
+                        $m_trans->set('trans_date','NOW()');
+                        $m_trans->trans_key_id=6; //CRUD
+                        $m_trans->trans_type_id=43; // TRANS TYPE
+                        $m_trans->trans_log='User Log in: '.$this->session->user_fullname;
+                        $m_trans->save();
+
                         $response['title']='Success';
                         $response['stat']='success';
                         $response['msg']='User successfully authenticated.';
@@ -241,6 +250,14 @@ class Login extends CORE_Controller {
                     }
 
                     else{ //not valid
+
+                        $m_trans=$this->Trans_model;
+                        $m_trans->user_id=0;
+                        $m_trans->set('trans_date','NOW()');
+                        $m_trans->trans_key_id=10; //CRUD
+                        $m_trans->trans_type_id=43; // TRANS TYPE
+                        $m_trans->trans_log='Login Attempt using username: '.$uname;
+                        $m_trans->save();
 
                         $response['title']='Cannot authenticate user!';
                         $response['stat']='error';
@@ -256,7 +273,15 @@ class Login extends CORE_Controller {
                     $m_users=$this->Users_model;
                     $m_users->is_online=0;
                     $m_users->modify($this->session->user_id);
-                    
+
+                        $m_trans=$this->Trans_model;
+                        $m_trans->user_id=$this->session->user_id;
+                        $m_trans->set('trans_date','NOW()');
+                        $m_trans->trans_key_id=7; //CRUD
+                        $m_trans->trans_type_id=43; // TRANS TYPE
+                        $m_trans->trans_log='User Log Out :'.$this->session->user_fullname;
+                        $m_trans->save();
+
                     $this->end_session();
                 //****************************************************************************
                 break;

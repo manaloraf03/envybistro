@@ -17,6 +17,8 @@ class Deliveries extends CORE_Controller
         $this->load->model('Departments_model');
         $this->load->model('Refproduct_model');
         $this->load->model('Users_model');
+        $this->load->model('Trans_model');
+
 
     }
 
@@ -260,6 +262,15 @@ class Deliveries extends CORE_Controller
                 $m_suppliers=$this->Suppliers_model;
                 $m_suppliers->recalculate_supplier_payable($this->input->post('supplier',TRUE));
 
+                $m_trans=$this->Trans_model;
+                $m_trans->user_id=$this->session->user_id;
+                $m_trans->set('trans_date','NOW()');
+                $m_trans->trans_key_id=1; //CRUD
+                $m_trans->trans_type_id=12; // TRANS TYPE
+                $m_trans->trans_log='Created Purchase Invoice No: P-INV-'.date('Ymd').'-'.$dr_invoice_id;
+                $m_trans->save();
+
+
 
                 $m_delivery_invoice->commit();
 
@@ -389,6 +400,14 @@ class Deliveries extends CORE_Controller
                 $m_suppliers=$this->Suppliers_model;
                 $m_suppliers->recalculate_supplier_payable($this->input->post('supplier',TRUE));
 
+                $pi_info=$m_delivery_invoice->get_list($dr_invoice_id,'dr_invoice_no');
+                $m_trans=$this->Trans_model;
+                $m_trans->user_id=$this->session->user_id;
+                $m_trans->set('trans_date','NOW()');
+                $m_trans->trans_key_id=2; //CRUD
+                $m_trans->trans_type_id=12; // TRANS TYPE
+                $m_trans->trans_log='Updated Purchase Invoice No: '.$pi_info[0]->dr_invoice_no;
+                $m_trans->save();
 
                 $m_delivery_invoice->commit();
 
@@ -445,6 +464,14 @@ class Deliveries extends CORE_Controller
                     $m_purchases->modify($purchase_order_id);
                 }
                 //********************************************************************************************************************
+                    $pi_info=$m_delivery_invoice->get_list($dr_invoice_id,'dr_invoice_no');
+                    $m_trans=$this->Trans_model;
+                    $m_trans->user_id=$this->session->user_id;
+                    $m_trans->set('trans_date','NOW()');
+                    $m_trans->trans_key_id=3; //CRUD
+                    $m_trans->trans_type_id=12; // TRANS TYPE
+                    $m_trans->trans_log='Deleted Purchase Invoice No: '.$pi_info[0]->dr_invoice_no;
+                    $m_trans->save();
 
                 $response['title']='Success!';
                 $response['stat']='success';

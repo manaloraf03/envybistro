@@ -21,7 +21,8 @@ class General_journal extends CORE_Controller
                 'Accounting_period_model',
                 'Users_model',
                 'Tax_model',
-                'Depreciation_expense_model'
+                'Depreciation_expense_model',
+                'Trans_model'
             )
         );
 
@@ -71,6 +72,7 @@ class General_journal extends CORE_Controller
                 $this->load->view('template/journal_entries', $data);
                 break;
             case 'create' :
+
                 $m_journal=$this->Journal_info_model;
                 $m_journal_accounts=$this->Journal_account_model;
 
@@ -125,8 +127,13 @@ class General_journal extends CORE_Controller
                 $m_journal->modify($journal_id);
 
 
-
-
+                $m_trans=$this->Trans_model;
+                $m_trans->user_id=$this->session->user_id;
+                $m_trans->trans_key_id=1;
+                $m_trans->trans_type_id=1;
+                $m_trans->set('trans_date','NOW()');
+                $m_trans->trans_log='Created General Journal TXN-'.date('Ymd').'-'.$journal_id;
+                $m_trans->save();
 
                 $response['stat']='success';
                 $response['title']='Success!';
@@ -223,7 +230,25 @@ class General_journal extends CORE_Controller
                 $m_journal->set('is_active','NOT is_active');
                 $m_journal->modify($journal_id);
 
+                // AUDIT TRAIL START
 
+                $journal_txn_no =$m_journal->get_list($journal_id,'txn_no,is_active');
+                $m_trans=$this->Trans_model;
+                $m_trans->user_id=$this->session->user_id;
+                $m_trans->set('trans_date','NOW()');
+                if($journal_txn_no[0]->is_active ==TRUE){
+
+                $m_trans->trans_key_id=9; //CRUD
+                $m_trans->trans_type_id=1; // TRANS TYPE
+                $m_trans->trans_log='Uncancelled General Journal Entry : '.$journal_txn_no[0]->txn_no;
+
+                }else if($journal_txn_no[0]->is_active ==FALSE){
+                $m_trans->trans_key_id=4; //CRUD
+                $m_trans->trans_type_id=1; // TRANS TYPE
+                $m_trans->trans_log='Cancelled General Journal Entry : '.$journal_txn_no[0]->txn_no;
+                }
+                $m_trans->save();
+                //AUDIT TRAIL END
 
                 $response['title']='Cancelled!';
                 $response['stat']='success';

@@ -20,7 +20,8 @@ class Account_payables extends CORE_Controller
                 'Delivery_invoice_model',
                 'Departments_model',
                 'Users_model',
-                'Accounting_period_model'
+                'Accounting_period_model',
+                'Trans_model'
             )
         );
 
@@ -119,8 +120,31 @@ class Account_payables extends CORE_Controller
                     $m_purchase_invoice->journal_id=$journal_id;
                     $m_purchase_invoice->is_journal_posted=TRUE;
                     $m_purchase_invoice->modify($dr_invoice_id);
+
+                // AUDIT TRAIL START
+                $purchase_invoice=$m_purchase_invoice->get_list($dr_invoice_id,'dr_invoice_no');
+                $m_trans=$this->Trans_model;
+                $m_trans->user_id=$this->session->user_id;
+                $m_trans->set('trans_date','NOW()');
+                $m_trans->trans_key_id=8; //CRUD
+                $m_trans->trans_type_id=12; // TRANS TYPE
+                $m_trans->trans_log='Finalized Purchase Invoice No.'.$purchase_invoice[0]->dr_invoice_no.' For Purchase Journal Entry TXN-'.date('Ymd').'-'.$journal_id;
+                $m_trans->save();
+                //AUDIT TRAIL END
                 }
 
+
+
+                // AUDIT TRAIL START
+
+                $m_trans=$this->Trans_model;
+                $m_trans->user_id=$this->session->user_id;
+                $m_trans->set('trans_date','NOW()');
+                $m_trans->trans_key_id=1; //CRUD
+                $m_trans->trans_type_id=3; // TRANS TYPE
+                $m_trans->trans_log='Created Purchase Journal Entry TXN-'.date('Ymd').'-'.$journal_id;
+                $m_trans->save();
+                //AUDIT TRAIL END
 
                 $response['stat']='success';
                 $response['title']='Success!';
@@ -207,6 +231,16 @@ class Account_payables extends CORE_Controller
                     $m_journal->cancelled_by_user=$this->session->user_id;//user that cancelled the record
                     $m_journal->modify($journal_id);
 
+
+                    $journal_txn_no =$m_journal->get_list($journal_id,'txn_no,is_active');
+                    $m_trans=$this->Trans_model;
+                    $m_trans->user_id=$this->session->user_id;
+                    $m_trans->set('trans_date','NOW()');
+                    $m_trans->trans_key_id=4; //CRUD
+                    $m_trans->trans_type_id=3; // TRANS TYPE
+                    $m_trans->trans_log='Cancelled Purchase Journal Entry : '.$journal_txn_no[0]->txn_no;
+                    $m_trans->save();
+
                     $response['title']='Cancelled!';
                     $response['stat']='error';
                     $response['msg']='Journal successfully cancelled.';
@@ -216,6 +250,16 @@ class Account_payables extends CORE_Controller
                     $m_journal->is_active=1;
                     $m_journal->cancelled_by_user=$this->session->user_id;//user that opened the record
                     $m_journal->modify($journal_id);
+
+                    $journal_txn_no =$m_journal->get_list($journal_id,'txn_no,is_active');
+                    $m_trans=$this->Trans_model;
+                    $m_trans->user_id=$this->session->user_id;
+                    $m_trans->set('trans_date','NOW()');
+                    $m_trans->trans_key_id=9; //CRUD
+                    $m_trans->trans_type_id=3; // TRANS TYPE
+                    $m_trans->trans_log='Uncancelled Purchase Journal Entry : '.$journal_txn_no[0]->txn_no;
+                    $m_trans->save();
+
 
                     $response['title']='Opened!';
                     $response['stat']='success';

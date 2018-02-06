@@ -15,6 +15,7 @@ class receivable_payments extends CORE_Controller
         $this->load->model('Payment_method_model');
         $this->load->model('Departments_model');
         $this->load->model('Users_model');
+        $this->load->model('Trans_model');
 
     }
 
@@ -128,7 +129,13 @@ class receivable_payments extends CORE_Controller
                 $m_customers->recalculate_customer_receivable($this->input->post('customer_id',TRUE));
                 //******************************************************************************************
 
-
+                $m_trans=$this->Trans_model;
+                $m_trans->user_id=$this->session->user_id;
+                $m_trans->set('trans_date','NOW()');
+                $m_trans->trans_key_id=1; //CRUD
+                $m_trans->trans_type_id=18; // TRANS TYPE
+                $m_trans->trans_log='Posted Payment No: '.$receipt_no.' to Collection Entry';
+                $m_trans->save();
 
                 $m_payment->commit();
 
@@ -167,6 +174,14 @@ class receivable_payments extends CORE_Controller
                 $m_customers=$this->Customers_model;
                 $m_customers->recalculate_customer_receivable($customer_id);
                 //******************************************************************************************
+                $pay_info=$m_payment->get_list($payment_id,'receipt_no');
+                $m_trans=$this->Trans_model;
+                $m_trans->user_id=$this->session->user_id;
+                $m_trans->set('trans_date','NOW()');
+                $m_trans->trans_key_id=4; //CRUD
+                $m_trans->trans_type_id=18; // TRANS TYPE
+                $m_trans->trans_log='Cancelled Payment No: '.$pay_info[0]->receipt_no.' from Collection Entry';
+                $m_trans->save();
 
                 $m_payment->commit();
 

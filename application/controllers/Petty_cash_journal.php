@@ -17,7 +17,8 @@
 					'Account_integration_model',
 					'Batch_info_model',
 					'Users_model',
-					'Tax_model'
+					'Tax_model',
+					'Trans_model'
 				)
 			);
 		}
@@ -147,6 +148,18 @@
 					$m_journal->txn_no='PCV-'.date('Ymd').'-'.$journal_id;
 					$m_journal->modify($journal_id);
 
+		                // AUDIT TRAIL START
+
+		                $m_trans=$this->Trans_model;
+		                $m_trans->user_id=$this->session->user_id;
+		                $m_trans->set('trans_date','NOW()');
+		                $m_trans->trans_key_id=1; //CRUD
+		                $m_trans->trans_type_id=5; // TRANS TYPE
+		                $m_trans->trans_log='Posted Petty Cash Journal Entry PCV-'.date('Ymd').'-'.$journal_id;
+		                $m_trans->save();
+		                //AUDIT TRAIL END
+
+
 					$m_journal->commit();
 
 					$response['title'] = 'Success!';
@@ -196,6 +209,20 @@
 
 					$m_journal->commit();
 
+                // AUDIT TRAIL START
+
+                $m_trans=$this->Trans_model;
+                $m_trans->user_id=$this->session->user_id;
+                $m_trans->set('trans_date','NOW()');
+                $m_trans->trans_key_id=2; //CRUD
+                $m_trans->trans_type_id=5; // TRANS TYPE
+                $m_trans->trans_log='Updated Petty Cash Journal Entry PCV-'.date('Ymd').'-'.$journal_id;
+                $m_trans->save();
+                //AUDIT TRAIL END
+
+
+
+
 					$response['title'] = 'Success!';
                     $response['stat'] = 'success';
                     $response['msg'] = 'Petty Cash successfully updated.';
@@ -213,6 +240,15 @@
 					$m_journal->set('date_cancelled','NOW()');
 					$m_journal->cancelled_by_user=$this->session->user_id;
 					$m_journal->modify($journal_id);
+
+		            $journal_txn_no =$m_journal->get_list($journal_id,'txn_no,is_active');
+		            $m_trans=$this->Trans_model;
+		            $m_trans->user_id=$this->session->user_id;
+		            $m_trans->set('trans_date','NOW()');
+		            $m_trans->trans_key_id=4; //CRUD
+		            $m_trans->trans_type_id=5; // TRANS TYPE
+		            $m_trans->trans_log='Cancelled Petty Cash Journal Entry : '.$journal_txn_no[0]->txn_no;
+		            $m_trans->save();
 
 					$response['title'] = 'Success!';
                     $response['stat'] = 'success';
@@ -329,6 +365,20 @@
 						$response['title'] = 'Success!';
 	                    $response['stat'] = 'success';
 	                    $response['msg'] = 'Petty Cash successfully replenished.';
+
+
+		                // AUDIT TRAIL START
+
+		                $m_trans=$this->Trans_model;
+		                $m_trans->user_id=$this->session->user_id;
+		                $m_trans->set('trans_date','NOW()');
+		                $m_trans->trans_key_id=8; //CRUD
+		                $m_trans->trans_type_id=5; // TRANS TYPE
+		                $m_trans->trans_log='Replenished Petty Cash from transactions on or before '.$AsOfDate.' and Posted Journal Entry TXN-'.date('Ymd').'-'.$journal_id;
+		                $m_trans->save();
+		                //AUDIT TRAIL END
+
+
 
 	                    echo json_encode($response);
                     }

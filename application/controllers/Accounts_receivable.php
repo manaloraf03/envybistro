@@ -20,7 +20,8 @@ class Accounts_receivable extends CORE_Controller
                 'Sales_invoice_model',
                 'Departments_model',
                 'Users_model',
-                'Accounting_period_model'
+                'Accounting_period_model',
+                'Trans_model'
             )
         );
 
@@ -119,7 +120,28 @@ class Accounts_receivable extends CORE_Controller
                     $m_sales_invoice->journal_id=$journal_id;
                     $m_sales_invoice->is_journal_posted=TRUE;
                     $m_sales_invoice->modify($sales_invoice_id);
+                // AUDIT TRAIL START
+                $sales_invoice=$m_sales_invoice->get_list($sales_invoice_id,'sales_inv_no');
+                $m_trans=$this->Trans_model;
+                $m_trans->user_id=$this->session->user_id;
+                $m_trans->set('trans_date','NOW()');
+                $m_trans->trans_key_id=8; //CRUD
+                $m_trans->trans_type_id=17; // TRANS TYPE
+                $m_trans->trans_log='Finalized Sales Invoice No.'.$sales_invoice[0]->sales_inv_no.' For Sales Journal Entry TXN-'.date('Ymd').'-'.$journal_id;
+                $m_trans->save();
+                //AUDIT TRAIL END
                 }
+
+                // AUDIT TRAIL START
+
+                $m_trans=$this->Trans_model;
+                $m_trans->user_id=$this->session->user_id;
+                $m_trans->set('trans_date','NOW()');
+                $m_trans->trans_key_id=1; //CRUD
+                $m_trans->trans_type_id=4; // TRANS TYPE
+                $m_trans->trans_log='Created Sales Journal Entry TXN-'.date('Ymd').'-'.$journal_id;
+                $m_trans->save();
+                //AUDIT TRAIL END
 
 
                 $response['stat']='success';
@@ -208,7 +230,23 @@ class Accounts_receivable extends CORE_Controller
                 $m_journal->set('is_active','NOT is_active');
                 $m_journal->modify($journal_id);
 
+                $journal_txn_no =$m_journal->get_list($journal_id,'txn_no,is_active');
+                $m_trans=$this->Trans_model;
+                $m_trans->user_id=$this->session->user_id;
+                $m_trans->set('trans_date','NOW()');
+                if($journal_txn_no[0]->is_active ==TRUE){
 
+                $m_trans->trans_key_id=9; //CRUD
+                $m_trans->trans_type_id=4; // TRANS TYPE
+                $m_trans->trans_log='Uncancelled Sales Journal Entry : '.$journal_txn_no[0]->txn_no;
+                
+
+                }else if($journal_txn_no[0]->is_active ==FALSE){
+                $m_trans->trans_key_id=4; //CRUD
+                $m_trans->trans_type_id=4; // TRANS TYPE
+                $m_trans->trans_log='Cancelled Sales Journal Entry : '.$journal_txn_no[0]->txn_no;
+                }
+                $m_trans->save();
 
                 $response['title']='Cancelled!';
                 $response['stat']='success';
