@@ -3288,7 +3288,7 @@ class Templates extends CORE_Controller {
                 $excel->getActiveSheet()->setCellValue('A8','CUSTOMER SUBSIDIARY REPORT')
                                         ->getStyle('A8')->getFont()->setBold(TRUE);
 
-                $excel->getActiveSheet()->setCellValue('A10','CUSTOMER: '.$subsidiary_info->account_title)
+                $excel->getActiveSheet()->setCellValue('A10','CUSTOMER: '.$subsidiary_info->customer_name)
                                         ->mergeCells('A10:D10');                                         
                 $excel->getActiveSheet()->setCellValue('E10','ACCOUNT: '.$subsidiary_info->account_title)
                                         ->mergeCells('E10:H10');
@@ -4202,7 +4202,7 @@ class Templates extends CORE_Controller {
                 $excel->getActiveSheet()->setCellValue('A8','CUSTOMER SUBSIDIARY REPORT')
                                         ->getStyle('A8')->getFont()->setBold(TRUE);
 
-                $excel->getActiveSheet()->setCellValue('A10','CUSTOMER: '.$subsidiary_info->account_title)
+                $excel->getActiveSheet()->setCellValue('A10','CUSTOMER: '.$subsidiary_info->customer_name)
                                         ->mergeCells('A10:D10');                                         
                 $excel->getActiveSheet()->setCellValue('E10','ACCOUNT: '.$subsidiary_info->account_title)
                                         ->mergeCells('E10:H10');

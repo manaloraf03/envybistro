@@ -669,6 +669,7 @@
                                 showList(true);
                                 $('#btn_save').attr('disabled',false);
                             }
+                            $('#btn_save').attr('disabled',false);
 
                         }).always(function(){
                             showSpinningProgress($('#btn_save'));
