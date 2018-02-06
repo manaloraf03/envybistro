@@ -79,10 +79,10 @@
     					<tr>
     						<td style="text-align: left;"><?php echo $summary->dr_invoice_no; ?></td>
     						<td style="text-align: left;"><?php echo $summary->date_delivered; ?></td>
-    						<td><?php echo number_format($summary->total_after_tax,4); ?></td>
+    						<td><?php echo number_format($summary->total_after_discount,4); ?></td>
     					</tr>		
        				<?php
-       				$sum+=$summary->total_after_tax;
+       				$sum+=$summary->total_after_discount;
        			}
     		}
     		?>

@@ -381,7 +381,7 @@
                             { targets:[2],data: "date_delivered" },
                             {
                                 sClass: "numericCol", 
-                                targets:[3],data: "total_after_tax",
+                                targets:[3],data: "total_after_discount",
                                 render: function(data,type,full,meta){
                                     return accounting.formatNumber(data,2);
                                 }
