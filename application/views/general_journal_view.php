@@ -1273,7 +1273,7 @@ $(document).ready(function(){
                         var tbl=$('#tbl_entries_for_review_'+ d.adjustment_id);
                         var parent_tab_pane=$('#journal_review_'+ d.adjustment_id);
                         reInitializeDropDownAccounts(tbl);
-                        reInitializeChildEntriesTable(tbl);
+                        reInitializeChildEntriesTableAdjustment(tbl);
                         reInitializeChildElementsAdjustment(parent_tab_pane);
 
                         // Add to the 'open' array
@@ -1647,6 +1647,55 @@ $(document).ready(function(){
     //              user defines
 
         var reInitializeChildEntriesTable=function(tbl){
+
+            var _oTblEntries=tbl.find('tbody');
+            _oTblEntries.on('keyup','input.numeric',function(){
+                var _oRow=$(this).closest('tr');
+
+                if(_oTblEntries.find(oTBJournal.dr).index()===$(this).closest('td').index()){ //if true, this is Debit amount
+                    if(getFloat(_oRow.find(oTBJournal.dr).find('input.numeric').val())>0){
+                        _oRow.find(oTBJournal.cr).find('input.numeric').val('0.00');
+                    }
+                }else{
+                    if(getFloat(_oRow.find(oTBJournal.cr).find('input.numeric').val())>0) {
+                        _oRow.find(oTBJournal.dr).find('input.numeric').val('0.00');
+                    }
+                }
+                reComputeTotals(tbl);
+            });
+
+
+
+            //add account button on table
+            tbl.on('click','button.add_account',function(){
+
+                var row=$('#table_hidden').find('tr');
+                row.clone().insertAfter(tbl.find('tbody > tr:last'));
+
+                reInitializeNumeric();
+                reInitializeDropDownAccounts(tbl,false);
+
+            });
+
+
+            tbl.on('click','button.remove_account',function(){
+                var oRow=tbl.find('tbody tr');
+
+                if(oRow.length>1){
+                    $(this).closest('tr').remove();
+                }else{
+                    showNotification({"title":"Error!","stat":"error","msg":"Sorry, you cannot remove all rows."});
+                }
+
+                reComputeTotals(tbl);
+
+            });
+
+
+
+
+        };
+        var reInitializeChildEntriesTableAdjustment=function(tbl){
 
             var _oTblEntries=tbl.find('tbody');
             _oTblEntries.on('keyup','input.numeric',function(){
