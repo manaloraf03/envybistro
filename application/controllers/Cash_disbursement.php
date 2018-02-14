@@ -148,6 +148,7 @@ class Cash_disbursement extends CORE_Controller
                 $memos=$this->input->post('memo',TRUE);
                 $dr_amounts=$this->input->post('dr_amount',TRUE);
                 $cr_amounts=$this->input->post('cr_amount',TRUE);
+                $department_id_line=$this->input->post('department_id_line',TRUE);
 
                 for($i=0;$i<=count($accounts)-1;$i++) {
                     $m_journal_temp_entry->template_id=$journal_template_id;
@@ -155,6 +156,7 @@ class Cash_disbursement extends CORE_Controller
                     $m_journal_temp_entry->memo=$memos[$i];
                     $m_journal_temp_entry->dr_amount=$this->get_numeric_value($dr_amounts[$i]);
                     $m_journal_temp_entry->cr_amount=$this->get_numeric_value($cr_amounts[$i]);
+                    $m_journal_temp_entry->department_id=$this->get_numeric_value($department_id_line[$i]);
                     $m_journal_temp_entry->save();
                 }
 
@@ -205,6 +207,7 @@ class Cash_disbursement extends CORE_Controller
                 $memos=$this->input->post('memo',TRUE);
                 $dr_amounts=$this->input->post('dr_amount',TRUE);
                 $cr_amounts=$this->input->post('cr_amount',TRUE);
+                $department_id_line=$this->input->post('department_id_line',TRUE);
 
                 for($i=0;$i<=count($accounts)-1;$i++){
                     $m_journal_accounts->journal_id=$journal_id;
@@ -212,6 +215,7 @@ class Cash_disbursement extends CORE_Controller
                     $m_journal_accounts->memo=$memos[$i];
                     $m_journal_accounts->dr_amount=$this->get_numeric_value($dr_amounts[$i]);
                     $m_journal_accounts->cr_amount=$this->get_numeric_value($cr_amounts[$i]);
+                    $m_journal_accounts->department_id=$this->get_numeric_value($department_id_line[$i]);
                     $m_journal_accounts->save();
                 }
 

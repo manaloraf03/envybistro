@@ -104,6 +104,7 @@
                                             <th>Template Description</th>
                                             <th>Payee / Particular</th>
                                             <th><center>Action</center></th>
+                                            <th>Template Id</th>
                                         </thead>
                                         <tbody></tbody>
                                     </table>
@@ -134,13 +135,13 @@
                                                 <div id="show_gj">
                                                     <div class="col-xs-12 col-md-4">
                                                         <strong>* Particular :</strong><br>
-                                                        <select id="cbo_particulars" name="particular_id" class="show-tick form-control" data-live-search="true" >
+                                                        <select id="cbo_particulars" name="particular_id" class="show-tick form-control" data-live-search="true" data-error-msg="Particular is required!" >
                                                             <optgroup label="Customers">
                                                                 <?php foreach($customers as $customer){ ?>
                                                                     <option value='C-<?php echo $customer->customer_id; ?>'><?php echo $customer->customer_name; ?></option>
                                                                 <?php } ?>
                                                             </optgroup>
-                                                            <optgroup label="Suppliers">
+                                                            <optgroup label="Suppliers" >
                                                                 <?php foreach($suppliers as $supplier){ ?>
                                                                     <option value='S-<?php echo $supplier->supplier_id; ?>'><?php echo $supplier->supplier_name; ?></option>
                                                                 <?php } ?>
@@ -151,7 +152,7 @@
                                                 <div id="show_cdj">
                                                     <div class="col-xs-12 col-md-4">
                                                         <strong>* Supplier :</strong><br>
-                                                        <select id="cbo_supplier" name="particular_id" class="show-tick form-control" data-live-search="true">
+                                                        <select id="cbo_supplier" name="particular_id" class="show-tick form-control" data-live-search="true" data-error-msg="Supplier is required!">
                                                             <?php foreach($suppliers as $supplier){ ?>
                                                                 <option value='S-<?php echo $supplier->supplier_id; ?>'><?php echo $supplier->supplier_name; ?></option>
                                                             <?php } ?>
@@ -165,10 +166,11 @@
                                                         <thead class="">
                                                         <tr>
                                                             <th style="width: 30%;">Account</th>
-                                                            <th style="width: 30%;">Memo</th>
+                                                            <th style="width: 15%;">Memo</th>
                                                             <th style="width: 15%;text-align: right;">Dr</th>
                                                             <th style="width: 15%;text-align: right;">Cr</th>
-                                                            <th align="center">Action</th>
+                                                            <th style="width: 15%;">Department</th>
+                                                            <th align="center" style="width: 10%">Action</th>
                                                         </tr>
                                                         </thead>
 
@@ -184,6 +186,14 @@
                                                             <td><input type="text" name="memo[]" class="form-control"></td>
                                                             <td><input type="text" name="dr_amount[]" class="form-control numeric text-right"></td>
                                                             <td><input type="text" name="cr_amount[]" class="form-control numeric text-right"></td>
+                                                            <td>       
+                                                                <select  name="department_id_line[]" class="selectpicker show-tick form-control dept" data-live-search="true" >
+                                                                    <option value="0">[ None ]</option>
+                                                                    <?php foreach($departments as $department){ ?>
+                                                                        <option value='<?php echo $department->department_id; ?>'><?php echo $department->department_name; ?></option>
+                                                                    <?php } ?>
+                                                                </select>
+                                                            </td>
                                                             <td>
                                                                 <button type="button" class="btn btn-default add_account"><i class="fa fa-plus-circle" style="color: green;"></i></button>
                                                                 <button type="button" class="btn btn-default remove_account"><i class="fa fa-times-circle" style="color: red;"></i></button>
@@ -192,7 +202,7 @@
 
                                                         <tr>
                                                             <td>
-                                                                <select name="accounts[]" class="selectpicker show-tick form-control selectpicker_accounts" data-live-search="true" title="Please select Student">
+                                                                <select name="accounts[]" class="selectpicker show-tick form-control selectpicker_accounts" data-live-search="true" title="Please select">
                                                                     <?php foreach($accounts as $account){ ?>
                                                                         <option value='<?php echo $account->account_id; ?>'><?php echo $account->account_title; ?></option>
                                                                     <?php } ?>
@@ -201,6 +211,14 @@
                                                             <td><input type="text" name="memo[]" class="form-control"></td>
                                                             <td><input type="text" name="dr_amount[]" class="form-control numeric text-right"></td>
                                                             <td><input type="text" name="cr_amount[]" class="form-control numeric text-right"></td>
+                                                            <td>       
+                                                                <select  name="department_id_line[]" class="selectpicker show-tick form-control dept" data-live-search="true" >
+                                                                    <option value="0">[ None ]</option>
+                                                                    <?php foreach($departments as $department){ ?>
+                                                                        <option value='<?php echo $department->department_id; ?>'><?php echo $department->department_name; ?></option>
+                                                                    <?php } ?>
+                                                                </select>
+                                                            </td>
                                                             <td>
                                                                 <button type="button" class="btn btn-default add_account"><i class="fa fa-plus-circle" style="color: green;"></i></button>
                                                                 <button type="button" class="btn btn-default remove_account"><i class="fa fa-times-circle" style="color: red;"></i></button>
@@ -251,6 +269,14 @@
                                 <td><input type="text" name="memo[]" class="form-control"></td>
                                 <td><input type="text" name="dr_amount[]" class="form-control numeric text-right"></td>
                                 <td><input type="text" name="cr_amount[]" class="form-control numeric text-right"></td>
+                                <td>       
+                                    <select  name="department_id_line[]" class="selectpicker show-tick form-control dept" data-live-search="true">
+                                        <option value="0">[ None ]</option>
+                                        <?php foreach($departments as $department){ ?>
+                                            <option value='<?php echo $department->department_id; ?>'><?php echo $department->department_name; ?></option>
+                                        <?php } ?>
+                                    </select>
+                                </td>
                                 <td>
                                     <button type="button" class="btn btn-default add_account"><i class="fa fa-plus-circle" style="color: green;"></i></button>
                                     <button type="button" class="btn btn-default remove_account"><i class="fa fa-times-circle" style="color: red;"></i></button>
@@ -362,6 +388,7 @@ $(document).ready(function(){
             "dom":'<"toolbar">frtip',
             "bLengthChange": false,
             "bPaginate":true, 
+            "order": [[ 5, "desc" ]],
             language: { 
                 "searchPlaceholder": "Search Template" 
             },
@@ -379,7 +406,8 @@ $(document).ready(function(){
 
                         return '<center>'+btn_edit+'&nbsp;'+btn_trash+'</center>';
                     }
-                }
+                },
+                { visible:false,targets:[5],data: "template_id" }
             ]
         });
 
@@ -402,7 +430,7 @@ $(document).ready(function(){
             clearFields($('#frm_journal'));
             showList(false);
             $('#modal_booktype').modal('hide');
-        });
+            $('.dept').select2('val',0);        });
 
         $('#btn_cancel').on('click', function(){
             $('#modal_booktype').modal('hide');
@@ -414,7 +442,7 @@ $(document).ready(function(){
 
         $('#btn_cancel_entry').click(function(){
             showList(true);
-            $('.panel-title').html('<i class="fa fa-bars"></i> Recurring Template');
+            $('.h2-panel-heading').html(' Recurring Template');
         });
 
         $('#btn_yes').click(function(){
@@ -560,7 +588,7 @@ $(document).ready(function(){
                         showSpinningProgress($('#btn_save_entry'));
                     });
                 }
-                $('.panel-title').html('<i class="fa fa-bars"></i> Recurring Template');
+                $('.h2-panel-heading').html(' Recurring Template');
             }
         });
     }();
@@ -665,6 +693,10 @@ $(document).ready(function(){
             placeholder: "Please select account.",
             allowClear: false
         });
+        tbl.find('select.dept').select2({
+            placeholder: "Please select Department.",
+            allowClear: false
+        });
     };
 
     function reInitializeNumeric(){
@@ -675,11 +707,15 @@ $(document).ready(function(){
         if (bt == 'GJE') {
             $('#show_gj').show();
             $('#show_cdj').hide();
-            $('.panel-title').html('<i class="fa fa-bars"></i> Recurring Template (General Journal)');
+            $('.h2-panel-heading').html(' Recurring Template (General Journal)');
+                $('#cbo_particulars').prop('required',true);
+                $('#cbo_supplier').prop('required',false);
         } else {
             $('#show_gj').hide();
             $('#show_cdj').show();
-            $('.panel-title').html('<i class="fa fa-bars"></i> Recurring Template (Cash Disbursement)');
+            $('.h2-panel-heading').html(' Recurring Template (Cash Disbursement)');
+                $('#cbo_particulars').prop('required',false);
+                $('#cbo_supplier').prop('required',true);
         }
     };
 

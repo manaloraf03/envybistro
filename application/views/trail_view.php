@@ -335,10 +335,10 @@ $(document).ready(function(){
                                                 <br>
                                                 </div><br>
                                                 <div class="row">
-                                                    <div class="col-sm-2">
+       <!--                                              <div class="col-sm-2">
                                                         <button class="btn btn-primary pull-left" style="margin-right: 5px; margin-top: 10px; margin-bottom: 10px;" id="btn_print" style="text-transform: none; font-family: Tahoma, Georgia, Serif; " title="Print" ><i class="fa fa-print"></i> Print Report
                                                         </button>
-                                                    </div>
+                                                    </div> -->
                                                    <!--  <div class="col-sm-2">
                                                         <button class="btn btn-success pull-left" style="margin-right: 5px; margin-top: 10px; margin-bottom: 10px;" id="btn_excel" style="text-transform: none; font-family: Tahoma, Georgia, Serif; " title="Export to Excel" ><i class="fa fa-file-excel-o"></i> Excel Report
                                                         </button>

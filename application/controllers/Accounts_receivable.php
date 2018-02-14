@@ -97,6 +97,7 @@ class Accounts_receivable extends CORE_Controller
                 $memos=$this->input->post('memo',TRUE);
                 $dr_amounts=$this->input->post('dr_amount',TRUE);
                 $cr_amounts=$this->input->post('cr_amount',TRUE);
+                $department_id_line=$this->input->post('department_id_line',TRUE);
 
                 for($i=0;$i<=count($accounts)-1;$i++){
                     $m_journal_accounts->journal_id=$journal_id;
@@ -104,6 +105,7 @@ class Accounts_receivable extends CORE_Controller
                     $m_journal_accounts->memo=$memos[$i];
                     $m_journal_accounts->dr_amount=$this->get_numeric_value($dr_amounts[$i]);
                     $m_journal_accounts->cr_amount=$this->get_numeric_value($cr_amounts[$i]);
+                    $m_journal_accounts->department_id=$this->get_numeric_value($department_id_line[$i]);
                     $m_journal_accounts->save();
                 }
 

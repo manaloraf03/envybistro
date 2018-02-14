@@ -97,7 +97,7 @@
 
 					$remaining_amount=$m_journal->get_remaining_amount($AsOfDate,$depid);
 
-					if($remaining_amount[0]->Balance == 0) {
+					if($remaining_amount[0]->Balance == 0 || $remaining_amount[0]->Balance < 0) {
 						$response['title'] = "Error";
 	                    $response['stat'] = "error";
 	                    $response['msg'] = "Can't Post expense, petty cash amount must not be zero.";
@@ -136,6 +136,8 @@
 					$m_accounts->journal_id=$journal_id;
 					$m_accounts->account_id=$this->input->post('account_id',TRUE);
 					$m_accounts->dr_amount=$this->get_numeric_value($this->input->post('amount',TRUE));
+					$m_accounts->department_id=$this->input->post('department_id',TRUE);
+					
 					$m_accounts->save();
 
 					$petty_cash_account_id=$petty_cash_id[0]->petty_cash_account_id;
@@ -143,6 +145,7 @@
 					$m_accounts->account_id=$petty_cash_account_id;
 					$m_accounts->dr_amount=$this->get_numeric_value('0');
 					$m_accounts->cr_amount=$this->get_numeric_value($this->input->post('amount',TRUE));
+					$m_accounts->department_id=$this->input->post('department_id',TRUE);
 					$m_accounts->save();
 
 					$m_journal->txn_no='PCV-'.date('Ymd').'-'.$journal_id;
@@ -198,6 +201,7 @@
 					$m_accounts->journal_id=$journal_id;
 					$m_accounts->account_id=$this->input->post('account_id',TRUE);
 					$m_accounts->dr_amount=$this->get_numeric_value($this->input->post('amount',TRUE));
+					$m_accounts->department_id=$this->input->post('department_id',TRUE);
 					$m_accounts->save();
 
 					$petty_cash_account_id=$petty_cash_id[0]->petty_cash_account_id;
@@ -205,6 +209,7 @@
 					$m_accounts->account_id=$petty_cash_account_id;
 					$m_accounts->dr_amount=$this->get_numeric_value('0');
 					$m_accounts->cr_amount=$this->get_numeric_value($this->input->post('amount',TRUE));
+					$m_accounts->department_id=$this->input->post('department_id',TRUE);
 					$m_accounts->save();
 
 					$m_journal->commit();
@@ -352,12 +357,14 @@
 
 						// $m_accounts->account_id=13;
 						$m_accounts->dr_amount=$this->get_numeric_value($unreplenished_value);
+						$m_accounts->department_id=$depid;
 						$m_accounts->save();
 
 						$m_accounts->journal_id=$journal_id;
 						$m_accounts->account_id=$this->input->post('account_id_credit');
 						$m_accounts->dr_amount=$this->get_numeric_value('0');
 						$m_accounts->cr_amount=$this->get_numeric_value($unreplenished_value);
+						$m_accounts->department_id=$depid;
 						$m_accounts->save();
 
 		                $m_journal->commit();

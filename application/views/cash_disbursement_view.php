@@ -416,9 +416,10 @@
                         <thead class="">
                         <tr>
                             <th style="width: 30%;">Account</th>
-                            <th style="width: 30%;">Memo</th>
+                            <th style="width: 15%;">Memo</th>
                             <th style="width: 15%;text-align: right;">Dr</th>
                             <th style="width: 15%;text-align: right;">Cr</th>
+                            <th style="width: 15%;">Department</th>
                             <th style="width: 10%;">Action</th>
                         </tr>
                         </thead>
@@ -427,7 +428,7 @@
                         <tr>
                             <td>
 
-                                <select name="accounts[]" class="selectpicker show-tick form-control selectpicker_accounts" data-live-search="true" >
+                                <select name="accounts[]" class="selectpicker show-tick form-control selectpicker_accounts" data-live-search="true" data-error-msg="Account is required." required>
                                     <?php $i=0; foreach($accounts as $account){ ?>
                                         <option value='<?php echo $account->account_id; ?>' <?php echo ($i==0?'':''); ?>><?php echo $account->account_title; ?></option>
                                         <?php $i++; } ?>
@@ -436,15 +437,24 @@
                             <td><input type="text" name="memo[]" class="form-control"></td>
                             <td><input type="text" name="dr_amount[]" class="form-control numeric"></td>
                             <td><input type="text" name="cr_amount[]" class="form-control numeric"></td>
+                            <td>       
+                                <select id="cbo_branch" name="department_id_line[]" class="dept show-tick form-control" data-live-search="true" >
+                                     <option value="0">[ None ]</option>
+                                    <?php foreach($departments as $department){ ?>
+                                        <option value='<?php echo $department->department_id; ?>'><?php echo $department->department_name; ?></option>
+                                    <?php } ?>
+                                </select>
+                            </td>
                             <td>
                                 <button type="button" class="btn btn-default add_account"><i class="fa fa-plus-circle" style="color: green;"></i></button>
                                 <button type="button" class="btn btn-default remove_account"><i class="fa fa-times-circle" style="color: red;"></i></button>
+
                             </td>
                         </tr>
 
                         <tr>
                             <td>
-                                <select name="accounts[]" class="selectpicker show-tick form-control selectpicker_accounts" data-live-search="true">
+                                <select name="accounts[]" class="selectpicker show-tick form-control selectpicker_accounts" data-live-search="true" data-error-msg="Account is required." required>
                                     <?php $i=0; foreach($accounts as $account){ ?>
                                         <option value='<?php echo $account->account_id; ?>' <?php echo ($i==0?'':''); ?> > <?php echo $account->account_title; ?> </option>
                                         <?php $i++; } ?>
@@ -453,6 +463,14 @@
                             <td><input type="text" name="memo[]" class="form-control"></td>
                             <td><input type="text" name="dr_amount[]" class="form-control numeric"></td>
                             <td><input type="text" name="cr_amount[]" class="form-control numeric"></td>
+                            <td>       
+                                <select id="cbo_branch" name="department_id_line[]" class="dept  show-tick form-control" data-live-search="true" >
+                                     <option value="0">[ None ]</option>
+                                    <?php foreach($departments as $department){ ?>
+                                        <option value='<?php echo $department->department_id; ?>'><?php echo $department->department_name; ?></option>
+                                    <?php } ?>
+                                </select>
+                            </td>
                             <td>
                                 <button type="button" class="btn btn-default add_account"><i class="fa fa-plus-circle" style="color: green;"></i></button>
                                 <button type="button" class="btn btn-default remove_account"><i class="fa fa-times-circle" style="color: red;"></i></button>
@@ -466,6 +484,7 @@
                             <td colspan="2" align="right"><strong>Total</strong></td>
                             <td align="right"><strong>0.00</strong></td>
                             <td align="right"><strong>0.00</strong></td>
+                            <td></td>
                             <td></td>
                         </tr>
                         </tfoot>
@@ -514,7 +533,7 @@
     <table id="table_hidden" class="hidden">
         <tr>
             <td width="30%">
-                <select name="accounts[]" class="selectpicker show-tick form-control selectpicker_accounts" data-live-search="true" >
+                <select name="accounts[]" class="selectpicker show-tick form-control selectpicker_accounts" data-live-search="true" data-error-msg="Account is required." required>
                     <?php $i=0; foreach($accounts as $account){ ?>
                         <option value='<?php echo $account->account_id; ?>' <?php echo ($i==0?'':''); ?>><?php echo $account->account_title; ?></option>
                         <?php $i++; } ?>
@@ -523,6 +542,14 @@
             <td><input type="text" name="memo[]" class="form-control"></td>
             <td><input type="text" name="dr_amount[]" class="form-control numeric"></td>
             <td><input type="text" name="cr_amount[]" class="form-control numeric"></td>
+            <td>       
+                <select id="cbo_branch" name="department_id_line[]" class="dept show-tick form-control" data-live-search="true" >
+                     <option value="0">[ None ]</option>
+                    <?php foreach($departments as $department){ ?>
+                        <option value='<?php echo $department->department_id; ?>'><?php echo $department->department_name; ?></option>
+                    <?php } ?>
+                </select>
+            </td>
             <td>
                 <button type="button" class="btn btn-default add_account"><i class="fa fa-plus-circle" style="color: green;"></i></button>
                 <button type="button" class="btn btn-default remove_account"><i class="fa fa-times-circle" style="color: red;"></i></button>
@@ -1175,7 +1202,7 @@ $(document).ready(function(){
         });
 
         reInitializeNumeric();
-        reInitializeDropDownAccounts($('#tbl_entries'),false);
+        reInitializeDropDownAccounts($('#tbl_entries'));
 
 
         $('.date-picker').datepicker({
@@ -1435,7 +1462,7 @@ $(document).ready(function(){
                     }
                 }).done(function(response){
                     row.child( response,'no-padding' ).show();
-
+                    // $('.dept').val(null);
                     reInitializeSpecificDropDown($('.cbo_customer_list'));
                     reInitializeSpecificDropDown($('.cbo_department_list'));
                     reInitializeSpecificDropDown($('.cbo_payment_method'));
@@ -1536,7 +1563,7 @@ $(document).ready(function(){
             $('#cbo_suppliers').select2('val',null);
             $('#cbo_refType').select2('val',"CV");
             $('#cbo_bank').select2('val',null);
-
+       
             //set defaults
             _cboPaymentMethod.select2('val',1);//set cash as default
             $('input[name="date_txn"]').val(_currentDate);
@@ -1918,10 +1945,8 @@ $(document).ready(function(){
     };
 
     var clearFields=function(f){
-        $('input,textarea,select',f).val('');
-        $(f).find('select').select2('val',null);
-
-
+        $('input,textarea',f).val('');
+        // $(f).find('select').select2('val',null);
 
         $(f).find('input:first').focus();
         $('#tbl_entries > tbody tr').slice(2).remove();
@@ -1938,15 +1963,23 @@ $(document).ready(function(){
 
     function reInitializeDropDownAccounts(tbl,bClear=false){
         var obj=tbl.find('select.selectpicker');
+        var objdept=tbl.find('select.dept');
 
         obj.select2({
-            placeholder: "Please select account.",
+            placeholder: "Please Select Account.",
+            allowClear: false
+        });
+        objdept.select2({
+            placeholder: "Please Select Department.",
             allowClear: false
         });
 
         if(bClear){
             $.each(obj,function(){
                 $(this).select2('val',null);
+            });
+            $.each(objdept,function(){
+                $(this).select2('val',0);
             });
         }
 
@@ -2137,18 +2170,20 @@ $(document).ready(function(){
 
             var _curBtn=$(this);
             if(isBalance('#tbl_entries_for_review_'+_dataParentID)){
+                if(validateRequiredFields('#tbl_entries_for_review_'+_dataParentID)){
                 finalizeJournalReview().done(function(response){
-                    showNotification(response);
-                    if(response.stat=="success"){
-                        dt.row.add(response.row_added[0]).draw();
-                        var _parentRow=_curBtn.parents('table.table_journal_entries_review').parents('tr').prev();
-                        dtReview.row(_parentRow).remove().draw();
-                    }
+                        showNotification(response);
+                        if(response.stat=="success"){
+                            dt.row.add(response.row_added[0]).draw();
+                            var _parentRow=_curBtn.parents('table.table_journal_entries_review').parents('tr').prev();
+                            dtReview.row(_parentRow).remove().draw();
+                        }
 
 
-                }).always(function(){
-                    showSpinningProgress(_curBtn);
-                });
+                    }).always(function(){
+                        showSpinningProgress(_curBtn);
+                    });
+                }
             }else{
                 showNotification({title:"Not Balance!",stat:"error",msg:'Please make sure Debit and Credit amount are equal.'});
                 stat=false;

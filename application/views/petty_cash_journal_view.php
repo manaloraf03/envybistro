@@ -733,7 +733,7 @@
                         _txnMode="new"
                         clearFields($('#frm_petty_cash'));
                         $('#cbo_account').select2('val',null);
-                        $('#cbo_department').select2('val', null);
+                        $('#cbo_department').select2('val', $('#cbo_department_filter').val());
                         $('#cbo_supplier').select2('val',null);
                         $('#pcf_title').text('Post New Expense');
                         $('#txt_date_txn').val('<?php echo date('m/d/Y'); ?>');

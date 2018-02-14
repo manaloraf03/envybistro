@@ -107,6 +107,7 @@
                 <th width="30%" style="border: 1px solid black;text-align: right;height: 30px;padding: 6px;">Memo</th>
                 <th width="15%" style="border: 1px solid black;text-align: right;height: 30px;padding: 6px;">Debit</th>
                 <th width="15%" style="border: 1px solid black;text-align: right;height: 30px;padding: 6px;">Credit</th>
+                <th width="15%" style="border: 1px solid black;text-align: right;height: 30px;padding: 6px;">Department</th>
             </tr>
             </thead>
             <tbody>
@@ -123,6 +124,7 @@
                     <td width="30%" style="border: 1px solid black;text-align: right;height: 30px;padding: 6px;"><?php echo $account->memo; ?></td>
                     <td width="15%" style="border: 1px solid black;text-align: right;height: 30px;padding: 6px;"><?php echo number_format($account->dr_amount,2); ?></td>
                     <td width="15%" style="border: 1px solid black;text-align: right;height: 30px;padding: 6px;"><?php echo number_format($account->cr_amount,2); ?></td>
+                    <td width="15%" style="border: 1px solid black;text-align: left;height: 30px;padding: 6px;"><?php echo $account->department_name ?></td>
                 </tr>
                 <?php
 
@@ -143,10 +145,11 @@
                         <td style="border: 1px solid black;text-align: right;height: 30px;padding: 6px;" align="right"><strong>Total : </strong></td>
                         <td style="border: 1px solid black;text-align: right;height: 30px;padding: 6px;" align="right"><strong><?php echo number_format($dr_amount,2); ?></strong></td>
                         <td style="border: 1px solid black;text-align: right;height: 30px;padding: 6px;" align="right"><strong><?php echo number_format($cr_amount,2); ?></strong></td>
+                        <td style="border: 1px solid black;text-align: right;height: 30px;padding: 6px;"></td>
                     </tr>
                     <tr style="border: 1px solid black;">
                         <td colspan="2" style="border: 1px solid black;text-align: left;height: 30px;padding: 6px;"><?php echo $journal_info->remarks; ?></td>
-                        <td colspan="3" style="border: 1px solid black;text-align: left;height: 30px;padding: 6px;"></td>
+                        <td colspan="4" style="border: 1px solid black;text-align: left;height: 30px;padding: 6px;"></td>
                     </tr>
                 </tfoot>    
         </table><br><br>

@@ -73,6 +73,29 @@ class Issuances extends CORE_Controller
                 );
                 echo json_encode($response);
                 break;
+
+            case 'issuance-for-review':  //this returns JSON of Issuance to be rendered on Datatable
+                $m_issuance=$this->Issuance_model;
+                $response['data']=$this->Issuance_model->get_list('issuance_info.is_active=TRUE AND issuance_info.is_deleted=FALSE AND is_journal_posted = FALSE',
+                array(
+                    'issuance_info.issuance_id',
+                    'issuance_info.slip_no',
+                    'issuance_info.remarks',
+                    'issuance_info.issued_to_person',
+                    'issuance_info.date_created',
+                    'DATE_FORMAT(issuance_info.date_issued,"%m/%d/%Y") as date_issued',
+                    'issuance_info.terms',
+                    'departments.department_id',
+                    'departments.department_name'
+                ),
+                array(
+                    array('departments','departments.department_id=issuance_info.issued_department_id','left')
+                    //array('customers','customers.customer_id=issuance_info.issued_to_person','left')
+                ),
+                'issuance_info.issuance_id DESC'
+            );
+                echo json_encode($response);
+                break;
             ////****************************************items/products of selected Items***********************************************
             case 'items': //items on the specific PO, loads when edit button is called
                 $m_items=$this->Issuance_item_model;

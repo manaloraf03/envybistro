@@ -764,7 +764,7 @@ dt_si = $('#tbl_si_list').DataTable({
             }
         }).bind('typeahead:select', function(ev, suggestion) {
             //console.log(suggestion);
-            var tax_rate=0;
+            var tax_rate=getFloat(suggestion.tax_rate);
             var total=getFloat(suggestion.purchase_cost);
             var net_vat=0;
             var vat_input=0;
@@ -1344,6 +1344,13 @@ dt_si = $('#tbl_si_list').DataTable({
         $('#td_after_tax').html('<b>'+accounting.formatNumber(after_tax,2)+'</b>');
         $('#td_discount').html(accounting.formatNumber(discounts,2));
         $('#td_tax').html(accounting.formatNumber(issue_tax_amount,2));
+
+        var tbl_summary=$('#tbl_issuance_summary');
+        tbl_summary.find(oTableDetails.discount).html(accounting.formatNumber(discounts,2));
+        tbl_summary.find(oTableDetails.before_tax).html(accounting.formatNumber(before_tax,2));
+        tbl_summary.find(oTableDetails.issue_tax_amount).html(accounting.formatNumber(issue_tax_amount,2));
+        tbl_summary.find(oTableDetails.after_tax).html('<b>'+accounting.formatNumber(after_tax,2)+'</b>');
+               
     };
     var reInitializeNumeric=function(){
         $('.numeric').autoNumeric('init');

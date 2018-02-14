@@ -294,9 +294,10 @@
                                                     <thead class="">
                                                     <tr>
                                                         <th style="width: 30%;">Account</th>
-                                                        <th style="width: 30%;">Memo</th>
+                                                        <th style="width: 15%;">Memo</th>
                                                         <th style="width: 15%;text-align: right;">Dr</th>
                                                         <th style="width: 15%;text-align: right;">Cr</th>
+                                                        <th style="width: 15%;text-align: left;">Department</th>
                                                         <th>Action</th>
                                                     </tr>
                                                     </thead>
@@ -304,7 +305,7 @@
                                                     <tbody>
                                                     <tr>
                                                         <td>
-                                                            <select name="accounts[]" class="selectpicker show-tick form-control selectpicker_accounts" data-live-search="true" >
+                                                            <select name="accounts[]" class="selectpicker show-tick form-control selectpicker_accounts" data-live-search="true" data-error-msg="Account is required." required>
                                                                 <?php foreach($accounts as $account){ ?>
                                                                     <option value='<?php echo $account->account_id; ?>'><?php echo $account->account_title; ?></option>
                                                                 <?php } ?>
@@ -313,6 +314,12 @@
                                                         <td><input type="text" name="memo[]" class="form-control"></td>
                                                         <td><input type="text" name="dr_amount[]" class="form-control numeric"></td>
                                                         <td><input type="text" name="cr_amount[]" class="form-control numeric"></td>
+                                                        <td><select  name="department_id_line[]" class="dept show-tick form-control" data-live-search="true" >
+                                                            <option value="0">[ None ]</option>
+                                                            <?php foreach($departments as $department){ ?>
+                                                                <option value='<?php echo $department->department_id; ?>'><?php echo $department->department_name; ?></option>
+                                                            <?php } ?>
+                                                        </select></td>
                                                         <td>
                                                             <button type="button" class="btn btn-default add_account"><i class="fa fa-plus-circle" style="color: green;"></i></button>
                                                             <button type="button" class="btn btn-default remove_account"><i class="fa fa-times-circle" style="color: red;"></i></button>
@@ -321,7 +328,7 @@
 
                                                     <tr>
                                                         <td>
-                                                            <select name="accounts[]" class="selectpicker show-tick form-control selectpicker_accounts" data-live-search="true" >
+                                                            <select name="accounts[]" class="selectpicker show-tick form-control selectpicker_accounts" data-live-search="true" data-error-msg="Account is required." required>
                                                                 <?php foreach($accounts as $account){ ?>
                                                                     <option value='<?php echo $account->account_id; ?>'><?php echo $account->account_title; ?></option>
                                                                 <?php } ?>
@@ -330,6 +337,12 @@
                                                         <td><input type="text" name="memo[]" class="form-control"></td>
                                                         <td><input type="text" name="dr_amount[]" class="form-control numeric"></td>
                                                         <td><input type="text" name="cr_amount[]" class="form-control numeric"></td>
+                                                        <td><select  name="department_id_line[]" class="dept show-tick form-control" data-live-search="true" >
+                                                            <option value="0">[ None ]</option>
+                                                            <?php foreach($departments as $department){ ?>
+                                                                <option value='<?php echo $department->department_id; ?>'><?php echo $department->department_name; ?></option>
+                                                            <?php } ?>
+                                                        </select></td>
                                                         <td>
                                                             <button type="button" class="btn btn-default add_account"><i class="fa fa-plus-circle" style="color: green;"></i></button>
                                                             <button type="button" class="btn btn-default remove_account"><i class="fa fa-times-circle" style="color: red;"></i></button>
@@ -377,7 +390,7 @@
                                         <table id="table_hidden" class="hidden">
                                             <tr>
                                                 <td>
-                                                    <select name="accounts[]" class="selectpicker show-tick form-control selectpicker_accounts" data-live-search="true">
+                                                    <select name="accounts[]" class="selectpicker show-tick form-control selectpicker_accounts" data-live-search="true" data-error-msg="Account is required." required>
                                                         <?php foreach($accounts as $account){ ?>
                                                             <option value='<?php echo $account->account_id; ?>'><?php echo $account->account_title; ?></option>
                                                         <?php } ?>
@@ -386,6 +399,12 @@
                                                 <td><input type="text" name="memo[]" class="form-control"></td>
                                                 <td><input type="text" name="dr_amount[]" class="form-control numeric"></td>
                                                 <td><input type="text" name="cr_amount[]" class="form-control numeric"></td>
+                                                <td><select  name="department_id_line[]" class="dept show-tick form-control" data-live-search="true" >
+                                                    <option value="0">[ None ]</option>
+                                                    <?php foreach($departments as $department){ ?>
+                                                        <option value='<?php echo $department->department_id; ?>'><?php echo $department->department_name; ?></option>
+                                                    <?php } ?>
+                                                </select></td>
                                                 <td>
                                                     <button type="button" class="btn btn-default add_account"><i class="fa fa-plus-circle" style="color: green;"></i></button>
                                                     <button type="button" class="btn btn-default remove_account"><i class="fa fa-times-circle" style="color: red;"></i></button>
@@ -943,7 +962,6 @@
 
                         var tbl=$('#tbl_entries_for_review_'+ d.dr_invoice_id);
                         var parent_tab_pane=$('#journal_review_'+ d.dr_invoice_id);
-
                         reInitializeDropDownAccounts(tbl);
                         reInitializeChildEntriesTable(tbl);
                         reInitializeChildElements(parent_tab_pane);
@@ -969,9 +987,13 @@
                 clearFields($('#div_payable_fields'));
                 $('#cbo_departments').select2('val',null);
                 $('#cbo_suppliers').select2('val',null);
-                showList(false);
+                
                 $('#date_txn').datepicker('setDate','today');
                 //$('#modal_journal_entry').modal('show');
+                $('.selectpicker').val(null);
+                reInitializeDropDownAccounts($('#tbl_entries'),true);
+                $('.dept').val('0');
+                showList(false);
             });
 
 
@@ -1031,7 +1053,7 @@
                 row.clone().insertAfter('#tbl_entries > tbody > tr:last');
 
                 reInitializeNumeric();
-                reInitializeDropDownAccounts($('#tbl_entries'));
+                reInitializeDropDownAccounts($('#tbl_entries'),false);
 
             });
 
@@ -1346,13 +1368,29 @@
             $('.numeric').autoNumeric('init');
         };
 
-        function reInitializeDropDownAccounts(tbl){
-            tbl.find('select.selectpicker').select2({
-                placeholder: "Please select account.",
-                allowClear: false
-            });
-        };
+    function reInitializeDropDownAccounts(tbl,bClear=false){
+        var obj=tbl.find('select.selectpicker');
+        var objdept=tbl.find('select.dept');
 
+        obj.select2({
+            placeholder: "Please Select Account.",
+            allowClear: false
+        });
+        objdept.select2({
+            placeholder: "Select Department.",
+            allowClear: false
+        });
+
+        if(bClear){
+            $.each(obj,function(){
+                $(this).select2('val',null);
+            });
+            $.each(objdept,function(){
+                $(this).select2('val',0);
+            });
+        }
+
+    };
 
         function reInitializeSpecificDropDown(elem){
             elem.select2({
@@ -1494,7 +1532,7 @@
                 row.clone().insertAfter(tbl.find('tbody > tr:last'));
 
                 reInitializeNumeric();
-                reInitializeDropDownAccounts(tbl);
+                reInitializeDropDownAccounts(tbl,false);
 
             });
 
@@ -1539,7 +1577,8 @@
                 var _curBtn=$(this);
 
                 if(isBalance('#tbl_entries_for_review_'+_dataParentID)){
-                    finalizeJournalReview().done(function(response){
+                    if(validateRequiredFields('#tbl_entries_for_review_'+_dataParentID)){
+                                           finalizeJournalReview().done(function(response){
                         showNotification(response);
                         if(response.stat=="success"){
                             dt.row.add(response.row_added[0]).draw();
@@ -1550,7 +1589,9 @@
 
                     }).always(function(){
                         showSpinningProgress(_curBtn);
-                    });
+                    }); 
+                    }
+
                 }else{
                     showNotification({title:"Not Balance!",stat:"error",msg:'Please make sure Debit and Credit amount are equal.'});
                     stat=false;

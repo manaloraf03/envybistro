@@ -99,10 +99,11 @@
             <thead>
             <tr style="border-bottom:solid gray;">
                 <th style="width: 30%;">Account</th>
-                <th style="width: 30%;">Memo</th>
+                <th style="width: 15%;">Memo</th>
                 <th style="width: 15%;text-align: right;">Dr</th>
                 <th style="width: 15%;text-align: right;">Cr</th>
-                <th>Action</th>
+                <th style="width: 15%;text-align: left;">Department</th>
+                <th style="width: 10%">Action</th>
             </tr>
             </thead>
             <tbody>
@@ -121,6 +122,12 @@
                     <td><input type="text" name="memo[]" class="form-control"  value="<?php echo $entry->memo; ?>"></td>
                     <td><input type="text" name="dr_amount[]" class="form-control numeric" value="<?php echo number_format($entry->dr_amount,2); ?>"></td>
                     <td><input type="text" name="cr_amount[]" class="form-control numeric"  value="<?php echo number_format($entry->cr_amount,2);?>"></td>
+                    <td><select  name="department_id_line[]" class="dept show-tick form-control" data-live-search="true" >
+                        <option value="0">[ None ]</option>
+                        <?php foreach($departments as $department){ ?>
+                            <option value='<?php echo $department->department_id; ?>'><?php echo $department->department_name; ?></option>
+                        <?php } ?>
+                    </select></td>
                     <td>
                         <button type="button" class="btn btn-default add_account"><i class="fa fa-plus-circle" style="color: green;"></i></button>
                         <button type="button" class="btn btn-default remove_account"><i class="fa fa-times-circle" style="color: red;"></i></button>
@@ -137,6 +144,7 @@
                 <td colspan="2" align="right"><strong>Total</strong></td>
                 <td align="right"><strong><?php echo number_format($dr_total,2); ?></strong></td>
                 <td align="right"><strong><?php echo number_format($cr_total,2); ?></strong></td>
+                <td></td>
                 <td></td>
             </tr>
             </tfoot>

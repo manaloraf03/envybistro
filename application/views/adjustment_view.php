@@ -909,6 +909,14 @@ $(document).ready(function(){
             _selectRowObj=$(this).closest('tr');
             var data=dt.row(_selectRowObj).data();
             _selectedID=data.adjustment_id;
+
+            _is_journal_posted=data.is_journal_posted;
+            if(_is_journal_posted > 0){
+                showNotification({title:"<b style='color:white;'> Error!</b>",stat:"error",msg:"Cannot Edit: Invoice is already Posted in General Journal."});
+            }else{
+
+
+
             $('#span_invoice_no').html(data.adjustment_code);
 
             getproduct().done(function(data){
@@ -1000,6 +1008,7 @@ $(document).ready(function(){
 
             showList(false);
 
+            } // end of else if for validation if adjustment is posted in Accounting
         });
 
         $('#tbl_issuances tbody').on('click','button[name="remove_info"]',function(){

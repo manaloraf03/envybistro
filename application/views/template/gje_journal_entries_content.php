@@ -63,7 +63,7 @@
 <body>
     <table width="100%">
         <tr>
-            <td width="10%"><img src="<?php echo $company_info->logo_path; ?>" style="height: 90px; width: 120px; text-align: left;"></td>
+            <td width="10%"><img src="<?php echo base_url().$company_info->logo_path; ?>" style="height: 90px; width: 120px; text-align: left;"></td>
             <td width="60%" class="">
                 <h1 class="report-header"><strong><?php echo $company_info->company_name; ?></strong></h1>
                 <p><?php echo $company_info->company_address; ?></p>
@@ -107,9 +107,10 @@
             <tr>
                 <th width="10%" style="border: 1px solid black;text-align: left;height: 30px;padding: 6px;">Account #</th>
                 <th width="30%" style="border: 1px solid black;text-align: left;height: 30px;padding: 6px;">Account</th>
-                <th width="30%" style="border: 1px solid black;text-align: right;height: 30px;padding: 6px;">Memo</th>
+                <th width="15%" style="border: 1px solid black;text-align: right;height: 30px;padding: 6px;">Memo</th>
                 <th width="15%" style="border: 1px solid black;text-align: right;height: 30px;padding: 6px;">Debit</th>
                 <th width="15%" style="border: 1px solid black;text-align: right;height: 30px;padding: 6px;">Credit</th>
+                <th width="15%" style="border: 1px solid black;text-align: left;height: 30px;padding: 6px;">Department</th>
             </tr>
             </thead>
             <tbody>
@@ -121,11 +122,13 @@
 
                 ?>
                 <tr>
-                    <td width="30%" style="border: 1px solid black;text-align: left;height: 30px;padding: 6px;"><?php echo $account->account_no; ?></td>
+                    <td width="10%" style="border: 1px solid black;text-align: left;height: 30px;padding: 6px;"><?php echo $account->account_no; ?></td>
                     <td width="30%" style="border: 1px solid black;text-align: left;height: 30px;padding: 6px;"><?php echo $account->account_title; ?></td>
-                    <td width="30%" style="border: 1px solid black;text-align: right;height: 30px;padding: 6px;"><?php echo $account->memo; ?></td>
+                    <td width="15%" style="border: 1px solid black;text-align: right;height: 30px;padding: 6px;"><?php echo $account->memo; ?></td>
                     <td width="15%" style="border: 1px solid black;text-align: right;height: 30px;padding: 6px;"><?php echo number_format($account->dr_amount,2); ?></td>
                     <td width="15%" style="border: 1px solid black;text-align: right;height: 30px;padding: 6px;"><?php echo number_format($account->cr_amount,2); ?></td>
+                    <td width="15%" style="border: 1px solid black;text-align: left;padding: 6px;"><?php echo $account->department_name; ?></td>
+
                 </tr>
                 <?php
 
@@ -146,10 +149,11 @@
                         <td style="border: 1px solid black;text-align: right;height: 30px;padding: 6px;" align="right"><strong>Total : </strong></td>
                         <td style="border: 1px solid black;text-align: right;height: 30px;padding: 6px;" align="right"><strong><?php echo number_format($dr_amount,2); ?></strong></td>
                         <td style="border: 1px solid black;text-align: right;height: 30px;padding: 6px;" align="right"><strong><?php echo number_format($cr_amount,2); ?></strong></td>
+                        <td style="border: 1px solid black;text-align: right;padding: 6px;" align="right"><strong></strong></td>
                     </tr>
                     <tr style="border: 1px solid black;">
                         <td colspan="2" style="border: 1px solid black;text-align: left;height: 30px;padding: 6px;"><?php echo $journal_info->remarks; ?></td>
-                        <td colspan="3" style="border: 1px solid black;text-align: left;height: 30px;padding: 6px;"></td>
+                        <td colspan="4" style="border: 1px solid black;text-align: left;height: 30px;padding: 6px;"></td>
                     </tr>
                 </tfoot>    
         </table><br><br>

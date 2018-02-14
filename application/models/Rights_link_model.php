@@ -93,7 +93,9 @@ class Rights_link_model extends CORE_Model{
                                           (83,'12','12-6','Product List Detailed'),
                                           (84,'12','12-7','Pick-list (Reorder)'),
                                           (85,'2','2-6','Purchase History'),
-                                          (86,'2','2-7','Purchase Monitoring')
+                                          (86,'2','2-7','Purchase Monitoring'),
+                                          (87,'6','6-12','Purchase Configuration')
+
 
 
 

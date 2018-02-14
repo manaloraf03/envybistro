@@ -98,7 +98,7 @@
     <table width="100%" style="border-collapse: collapse;border-spacing: 0;font-family: tahoma;"  class="noborder">
             <thead>
             <tr>
-                <td style="border: 1px solid black;text-align: center;padding: 6px;" colspan="5"><strong>ENTRIES</strong></td>
+                <td style="border: 1px solid black;text-align: center;padding: 6px;" colspan="6"><strong>ENTRIES</strong></td>
             </tr>
             <tr>
                 <th width="10%" style="border: 1px solid black;text-align: left;padding: 6px;">ACCNT. #</th>
@@ -106,6 +106,7 @@
                 <th width="30%" style="border: 1px solid black;text-align: right;padding: 6px;">MEMO</th>
                 <th width="15%" style="border: 1px solid black;text-align: right;padding: 6px;">DEBIT</th>
                 <th width="15%" style="border: 1px solid black;text-align: right;padding: 6px;">CREDIT</th>
+                <th width="15%" style="border: 1px solid black;text-align: left;padding: 6px;">DEPARTMENT</th>
             </tr>
             </thead>
             <tbody>
@@ -117,11 +118,12 @@
 
                 ?>
                 <tr>
-                    <td width="30%" style="border: 1px solid black;text-align: left;padding: 6px;"><?php echo $account->account_no; ?></td>
+                    <td width="10%" style="border: 1px solid black;text-align: left;padding: 6px;"><?php echo $account->account_no; ?></td>
                     <td width="30%" style="border: 1px solid black;text-align: left;padding: 6px;"><?php echo $account->account_title; ?></td>
                     <td width="30%" style="border: 1px solid black;text-align: right;padding: 6px;"><?php echo $account->memo; ?></td>
                     <td width="15%" style="border: 1px solid black;text-align: right;padding: 6px;"><?php echo number_format($account->dr_amount,2); ?></td>
                     <td width="15%" style="border: 1px solid black;text-align: right;padding: 6px;"><?php echo number_format($account->cr_amount,2); ?></td>
+                    <td width="15%" style="border: 1px solid black;text-align: left;padding: 6px;"><?php echo $account->department_name; ?></td>
                 </tr>
                 <?php
 
@@ -142,10 +144,12 @@
                         <td style="border: 1px solid black;text-align: right;padding: 6px;" align="right"><strong>Total : </strong></td>
                         <td style="border: 1px solid black;text-align: right;padding: 6px;" align="right"><strong><?php echo number_format($dr_amount,2); ?></strong></td>
                         <td style="border: 1px solid black;text-align: right;padding: 6px;" align="right"><strong><?php echo number_format($cr_amount,2); ?></strong></td>
+                        <td style="border: 1px solid black;text-align: right;padding: 6px;" align="right"><strong></strong></td>
+
                     </tr>
                     <tr style="border: 1px solid black;">
                         <td colspan="2" style="border: 1px solid black;text-align: left;padding: 6px;"><?php echo $journal_info->remarks; ?>&nbsp;</td>
-                        <td colspan="3" style="border: 1px solid black;text-align: left;padding: 6px;"></td>
+                        <td colspan="4" style="border: 1px solid black;text-align: left;padding: 6px;"></td>
                     </tr>
                 </tfoot>    
         </table><br><br>
