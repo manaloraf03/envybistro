@@ -418,7 +418,7 @@
                         <td><input type="text" name="dr_amount[]" class="form-control numeric"></td>
                         <td><input type="text" name="cr_amount[]" class="form-control numeric"></td>
                         <td>       
-                            <select name="department_id_line[]" class="selectpicker show-tick form-control dept" data-live-search="true" data-error-msg="Department is required." required>
+                            <select name="department_id_line[]" class="selectpicker show-tick form-control dept" data-live-search="true" >
                                 <option value="0">[ None ]</option>
                                 <?php foreach($departments as $department){ ?>
                                     <option value='<?php echo $department->department_id; ?>'><?php echo $department->department_name; ?></option>
@@ -1270,7 +1270,7 @@ $(document).ready(function(){
 
                         reInitializeNumeric();
 
-                        var tbl=$('#tbl_entries_for_review_'+ d.adjustment_id);
+                        var tbl=$('#tbl_entries_for_review_adj'+ d.adjustment_id);
                         var parent_tab_pane=$('#journal_review_'+ d.adjustment_id);
                         reInitializeDropDownAccounts(tbl);
                         reInitializeChildEntriesTableAdjustment(tbl);
@@ -1764,7 +1764,7 @@ $(document).ready(function(){
 
                 var _curBtn=$(this);
 
-                if(isBalance('#tbl_entries_for_review_'+_dataParentID)){
+                if(isBalance('#tbl_entries_for_review_adj'+_dataParentID)){
                     if(validateRequiredFields('#tbl_entries_for_review_'+_dataParentID)){
                                            finalizeJournalReview().done(function(response){
                         showNotification(response);
@@ -2044,14 +2044,20 @@ $(document).ready(function(){
     };
 
 
-    var isBalance=function(){
-        var oRow=$('#tbl_entries > tfoot tr');
-        var dr=getFloat(oRow.find(oTFSummary.dr).text());
-        var cr=getFloat(oRow.find(oTFSummary.cr).text());
+    var isBalance=function(opTable=null){
+        var oRow; var dr; var cr;
+
+        if(opTable==null){
+            oRow=$('#tbl_entries > tfoot tr');
+        }else{
+            oRow=$(opTable+' > tfoot tr');
+        }
+
+        dr=getFloat(oRow.find(oTFSummary.dr).text());
+        cr=getFloat(oRow.find(oTFSummary.cr).text());
 
         return (dr==cr);
     };
-
 
 
 

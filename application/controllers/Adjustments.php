@@ -226,17 +226,14 @@ class Adjustments extends CORE_Controller
 
                 $m_adjustment->commit();
 
-
-
                 if($m_adjustment->status()===TRUE){
                     $response['title'] = 'Success!';
                     $response['stat'] = 'success';
-                    $response['msg'] = 'Items successfully issued.';
+                    $response['msg'] = 'Items successfully Adjusted.';
                     $response['row_added']=$this->response_rows($adjustment_id);
 
                     echo json_encode($response);
                 }
-
 
                 break;
 

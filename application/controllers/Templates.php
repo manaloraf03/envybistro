@@ -1895,6 +1895,17 @@ class Templates extends CORE_Controller {
                     )
                 );
 
+                $data['customers']=$this->Customers_model->get_list(
+                    array(
+                        'customers.is_active'=>TRUE,
+                        'customers.is_deleted'=>FALSE
+                    ),
+
+                    array(
+                        'customers.customer_id',
+                        'customers.customer_name'
+                    )
+                );
                 $data['items']=$m_issuance_item_model->get_list(array('issuance_items.issuance_id'=>$issuance_id),
                     'issuance_items.*,
                     products.product_desc,
@@ -1935,6 +1946,7 @@ class Templates extends CORE_Controller {
 
                 $adjustment_info=$m_adjustment->get_list($adjustment_id,
                     'adjustment_info.*,
+                     DATE_FORMAT(adjustment_info.date_adjusted,"%m/%d/%Y %r")as date_adjusted,
                     CONCAT_WS(" ",user_accounts.user_fname,user_accounts.user_lname)as posted_by
                     ',
                     array(
