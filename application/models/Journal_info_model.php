@@ -50,6 +50,7 @@ class Journal_info_model extends CORE_Model{
         END) AS balance
         FROM
         (SELECT
+            ji.journal_id,
             date_txn,
             DATE_FORMAT(ji.date_created, '%Y-%m-%d') AS date_created,
             txn_no,
@@ -79,7 +80,7 @@ class Journal_info_model extends CORE_Model{
             suppliers AS s ON s.supplier_id = ji.supplier_id
             WHERE ji.is_active=TRUE AND ji.is_deleted=FALSE AND ji.supplier_id=$supplier_id AND ja.account_id=$account_id
             AND date_txn BETWEEN '$startDate' AND '$endDate'
-            ORDER BY date_txn) as m";
+            ORDER BY date_txn, ji.journal_id ASC) as m";
 
             return $this->db->query($sql)->result();
     }
@@ -729,6 +730,7 @@ class Journal_info_model extends CORE_Model{
         FROM
 
         (SELECT 
+            ji.journal_id,
             DATE_FORMAT(ji.date_txn, '%m/%d/%Y')as date_txn,
 
             DATE_FORMAT(ji.date_created, '%Y-%m-%d') AS date_created,
@@ -772,7 +774,7 @@ class Journal_info_model extends CORE_Model{
 
 
             AND date_txn BETWEEN '$startDate' AND '$endDate'
-            ORDER BY date_txn) as m";
+            ORDER BY date_txn,ji.journal_id ASC) as m";
 
             return $this->db->query($sql)->result();
     }
