@@ -808,6 +808,33 @@ class Journal_info_model extends CORE_Model{
             return $this->db->query($sql)->result();
     }
 
+    function get_account_balance_per_line($type_id,$depid=null,$start=null,$end=null){
+        $sql="SELECT main.*,att.account_title FROM(SELECT ji.journal_id,
+            at.account_no,at.grand_parent_id,ac.account_type_id,ac.account_class_id,
+            IF(
+                ac.account_type_id=1 OR ac.account_type_id=5,
+                SUM(ja.dr_amount)-SUM(ja.cr_amount),
+                SUM(ja.cr_amount)-SUM(ja.dr_amount)
+
+            )as account_balance
+
+
+            FROM journal_info as ji
+
+            INNER JOIN (journal_accounts as ja INNER JOIN
+            (account_titles as at
+            INNER JOIN account_classes as ac ON at.account_class_id=ac.account_class_id)
+            ON ja.account_id=at.account_id)
+            ON ji.journal_id=ja.journal_id
+
+            WHERE ji.is_active=TRUE AND ji.is_deleted=FALSE
+            AND ac.account_type_id=$type_id
+            ".($depid!=null?" AND ja.department_id=$depid":"")."
+            ".($start!=null&&$end!=null?" AND ji.date_txn BETWEEN '$start' AND '$end'":"")."
+
+            GROUP BY at.grand_parent_id)as main LEFT JOIN account_titles as att ON main.grand_parent_id=att.account_id";
+            return $this->db->query($sql)->result();
+    }
 
     function get_petty_cash_list($asOfDate=null,$department_id=null) {
         $sql="SELECT

@@ -2346,6 +2346,61 @@ class Templates extends CORE_Controller {
 
 
                 break;
+            case 'income-statement-per-field':
+                $type=$this->input->get('type',TRUE);
+                $start=$this->input->get('start',TRUE);
+                $end=$this->input->get('end',TRUE);
+                $depid=$this->input->get('depid',TRUE);
+
+                if($depid==1){$depid=null;}
+
+                $data['income_accounts']=$this->Journal_info_model->get_account_balance_per_line(4,$depid,date("Y-m-d",strtotime($start)),date("Y-m-d",strtotime($end)));
+                $data['expense_accounts']=$this->Journal_info_model->get_account_balance_per_line(5,$depid,date("Y-m-d",strtotime($start)),date("Y-m-d",strtotime($end)));
+
+                $m_company=$this->Company_model;
+                $company=$m_company->get_list();
+
+                $data['company_info']=$company[0];
+
+                $m_departments=$this->Departments_model;
+                $departments=$m_departments->get_list($depid);
+
+                $data['departments']=$departments[0]->department_name;
+
+
+                $data['start']=date("m/d/Y",strtotime($start));
+                $data['end']=date("m/d/Y",strtotime($end));
+
+                //download pdf
+                /*if($type=='pdf'){
+                    $file_name=date('Y-m-d');
+                    $pdfFilePath = $file_name.".pdf"; //generate filename base on id
+                    $pdf = $this->m_pdf->load(); //pass the instance of the mpdf class
+                    $content=$this->load->view('template/income_statement_report',$data,TRUE);
+                    $pdf->setFooter('{PAGENO}');
+                    $pdf->WriteHTML($content);
+                    //download it.
+                    $pdf->Output($pdfFilePath,"D");
+                }
+
+                //preview on browser
+                if($type=='preview'){
+                    $file_name=date('Y-m-d');
+                    $pdfFilePath = $file_name.".pdf"; //generate filename base on id
+                    $pdf = $this->m_pdf->load(); //pass the instance of the mpdf class
+                    $content=$this->load->view('template/income_statement_report',$data,TRUE);
+                    $pdf->setFooter('{PAGENO}');
+                    $pdf->WriteHTML($content);
+                    //download it.
+                    $pdf->Output();
+                }*/
+
+                if($type==null|$type=='preview'){
+                    $this->load->view('template/income_statement_report_per_line',$data);
+                }
+
+
+                break;
 
             case 'income-statement':
                 $type=$this->input->get('type',TRUE);

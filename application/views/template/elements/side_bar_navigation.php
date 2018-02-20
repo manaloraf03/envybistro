@@ -166,6 +166,7 @@
                                     <a href="#/"><span>Financial Reports</span></a>
                                     <ul class="acc-menu">
                                         <li class="<?php echo (in_array('9-2',$this->session->user_rights)?'':'hidden'); ?>"><a href="Income_statement">Income Statement</a></li>
+                                        <li class="<?php echo (in_array('9-22',$this->session->user_rights)?'':'hidden'); ?>"><a href="Income_statement_field">Income Statement (Per Field)</a></li>
                                         <li class="<?php echo (in_array('9-9',$this->session->user_rights)?'':'hidden'); ?>"><a href="Annual_income_statement">Annual Income Report</a></li>
                                         <li class="<?php echo (in_array('9-16',$this->session->user_rights)?'':'hidden'); ?>"><a href="Comparative_income">Comparative Income Report</a></li>
                                         <li class="<?php echo (in_array('9-3',$this->session->user_rights)?'':'hidden'); ?>"><a href="Trial_balance">Trial Balance</a></li>
