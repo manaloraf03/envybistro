@@ -55,6 +55,7 @@
 
                                     <div class="row">
                                         <div class="col-sm-12">
+                                        <b class="required">*</b> This report uses all branches/departments .<br>
                                             Branch : <br />
                                             <select name="department" id="cbo_departments" data-error-msg="Branch is required." required>
 

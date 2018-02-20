@@ -266,7 +266,7 @@
                                     <tbody>
                                         <?php foreach($payments_list as $pay){ ?>
                                             <tr>
-                                                <td><?php echo $pay->txn_no; ?></td>
+                                                <td><?php  if($pay->ref_no=='') {echo $pay->txn_no; } else {echo $pay->ref_no;}; ?></td>
                                                 <td><?php echo $pay->date_txn; ?></td>
                                                 <td><?php echo $pay->remarks; ?></td>
                                                 <td align="right"><?php echo number_format($pay->payment_amount,2); ?></td>

@@ -75,7 +75,7 @@
                 <div class="page-content"><!-- #page-content -->
                     <ol class="breadcrumb" style="margin:0%;">
                         <li><a href="dashboard">Dashboard</a></li>
-                        <li><a href="Balance_sheet">Balance Sheet</a></li>
+                        <li><a href="Income_statement">Income Statement</a></li>
                     </ol>
                     <div class="container-fluid">
                         <div data-widget-group="group1">
@@ -91,6 +91,7 @@
 
                                             <div class="row">
                                                 <div class="col-sm-12">
+                                               <b class="required">*</b> This report uses the Department set on Journal Transactions. <br>
                                                     Branch : <br />
                                                     <select name="department" id="cbo_departments" data-error-msg="Branch is required." required>
                                                         <?php foreach($departments as $department){ ?>

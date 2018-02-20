@@ -91,6 +91,7 @@
 
                                             <div class="row">
                                                 <div class="col-sm-12">
+                                                <b class="required">*</b> Choose <b>Admin</b> to use all branches/departments .<br>
                                                     Branch : <br />
                                                     <select name="department" id="cbo_departments" data-error-msg="Branch is required." required>
                                                         <?php foreach($departments as $department){ ?>
