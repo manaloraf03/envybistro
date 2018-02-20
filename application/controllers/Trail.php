@@ -30,7 +30,10 @@ class Trail extends CORE_Controller
         $data['trans_type']=$this->Trans_type_model->get_list();
         $data['trans_key']=$this->Trans_key_model->get_list();
         $data['users']=$this->Users_model->get_user_list();
-        $this->load->view('trail_view', $data);
+        (in_array('6-13',$this->session->user_rights)? 
+        $this->load->view('trail_view', $data)
+        :redirect(base_url('dashboard')));
+        
 
         
     }

@@ -95,7 +95,8 @@ class Rights_link_model extends CORE_Model{
                                           (85,'2','2-6','Purchase History'),
                                           (86,'2','2-7','Purchase Monitoring'),
                                           (87,'6','6-12','Purchase Configuration'),
-                                          (87,'9','9-22','Income Statement Per Field Report')
+                                          (88,'9','9-22','Income Statement Per Field Report'),
+                                          (89,'6','6-13','Audit Trail')
 
 
 

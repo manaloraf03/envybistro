@@ -91,6 +91,7 @@
 
                                             <div class="row">
                                                 <div class="col-sm-12">
+                                                 <b class="required">*</b> Choose <b>Admin</b> to use all branches/departments .<br>
                                                <b class="required">*</b> This report uses the Department set on Journal Transactions. <br>
                                                     Branch : <br />
                                                     <select name="department" id="cbo_departments" data-error-msg="Branch is required." required>

@@ -139,6 +139,7 @@
                                 <li class="<?php echo (in_array('6-10',$this->session->user_rights)?'':'hidden'); ?>"><a href="Email_settings">Email Settings</a></li>
                                 <li class="<?php echo (in_array('6-11',$this->session->user_rights)?'':'hidden'); ?>"><a href="Email_report_settings">Email Report Settings</a></li>                             
                                 <li class="<?php echo (in_array('6-9',$this->session->user_rights)?'':'hidden'); ?>"><a href="DBBackup">Backup Database</a></li>
+                                <li class="<?php echo (in_array('6-13',$this->session->user_rights)?'':'hidden'); ?>"><a href="Trail">Audit Trail</a></li>
                             </ul>
                         </li>
                         <li class="<?php echo (in_array('9',$this->session->parent_rights)?'':'hidden'); ?>">
