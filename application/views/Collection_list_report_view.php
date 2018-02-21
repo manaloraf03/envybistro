@@ -66,14 +66,12 @@
         <div class="static-content-wrapper white-bg">
             <div class="static-content"  >
 
-	            <div class="page-content"><!-- #page-content -->
+                <div class="page-content"><!-- #page-content -->
 
-	                <ol class="breadcrumb" style="margin-bottom: 0px;">
-	                    <li><a href="dashboard">Dashboard</a></li>
-	                    <li><a href="Voucher_registry_report">Collection List Report</a></li>
-	                </ol>
-
-
+                    <ol class="breadcrumb" style="margin-bottom: 0px;">
+                        <li><a href="dashboard">Dashboard</a></li>
+                        <li><a href="Voucher_registry_report">Collection List Report</a></li>
+                    </ol>
 
 
 
@@ -82,38 +80,44 @@
 
 
 
-	                <div class="container-fluid">
-	                    <div class="panel panel-default">
-	                    	<!-- <div class="panel-heading" style="background: #2ecc71;border-bottom: 1px solid lightgrey;;"><b style="color:white;font-size: 12pt;"><i class="fa fa-bars"></i> </b></div> -->
-		                    <div class="panel-body">
+
+
+                    <div class="container-fluid">
+                        <div class="panel panel-default">
+                            <!-- <div class="panel-heading" style="background: #2ecc71;border-bottom: 1px solid lightgrey;;"><b style="color:white;font-size: 12pt;"><i class="fa fa-bars"></i> </b></div> -->
+                            <div class="panel-body">
                             <h2 class="h2-panel-heading">Collection List Report </h2><hr>
-		                    	<div class="row">
-		                    		<div class="container-fluid">
-		                    			<div class="container-fluid group-box">
-		                    				<div class="col-xs-12 col-md-6">
-		                    					<strong>Start Date * : </strong><br>
-		                    					<div class="input-group">
-			                    					<input id="startDate" type="text" class="date-picker form-control" name="date_from" value="01/01/<?php echo date("Y"); ?>">
-			                    					<div class="input-group-addon">
-			                    						<i class="fa fa-calendar"></i>
-			                    					</div>
-		                    					</div>
-		                    				</div>
-			                    			<div class="col-xs-12 col-md-6">
-		                    					<strong>End Date * : </strong><br>
-			                    				<div class="input-group">
-			                    					<input id="endDate" type="text" class="date-picker form-control" name="date_to" value="<?php echo date("m/d/Y"); ?>">
-			                    					<div class="input-group-addon">
-			                    						<i class="fa fa-calendar"></i>
-			                    					</div>
-		                    					</div>
-		                    				</div>
-			                    		</div><br>
-			                    		<div class="container-fluid group-box">
-			                    			<button class="btn btn-primary pull-left" style="margin-right: 5px; margin-top: 10px; margin-bottom: 10px;" id="btn_print"  data-toggle="modal" data-target="#salesInvoice" data-placement="left" title="Print" ><i class="fa fa-print"></i> Print Report
+                                <div class="row">
+                                    <div class="container-fluid">
+                                        <div class="container-fluid group-box">
+                                            <div class="col-xs-12 col-md-6">
+                                                <strong>Start Date * : </strong><br>
+                                                <div class="input-group">
+                                                    <input id="startDate" type="text" class="date-picker form-control" name="date_from" value="01/01/<?php echo date("Y"); ?>">
+                                                    <div class="input-group-addon">
+                                                        <i class="fa fa-calendar"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 col-md-6">
+                                                <strong>End Date * : </strong><br>
+                                                <div class="input-group">
+                                                    <input id="endDate" type="text" class="date-picker form-control" name="date_to" value="<?php echo date("m/d/Y"); ?>">
+                                                    <div class="input-group-addon">
+                                                        <i class="fa fa-calendar"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div><br>
+                                        <div class="container-fluid group-box">
+                                            <button class="btn btn-primary pull-left" style="margin-right: 5px; margin-top: 10px; margin-bottom: 10px;" id="btn_print"  data-toggle="modal" data-target="#salesInvoice" data-placement="left" title="Print" ><i class="fa fa-print"></i> Print Report
                                             </button>
-		                    				<table id="tbl_voucher_registry" class="table table-striped" cellspacing="0" width="100%" style="background-color: transparent !important;";>
-		                    					<thead>
+                                            <button class="btn btn-success pull-left" style="margin-right: 5px; margin-top: 10px; margin-bottom: 10px;" id="btn_export"  data-toggle="modal" data-target="#salesInvoice" data-placement="left" title="Export" ><i class="fa fa-file-excel-o"></i> Export Report
+                                            </button>
+                                            <button class="btn btn-success pull-left" style="margin-right: 5px; margin-top: 10px; margin-bottom: 10px;" id="btn_email"  data-toggle="modal" data-target="#salesInvoice" data-placement="left" title="Email" ><i class="fa fa-share"></i> Email Report
+                                            </button>
+                                            <table id="tbl_voucher_registry" class="table table-striped" cellspacing="0" width="100%" style="background-color: transparent !important;";>
+                                                <thead>
                                                 <tr>   
                                                     <th width="10%">Receipt No.</th>
                                                     <th width="15%">Date</th>
@@ -123,16 +127,16 @@
                                                     <th style="text-align: center;"><br> Card</th>
                                                 </tr>
 <!--                                                 <tr style="background-color: transparent !important;">
-		                    						<th colspan="3" style="background-color: transparent !important; border-bottom: 1px solid #525252;border-left: 1px solid #525252;"></th>
-		                    				
+                                                    <th colspan="3" style="background-color: transparent !important; border-bottom: 1px solid #525252;border-left: 1px solid #525252;"></th>
+                                            
                                                     <th width="15%" style="background-color: transparent !important;border: 1px solid #525252;text-align: center;">Cash</th>
                                                     <th width="15%" style="background-color: transparent !important;border: 1px solid #525252; text-align: center;">Check</th>
                                                     <th width="15%"  style="background-color: transparent !important;border: 1px solid #525252; text-align: center;">Card</th>
                                                 </tr> -->
 
-		                    						
-		     
-		                    					</thead>
+                                                    
+             
+                                                </thead>
                                                         <tfoot>
                                                             <tr>
                                                                 <td colspan="2" style="text-align:right;font-size: 12px;"></td>
@@ -153,22 +157,20 @@
                                                             </tr>
                                                         </tfoot>
 
-		                    					<tbody>
-		                    						
-		                    					</tbody>
-		                    					
+                                                <tbody>
+                                                    
+                                                </tbody>
+                                                
 
-		                    				</table>
+                                            </table>
 
-			                    		</div>
-		                    		</div>		                    	
-		                    	</div>
-		                    </div>
-		                    <div class="panel-footer"></div>
-	                    </div>
-	            	</div> <!-- .container-fluid -->
-
-
+                                        </div>
+                                    </div>                              
+                                </div>
+                            </div>
+                            <div class="panel-footer"></div>
+                        </div>
+                    </div> <!-- .container-fluid -->
 
 
 
@@ -186,17 +188,19 @@
 
 
 
-				</div> <!-- #page-content -->
-        	</div>
 
-	        <footer role="contentinfo">
-	            <div class="clearfix">
-	                <ul class="list-unstyled list-inline pull-left">
-	                    <li><h6 style="margin: 0;">&copy; 2017 - JDEV IT Business Solutions</h6></li>
-	                </ul>
-	                <button class="pull-right btn btn-link btn-xs hidden-print" id="back-to-top"><i class="ti ti-arrow-up"></i></button>
-	            </div>
-	        </footer>
+
+                </div> <!-- #page-content -->
+            </div>
+
+            <footer role="contentinfo">
+                <div class="clearfix">
+                    <ul class="list-unstyled list-inline pull-left">
+                        <li><h6 style="margin: 0;">&copy; 2017 - JDEV IT Business Solutions</h6></li>
+                    </ul>
+                    <button class="pull-right btn btn-link btn-xs hidden-print" id="back-to-top"><i class="ti ti-arrow-up"></i></button>
+                </div>
+            </footer>
     </div>
 </div>
 </div>
@@ -223,8 +227,8 @@
 
 <script>
     $(document).ready(function(){
-    	var dt;
-    	 $('.isNumeric').autoNumeric('init');
+        var dt;
+         $('.isNumeric').autoNumeric('init');
 
 
        var initializeControls=function(){
@@ -241,35 +245,72 @@
         }();
 
         var bindEventHandlers=function() {
-        	$('#startDate').on('change', function() {
-        		dt.destroy();
-        		initializeDataTable();
-        	
-        	});
+            $('#startDate').on('change', function() {
+                dt.destroy();
+                initializeDataTable();
+            
+            });
 
-        	$('#endDate').on('change', function() {
-        		dt.destroy();
-        		initializeDataTable();
+            $('#endDate').on('change', function() {
+                dt.destroy();
+                initializeDataTable();
       
-        	});
+            });
 
-        	$('#btn_print').on('click', function() {
-        		window.open('Collection_list_report/transaction/report?start='+ $('#startDate').val() +'&end='+ $('#endDate').val());
-        	});
+            $('#btn_print').on('click', function() {
+                window.open('Collection_list_report/transaction/report?start='+ $('#startDate').val() +'&end='+ $('#endDate').val());
+            });
+
+            $('#btn_export').on('click', function() {
+                window.open('Collection_list_report/transaction/export?start='+ $('#startDate').val() +'&end='+ $('#endDate').val(),'_self');
+            });
+
+            $('#btn_email').on('click', function() {
+                showNotification({title:"Sending!",stat:"info",msg:"Please wait for a few seconds."});
+
+                var btn=$(this);
+            
+                $.ajax({
+                    "dataType":"json",
+                    "type":"POST",
+                    "url":'Collection_list_report/transaction/email?start='+ $('#startDate').val() +'&end='+ $('#endDate').val(),
+                    "beforeSend": showSpinningProgress(btn)
+                }).done(function(response){
+                    showNotification(response);
+                    showSpinningProgress(btn);
+
+                });
+            });
+
+            var showSpinningProgress=function(e){
+                $(e).toggleClass('disabled');
+                $(e).find('span').toggleClass('glyphicon glyphicon-refresh spinning');
+            };
+
+
+            var showNotification=function(obj){
+                PNotify.removeAll(); //remove all notifications
+                new PNotify({
+                    title:  obj.title,
+                    text:  obj.msg,
+                    type:  obj.stat
+                });
+            };
+
         }();
 
         function initializeDataTable(){
-        	dt=$('#tbl_voucher_registry').DataTable({
-        		"dom": '<"toolbar">frtip',
-        		"bLengthChange":false,
-        		  "paging": false,
-        		    "bInfo" : false,
+            dt=$('#tbl_voucher_registry').DataTable({
+                "dom": '<"toolbar">frtip',
+                "bLengthChange":false,
+                  "paging": false,
+                    "bInfo" : false,
                     "bSort": false,
-        		"language": {
-        			"searchPlaceholder":"Search"
-        		},
-        		"ajax":{
-        			"url": "Collection_list_report/transaction/list",
+                "language": {
+                    "searchPlaceholder":"Search"
+                },
+                "ajax":{
+                    "url": "Collection_list_report/transaction/list",
                     "type": "GET",
                     "bDestroy": true,
                     "data": function ( d ) {
@@ -285,7 +326,7 @@
                     { "searchable": true,targets:[2],data: "customer_name" },  
                     // { 
                     //     "searchable": true, className:"isNumeric" ,targets:[3],data: "total_paid_amount",
-                    //   	render: $.fn.dataTable.render.number( ',', '.', 2 )
+                    //      render: $.fn.dataTable.render.number( ',', '.', 2 )
                     // },
                     { targets:[3],data: "cash_amount", 
                         render: $.fn.dataTable.render.number( ',', '.', 2 )
@@ -391,10 +432,10 @@
 
 
         }
-        	});
+            });
 
 
-        	
+            
 
 
 

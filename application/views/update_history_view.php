@@ -32,4 +32,6 @@ February 14, 2018
             (Cannot Edit Invoice if it is already Finalized and posted to Accounting)
 February 20,2018
     - Added Income Statement Report Per Line
+February 21, 2018
+    - Added Print and Export to Excel on Chart of Accounts
 </pre>
