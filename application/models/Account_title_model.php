@@ -40,6 +40,35 @@ class Account_title_model extends CORE_Model{
         $this->db->query($sql);
     }
 
+  function get_account_types(){
+
+        $sql="SELECT * FROM account_types  
+        order by account_type_id ASC";
+        return $this->db->query($sql)->result();
+    }   
+    function get_account_classes(){
+
+        $sql="SELECT * FROM account_classes  
+        WHERE is_active = TRUE and is_deleted = FALSE 
+        order by account_type_id ASC";
+        return $this->db->query($sql)->result();
+    }
+    function get_account_titles(){
+
+        $sql="SELECT at.* FROM account_titles at
+        WHERE at.is_active = TRUE AND at.is_deleted = FALSE AND at.parent_account_id = 0
+        ";
+        return $this->db->query($sql)->result();
+    }
+
+    function get_account_titles_child(){
+
+        $sql="SELECT at.* FROM account_titles at
+        WHERE at.is_active = TRUE AND at.is_deleted = FALSE AND at.parent_account_id != 0
+        ";
+        return $this->db->query($sql)->result();
+    }
+
 
     function get_account_titles_balance($start=null,$end=null){
         $sql="SELECT

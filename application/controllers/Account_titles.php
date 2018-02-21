@@ -13,6 +13,8 @@ class Account_titles extends CORE_Controller
         $this->load->model('Journal_info_model');
         $this->load->model('Journal_account_model');
         $this->load->model('Users_model');
+        $this->load->model('Company_model');
+        $this->load->library('excel');
     }
 
     public function index() {
@@ -39,6 +41,19 @@ class Account_titles extends CORE_Controller
 
     function transaction($txn=null,$filter_id=null){
         switch($txn){
+            case 'print';
+                    $m_company_info=$this->Company_model;
+                    $company_info=$m_company_info->get_list();
+                    $data['company_info']=$company_info[0];
+                    $data['types']=$this->Account_title_model->get_account_types();
+                    $data['classes']=$this->Account_title_model->get_account_classes();
+                    $data['accounts']=$this->Account_title_model->get_account_titles();
+                    $data['accounts_child']=$this->Account_title_model->get_account_titles_child();
+
+                     $this->load->view('template/chart_of_accounts_content',$data);
+
+            break;
+            
             case 'list':
                 $m_accounts=$this->Account_title_model;
                 $response['data']=$this->response_rows($filter_id); //filter_id is default as null
@@ -286,5 +301,87 @@ class Account_titles extends CORE_Controller
         );
     }
  
+function Export(){
 
+            $company_info=$this->Company_model->get_list();
+            $data['company_info']=$company_info[0];
+
+
+                $excel=$this->excel;
+              
+                $excel->setActiveSheetIndex(0);
+                  ob_start();
+                // SET WIDTH
+                // $excel->getActiveSheet()->getColumnDimension('A')->setWidth(30);
+                // $excel->getActiveSheet()->getColumnDimension('B')->setWidth(30);
+                // $excel->getActiveSheet()->getColumnDimension('C')->setWidth(30);
+
+                    $types=$this->Account_title_model->get_account_types();
+                    $classes=$this->Account_title_model->get_account_classes();
+                    $accounts=$this->Account_title_model->get_account_titles();
+                    $accounts_child=$this->Account_title_model->get_account_titles_child();
+
+
+
+                $excel->getActiveSheet()->setTitle('Chart of Accounts');
+
+                $excel->getActiveSheet()->getStyle('A1')->getFont()->setBold(TRUE);
+                $excel->getActiveSheet()->setCellValue('A1',$company_info[0]->company_name)
+                                        ->setCellValue('A2',$company_info[0]->company_address)
+                                        ->setCellValue('A3',$company_info[0]->email_address)
+                                        ->setCellValue('A4',$company_info[0]->mobile_no);
+
+                $excel->getActiveSheet()->setCellValue('A6','CHART OF ACCOUNTS');
+                $i=9;
+
+                foreach ($types as $type) {
+                    $excel->getActiveSheet()->getStyle('A'.$i)->getFont()->setBold(TRUE);
+                    $excel->getActiveSheet()->setCellValue('A'.$i,strtoupper($type->account_type));    
+                    $i++;          
+                        foreach ($classes as $class) {
+                                if($class->account_type_id == $type->account_type_id){
+                                    $excel->getActiveSheet()->getStyle('B'.$i)->getFont()->setBold(TRUE);
+                                    $excel->getActiveSheet()->setCellValue('B'.$i,$class->account_class);
+                                    $i++;
+                                        foreach ($accounts as $account) {
+                                            if($account->account_class_id == $class->account_class_id){
+                                                $excel->getActiveSheet()->setCellValue('B'.$i,$account->account_no);
+                                                $excel->getActiveSheet()->setCellValue('C'.$i,$account->account_title);
+                                                // $excel->getActiveSheet()->setCellValue('D'.$i,$account->description);
+                                                $i++;
+                                                    foreach ($accounts_child as $child) {
+                                                        if($child->parent_account_id == $account->account_id){
+                                                            $excel->getActiveSheet()->setCellValue('C'.$i,$child->account_no);
+                                                            $excel->getActiveSheet()->setCellValue('D'.$i,$child->account_title);
+                                                            $i++;
+                                                        }
+                                                    }
+                                            }
+                                        }
+                                }
+                        }
+                $i++;
+                }
+
+
+
+                header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                header('Content-Disposition: attachment;filename="Chart of Accounts.xlsx"');
+                header('Cache-Control: max-age=0');
+                // If you're serving to IE 9, then the following may be needed
+                header('Cache-Control: max-age=1');
+
+                // If you're serving to IE over SSL, then the following may be needed
+                header ('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
+                header ('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT'); // always modified
+                header ('Cache-Control: cache, must-revalidate'); // HTTP/1.1
+                header ('Pragma: public'); // HTTP/1.0
+
+                $objWriter = PHPExcel_IOFactory::createWriter($excel, 'Excel2007');
+                $objWriter->save('php://output');
+
+               
+
+
+        }
 }
