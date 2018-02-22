@@ -187,7 +187,7 @@ class Income_statement_field extends CORE_Controller
                                         ->getAlignment()
                                         ->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
-                $total_net = $income_total + $expense_total;
+                $total_net = $income_total - $expense_total;
 
                 $i++;
                 $excel->getActiveSheet()->setCellValue('A'.$i, 'NET INCOME:')
@@ -374,7 +374,7 @@ class Income_statement_field extends CORE_Controller
                                         ->getAlignment()
                                         ->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
-                $total_net = $income_total + $expense_total;
+                $total_net = $income_total - $expense_total;
 
                 $i++;
                 $excel->getActiveSheet()->setCellValue('A'.$i, 'NET INCOME:')

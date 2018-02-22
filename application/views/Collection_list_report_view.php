@@ -70,7 +70,7 @@
 
                     <ol class="breadcrumb" style="margin-bottom: 0px;">
                         <li><a href="dashboard">Dashboard</a></li>
-                        <li><a href="Voucher_registry_report">Collection List Report</a></li>
+                        <li><a href="Collection_list_report">Collection List Report</a></li>
                     </ol>
 
 
