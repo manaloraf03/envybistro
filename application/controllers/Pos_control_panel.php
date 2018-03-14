@@ -17,7 +17,10 @@
 					'Company_model',
 					'Journal_account_model',
 					'Customers_model',
-					'Departments_model'
+					'Departments_model',
+					'Accounting_period_model',
+					'Account_title_model'
+
 
 
 				)
@@ -33,6 +36,9 @@
 	        $data['_switcher_settings'] = $this->load->view('template/elements/switcher', '', true);
 	        $data['_side_bar_navigation'] = $this->load->view('template/elements/side_bar_navigation', '', true);
 	        $data['_top_navigation'] = $this->load->view('template/elements/top_navigation', '', true);
+
+	        $data['accounts']=$this->Account_title_model->get_list('is_active=TRUE AND is_deleted=FALSE');
+
 	        $data['title'] = 'POS Integration Control Panel';
         (in_array('16-2',$this->session->user_rights)? 
         $this->load->view('pos_control_panel_view',$data)
@@ -66,6 +72,78 @@
 
 					echo json_encode($response);
 				break;
+
+				case 'create-pos':
+				$m_items=$this->Pos_integration_items_model;
+				$m_pos=$this->Pos_integration_model;
+				$m_journal=$this->Journal_info_model;
+                $m_journal_accounts=$this->Journal_account_model;
+
+                $valid_range=$this->Accounting_period_model->get_list("'".date('Y-m-d',strtotime($this->input->post('date_txn',TRUE)))."'<=period_end");
+                if(count($valid_range)>0){
+                    $response['stat']='error';
+                    $response['title']='<b>Accounting Period is Closed!</b>';
+                    $response['msg']='Please make sure transaction date is valid!<br /> ';
+                    die(json_encode($response));
+                }
+               $pos_validation_id=$this->input->post('pos_integration_items_id',TRUE);
+
+               $validate=$m_items->get_list(array('is_posted'=>TRUE, 'pos_integration_items_id'=>$pos_validation_id));
+               if(count($validate)>0){
+
+               	    $journal_info = $m_journal->get_list($validate[0]->journal_id,'txn_no');
+               	    $response['stat']='error';
+                    $response['title']='<b>Already Posted to Accounting!</b>';
+                    $response['msg']='Please Check Sales Journal Transaction '.$journal_info[0]->txn_no;
+                    $response['aa']= json_encode($validate);
+                    die(json_encode($response));
+               }
+
+                $m_journal->customer_id=$this->input->post('customer_id',TRUE);
+                $m_journal->department_id=$this->input->post('department_id',TRUE);
+                $m_journal->remarks=$this->input->post('remarks',TRUE);
+                $m_journal->date_txn=date('Y-m-d',strtotime($this->input->post('date_txn',TRUE)));
+                $m_journal->book_type='SJE';
+                $m_journal->ref_no=$this->input->post('ref_no',TRUE);
+                $m_journal->is_sales=1;
+                $m_journal->pos_integration_id=$this->input->post('pos_integration_items_id',TRUE);
+				$m_journal->set('date_created','NOW()');
+				$m_journal->date_txn=date('Y-m-d',now());
+				$m_journal->created_by_user=$this->session->user_id;
+				$m_journal->save();
+				$journal_id=$m_journal->last_insert_id();
+
+				$accounts=$this->input->post('accounts',TRUE);
+				$memo=$this->input->post('memo',TRUE);
+				$dr_amount=$this->input->post('dr_amount',TRUE);
+				$cr_amount=$this->input->post('cr_amount',TRUE);
+				$department_id_line=$this->input->post('department_id_line',TRUE);
+
+				for($i=0;$i<=count($accounts)-1;$i++){
+					$m_journal_accounts->journal_id=$journal_id;
+					$m_journal_accounts->account_id=$accounts[$i];
+					$m_journal_accounts->dr_amount=$this->get_numeric_value($dr_amount[$i]);
+					$m_journal_accounts->cr_amount=$this->get_numeric_value($cr_amount[$i]);
+					$m_journal_accounts->department_id=$this->get_numeric_value($department_id_line[$i]);
+					$m_journal_accounts->save();
+				}
+                $m_journal->txn_no='TXN-'.date('Ymd').'-'.$journal_id;
+                $m_journal->modify($journal_id);
+
+                //mark pos integration item as posted
+                $pos_integration_items_id =$this->input->post('pos_integration_items_id',TRUE);	
+				$m_items->is_posted = 1;
+				$m_items->journal_id = $journal_id;
+				$m_items->posted_by=$this->session->user_id;
+				$m_items->set('posted_date','NOW()');
+				$m_items->modify($pos_integration_items_id);
+
+				$response['stat']='success';
+                $response['title']='Success!';
+                $response['msg']='Journal successfully posted';
+                echo json_encode($response);
+				break;
+
 
 				case 'finalize':
 					$m_items = $this->Pos_integration_items_model;

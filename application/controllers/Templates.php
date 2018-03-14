@@ -1243,7 +1243,8 @@ class Templates extends CORE_Controller {
             case 'pos_control':
                 $item_id=$filter_value;
                 $m_pos = $this->Pos_integration_items_model;
-
+                $data['departments']=$this->Departments_model->get_list(array('is_active'=>TRUE,'is_deleted'=>FALSE));
+                $data['customers']=$this->Customers_model->get_list(array('is_active'=>TRUE, 'is_deleted'=>FALSE));
                 $m_pos_int = $this->Pos_integration_model;
                 $int_data = $m_pos_int->get_list(null,
                     'pos_integration.*,
@@ -1259,6 +1260,15 @@ class Templates extends CORE_Controller {
                 $data['item'] = $pos_data[0];
                 $data['item_id'] =$item_id;
                 $data['entries'] = $m_pos->get_pos_entries_journal($item_id);
+
+                $m_accounts=$this->Account_title_model;
+                $data['accounts']=$m_accounts->get_list(
+                    array(
+                        'account_titles.is_active'=>TRUE,
+                        'account_titles.is_deleted'=>FALSE
+                    )
+                );
+
                 $content=$this->load->view('template/pos_control_content',$data,TRUE);
 
                 echo $content;
@@ -1859,6 +1869,7 @@ class Templates extends CORE_Controller {
 
                 $issuance_info=$m_issuance_model->get_list($issuance_id,
                     'issuance_info.*,
+                    DATE_FORMAT(issuance_info.date_issued,"%m/%d/%Y")as date_issued,
                     CONCAT_WS(" ",user_accounts.user_fname,user_accounts.user_lname)as posted_by
                     ',
                     array(
@@ -1946,7 +1957,7 @@ class Templates extends CORE_Controller {
 
                 $adjustment_info=$m_adjustment->get_list($adjustment_id,
                     'adjustment_info.*,
-                     DATE_FORMAT(adjustment_info.date_adjusted,"%m/%d/%Y %r")as date_adjusted,
+                     DATE_FORMAT(adjustment_info.date_adjusted,"%m/%d/%Y")as date_adjusted,
                     CONCAT_WS(" ",user_accounts.user_fname,user_accounts.user_lname)as posted_by
                     ',
                     array(

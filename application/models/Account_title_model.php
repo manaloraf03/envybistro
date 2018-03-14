@@ -106,8 +106,96 @@ class Account_title_model extends CORE_Model{
             return $this->db->query($sql)->result();
     }
 
+    function get_journal_id_with_account_no($account_Id=null,$includeChild=0){
+      $sql="SELECT ja.journal_id, SUM(ja.cr_amount) as tax 
+      FROM journal_accounts ja 
+
+           LEFT JOIN
+            journal_info AS ji ON ji.journal_id = ja.journal_id
+                LEFT JOIN
+            (account_titles AS at LEFT JOIN account_titles as par ON par.account_id=at.grand_parent_id) ON at.account_id = ja.account_id
+                LEFT JOIN
+            account_classes AS ac ON ac.account_class_id = at.account_class_id
+                LEFT JOIN
+            account_types AS atypes ON atypes.account_type_id = ac.account_type_id
+                LEFT JOIN
+            user_accounts AS ua ON ua.user_id = ji.created_by_user
+
+            WHERE 
+            ".($includeChild==0?
+                " ja.account_id=$account_Id ":
+                " at.grand_parent_id IN(SELECT atx.grand_parent_id FROM account_titles as atx WHERE atx.account_id=$account_Id)"
+            )."
 
 
+   AND ji.is_active = TRUE AND ji.is_deleted = FALSE
+      GROUP BY ja.journal_id";
+
+
+      return $this->db->query($sql)->result();
+    }
+
+    function get_account_subsidiary_wht($array,$account_Id,$start_Date,$end_Date,$includeChild){
+            $sql="
+            SELECT 
+
+            ji.date_txn,
+            ji.txn_no,
+            s.supplier_name,
+            s.address,
+            s.tin_no,
+            CONCAT(ji.ref_type,' #', ji.ref_no) as cv_no,
+            s.supplier_name,
+            IFNULL(ja.gross,0) as gross,
+            IFNULL(jatax.tax,0) as tax,
+            (IFNULL(ja.gross,0) - IFNULL(jatax.tax,0)) as net
+            FROM journal_info ji
+
+            LEFT JOIN 
+            (SELECT 
+            ja.journal_id,
+            SUM(ja.cr_amount) as gross FROM journal_accounts as ja
+            GROUP BY ja.journal_id) as ja ON ja.journal_id = ji.journal_id
+
+            LEFT JOIN  suppliers as s ON s.supplier_id = ji.supplier_id
+
+            LEFT JOIN
+            (SELECT ja.journal_id, SUM(ja.cr_amount) as tax 
+            FROM journal_accounts ja 
+            
+            LEFT JOIN
+            journal_info AS ji ON ji.journal_id = ja.journal_id
+                LEFT JOIN
+            (account_titles AS at LEFT JOIN account_titles as par ON par.account_id=at.grand_parent_id) ON at.account_id = ja.account_id
+                LEFT JOIN
+            account_classes AS ac ON ac.account_class_id = at.account_class_id
+                LEFT JOIN
+            account_types AS atypes ON atypes.account_type_id = ac.account_type_id
+                LEFT JOIN
+            user_accounts AS ua ON ua.user_id = ji.created_by_user
+                LEFT JOIN
+            suppliers AS s ON s.supplier_id = ji.supplier_id
+
+            WHERE 
+
+
+            ".($includeChild==0?
+                " ja.account_id=$account_Id ":
+                " at.grand_parent_id IN(SELECT atx.grand_parent_id FROM account_titles as atx WHERE atx.account_id=$account_Id)"
+            )."
+
+            GROUP BY journal_id ) as jatax ON jatax.journal_id = ji.journal_id 
+
+            WHERE ji.is_active = TRUE AND ji.is_deleted = FALSE
+            AND ji.book_type = 'CDJ' 
+            AND ji.journal_id IN ($array) 
+            AND ji.date_txn BETWEEN '$start_Date' AND '$end_Date'
+
+            ORDER BY ji.date_txn ASC
+
+           ";
+                return $this->db->query($sql)->result();
+        }
 
 }
 

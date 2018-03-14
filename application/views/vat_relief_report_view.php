@@ -109,12 +109,12 @@
                                                 </button>
                                                 <button class="btn btn-success btn btn-sm pull-left" style="margin-right: 5px; margin-top: 10px; margin-bottom: 10px;" id="btn_email" style="text-transform: none; font-family: Tahoma, Georgia, Serif; " data-toggle="modal" data-target="#salesInvoice" data-placement="left" title="Send to Email" ><i class="fa fa-share"></i> Email
                                                 </button> 
-                                                <button class="btn btn-primary pull-left" style="margin-right: 5px; margin-top: 10px; margin-bottom: 10px;" id="btn_print_v2" style="text-transform: none; font-family: Tahoma, Georgia, Serif; " data-toggle="modal" data-target="#salesInvoice" data-placement="left" title="2nd Version" ><i class="fa fa-print"></i> Print Report (Detailed)
-                                                </button>
+<!--                                                 <button class="btn btn-primary pull-left" style="margin-right: 5px; margin-top: 10px; margin-bottom: 10px;" id="btn_print_v2" style="text-transform: none; font-family: Tahoma, Georgia, Serif; " data-toggle="modal" data-target="#salesInvoice" data-placement="left" title="2nd Version" ><i class="fa fa-print"></i> Print Report (Detailed)
+                                                </button> -->
                                                 <button class="btn btn-primary pull-left" style="margin-right: 5px; margin-top: 10px; margin-bottom: 10px;" id="btn_export_v2" style="text-transform: none; font-family: Tahoma, Georgia, Serif; " data-toggle="modal" data-target="#salesInvoice" data-placement="left" title="2nd Version" ><i class="fa fa-file-excel-o"></i> Export to Excel (Detailed)
                                                 </button>
-                                                <button class="btn btn-primary btn btn-sm pull-left" style="margin-right: 5px; margin-top: 10px; margin-bottom: 10px;" id="btn_email_v2" style="text-transform: none; font-family: Tahoma, Georgia, Serif; " data-toggle="modal" data-target="#salesInvoice" data-placement="left" title="2nd Version" ><i class="fa fa-share"></i> Email (Detailed)
-                                                </button> </center>
+<!--                                                 <button class="btn btn-primary btn btn-sm pull-left" style="margin-right: 5px; margin-top: 10px; margin-bottom: 10px;" id="btn_email_v2" style="text-transform: none; font-family: Tahoma, Georgia, Serif; " data-toggle="modal" data-target="#salesInvoice" data-placement="left" title="2nd Version" ><i class="fa fa-share"></i> Email (Detailed)
+                                                </button>  --></center>
                                             </div>
 
 		                    				<table id="tbl_vat_relief" class="table table-striped" width="100%">

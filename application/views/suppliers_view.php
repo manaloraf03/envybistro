@@ -691,7 +691,19 @@ $(document).ready(function(){
                                                 </div>
                                             </div>
                                         </div>
-
+                                        <div class="col-md-12">
+                                            <div class="col-md-4" id="label">
+                                                 <label class="control-label boldlabel" style="text-align:right;">Tax Output % :</label>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">
+                                                        <i class="fa fa-code"></i>
+                                                    </span>
+                                                    <input type="text" name="tax_output" class="form-control" placeholder="Input Percentage Number Only"> 
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div class="col-md-12">
                                             <div class="col-md-4" id="label">
                                                  <label class="control-label boldlabel" style="text-align:right;"><font color="red"><b>*</b></font> Tax :</label>

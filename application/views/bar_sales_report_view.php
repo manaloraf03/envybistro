@@ -269,7 +269,7 @@ $(document).ready(function(){
                             .column( 3, { page: 'current'} )
                             .data()
                             .reduce( function (a, b) {
-                                console.log(intVal(a) + intVal(b));
+                                // console.log(intVal(a) + intVal(b));
                                 return intVal(a) + intVal(b);
                             }, 0 );
 
@@ -277,7 +277,7 @@ $(document).ready(function(){
                             .column( 4, { page: 'current'} )
                             .data()
                             .reduce( function (a, b) {
-                                console.log(intVal(a) + intVal(b));
+                                // console.log(intVal(a) + intVal(b));
                                 return intVal(a) + intVal(b);
                             }, 0 );
 
@@ -285,14 +285,14 @@ $(document).ready(function(){
                             .column( 5, { page: 'current'} )
                             .data()
                             .reduce( function (a, b) {
-                                console.log(intVal(a) + intVal(b));
+                                // console.log(intVal(a) + intVal(b));
                                 return intVal(a) + intVal(b);
                             }, 0 );
                         pageTotalcard = api
                             .column( 6, { page: 'current'} )
                             .data()
                             .reduce( function (a, b) {
-                                console.log(intVal(a) + intVal(b));
+                                // console.log(intVal(a) + intVal(b));
                                 return intVal(a) + intVal(b);
                             }, 0 );
 
@@ -300,7 +300,7 @@ $(document).ready(function(){
                             .column( 7, { page: 'current'} )
                             .data()
                             .reduce( function (a, b) {
-                                console.log(intVal(a) + intVal(b));
+                                // console.log(intVal(a) + intVal(b));
                                 return intVal(a) + intVal(b);
                             }, 0 );
 

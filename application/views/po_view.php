@@ -616,7 +616,19 @@
                                     </div>
                                 </div>
                             </div>
-
+                            <div class="col-md-12">
+                                <div class="col-md-4" id="label">
+                                     <label class="control-label boldlabel" style="text-align:right;">Tax Output % :</label>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-code"></i>
+                                        </span>
+                                        <input type="text" name="tax_output" class="form-control" placeholder="Input Percentage Number Only"> 
+                                    </div>
+                                </div>
+                            </div>
                             <div class="col-md-12">
                                 <div class="col-md-4" id="label">
                                     <label class="control-label boldlabel" style="text-align:right;"><font color="red"><b>*</b></font> Tax :</label>
@@ -1355,11 +1367,11 @@ $(document).ready(function(){
 
 
         //track every changes on numeric fields
-        $('#tbl_items tbody').on('keyup ','input.numeric,input.number',function(){
+        $('#tbl_items tbody').on('keyup ','input.numeric',function(){
             var row=$(this).closest('tr');
             var price=parseFloat(accounting.unformat(row.find(oTableItems.unit_price).find('input.numeric').val()));
             var discount=parseFloat(accounting.unformat(row.find(oTableItems.discount).find('input.numeric').val()));
-            var qty=parseFloat(accounting.unformat(row.find(oTableItems.qty).find('input.number').val()));
+            var qty=parseFloat(accounting.unformat(row.find(oTableItems.qty).find('input.numeric').val()));
             var tax_rate=parseFloat(accounting.unformat(row.find(oTableItems.tax).find('input.numeric').val()))/100;
 
             // if(discount>price){
@@ -1687,7 +1699,7 @@ $(document).ready(function(){
             unit  = '<td width="5%"><select class="line_unit'+d.a+'" name="unit_id[]" ><option value="'+d.parent_unit_id+'" data-unit-identifier="1">'+d.parent_unit_name+'</option></select></td>';
         }
         return '<tr>'+
-        '<td ><input name="po_qty[]" type="text" class="number form-control" value="'+ d.po_qty+'"></td>'+unit+'<td >'+d.product_desc+' <input type="text" style="display:none;" class="form-control" name="is_parent[]" value="'+d.is_parent+'"></td>'+
+        '<td ><input name="po_qty[]" type="text" class="numeric form-control" value="'+ d.po_qty+'"></td>'+unit+'<td >'+d.product_desc+' <input type="text" style="display:none;" class="form-control" name="is_parent[]" value="'+d.is_parent+'"></td>'+
 
         '<td ><input name="po_price[]" type="text" class="numeric form-control" value="'+accounting.formatNumber(d.po_price,2)+'" style="text-align:right;"></td>'+
         '<td ><input name="po_discount[]" type="text" class="numeric form-control" value="'+ accounting.formatNumber(d.po_discount,2)+'" style="text-align:right;"></td>'+
