@@ -105,19 +105,16 @@
         <div class="tab-container tab-top tab-primary">
             <ul class="nav nav-tabs">
                 <li class="active"><a href="#accounts_integration_setting" data-toggle="tab" style="font-family: tahoma;"><i class="fa fa-gear"></i> Pos Integration Settings</a></li>
-
             </ul>
             <div class="tab-content">
-
                 <div class="tab-pane active" id="accounts_integration_setting" style="min-height: 300px;">
-
                     <form id="frm_account_integration" role="form" class="form-horizontal row-border">
                         <br >
                         <h4><span style="margin-left: 1%"><strong><i class="fa fa-gear"></i> Sales Journal Details</strong></span></h4>
                         <div class="form-group">
-                            <label class="col-md-3 control-label"> * Department :</label>
+                            <label class="col-md-3 control-label">  Department :</label>
                             <div class="col-md-7">
-                                <select name="department_id" class="cbo_accounts" data-error-msg="Department is required." required>
+                                <select name="card_id" class="cbo_accounts" data-error-msg="Department is required." required>
                                     <?php foreach($departments as $department){ ?>
                                         <option value="<?php echo $department->department_id; ?>" <?php echo ($current_accounts->department_id==$department->department_id?'selected':''); ?>  ><?php echo $department->department_name; ?></option>
                                     <?php } ?>
@@ -126,81 +123,145 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="col-md-3 control-label"> * Customer :</label>
+                            <label class="col-md-3 control-label">  Various Customers :</label>
                             <div class="col-md-7">
-                                <select name="customer_id" class="cbo_accounts" data-error-msg="Department is required." required>
+                                <select name="department_id" class="cbo_accounts" data-error-msg="Department is required." required>
                                     <?php foreach($customers as $customer){ ?>
                                         <option value="<?php echo $customer->customer_id; ?>" <?php echo ($current_accounts->customer_id==$customer->customer_id?'selected':''); ?>  ><?php echo $customer->customer_name; ?></option>
                                     <?php } ?>
                                 </select>
                             </div>
                         </div>
-
-                        <h4><span style="margin-left: 1%"><strong><i class="fa fa-gear"></i> Income Integration Account</strong></span></h4>
-
-                        <div class="form-group">
-                            <label class="col-md-3 control-label"> *Sales Income :</label>
-                            <div class="col-md-7">
-                                <select name="income_sales" class="cbo_accounts" data-error-msg="Sales Income Account is required." required>
-                                    <?php foreach($accounts as $account){ ?>
-                                        <option value="<?php echo $account->account_id; ?>" <?php echo ($current_accounts->income_sales==$account->account_id?'selected':''); ?>  ><?php echo $account->account_title; ?></option>
-                                    <?php } ?>
-                                </select>
-                            </div>
-                        </div>
-
                         <h4><span style="margin-left: 1%"><strong><i class="fa fa-gear"></i> Asset Integration Account</strong></span></h4>
-
-
                         <div class="form-group">
-                            <label class="col-md-3 control-label"> * Cash Sales :</label>
+                            <label class="col-md-3 control-label">  Cash :</label>
                             <div class="col-md-7">
-                                <select name="asset_cash" class="cbo_accounts" data-error-msg="Cash Sales Account is required." required>
+                                <select name="cash_id" class="cbo_accounts" data-error-msg="Cash Account is required." required>
                                     <?php foreach($accounts as $account){ ?>
-                                        <option value="<?php echo $account->account_id; ?>" <?php echo ($current_accounts->asset_cash==$account->account_id?'selected':''); ?>  ><?php echo $account->account_title; ?></option>
+                                        <option value="<?php echo $account->account_id; ?>" <?php echo ($current_accounts->cash_id==$account->account_id?'selected':''); ?>  ><?php echo $account->account_title; ?></option>
                                     <?php } ?>
                                 </select>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-md-3 control-label"> * Card Sales :</label>
+                            <label class="col-md-3 control-label">  Check  :</label>
                             <div class="col-md-7">
-                                <select name="asset_card" class="cbo_accounts" data-error-msg="Card Sales Account is required." required>
+                                <select name="check_id" class="cbo_accounts" data-error-msg="Check  Account is required." required>
                                     <?php foreach($accounts as $account){ ?>
-                                        <option value="<?php echo $account->account_id; ?>" <?php echo ($current_accounts->asset_card==$account->account_id?'selected':''); ?>  ><?php echo $account->account_title; ?></option>
+                                        <option value="<?php echo $account->account_id; ?>" <?php echo ($current_accounts->check_id==$account->account_id?'selected':''); ?>  ><?php echo $account->account_title; ?></option>
                                     <?php } ?>
                                 </select>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-md-3 control-label"> * Check Sales :</label>
+                            <label class="col-md-3 control-label">  Card  :</label>
                             <div class="col-md-7">
-                                <select name="asset_check" class="cbo_accounts" data-error-msg="Check Sales Account is required." required>
+                                <select name="card_id" class="cbo_accounts" data-error-msg="Card  Account is required." required>
                                     <?php foreach($accounts as $account){ ?>
-                                        <option value="<?php echo $account->account_id; ?>" <?php echo ($current_accounts->asset_check==$account->account_id?'selected':''); ?>  ><?php echo $account->account_title; ?></option>
+                                        <option value="<?php echo $account->account_id; ?>" <?php echo ($current_accounts->card_id==$account->account_id?'selected':''); ?>  ><?php echo $account->account_title; ?></option>
                                     <?php } ?>
                                 </select>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-md-3 control-label"> * GC Sales :</label>
+                            <label class="col-md-3 control-label">  Gift Check :</label>
                             <div class="col-md-7">
-                                <select name="asset_gc" class="cbo_accounts" data-error-msg="GC Sales Account is required." required>
+                                <select name="gc_id" class="cbo_accounts" data-error-msg="GC Account is required." required>
                                     <?php foreach($accounts as $account){ ?>
-                                        <option value="<?php echo $account->account_id; ?>" <?php echo ($current_accounts->asset_gc==$account->account_id?'selected':''); ?>  ><?php echo $account->account_title; ?></option>
+                                        <option value="<?php echo $account->account_id; ?>" <?php echo ($current_accounts->gc_id==$account->account_id?'selected':''); ?>  ><?php echo $account->account_title; ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">  Accounts Receivable :</label>
+                            <div class="col-md-7">
+                                <select name="ar_id" class="cbo_accounts" data-error-msg="Accounts Receivable Account is required." required>
+                                    <?php foreach($accounts as $account){ ?>
+                                        <option value="<?php echo $account->account_id; ?>" <?php echo ($current_accounts->ar_id==$account->account_id?'selected':''); ?>  ><?php echo $account->account_title; ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                        </div>
+                        <h4><span style="margin-left: 1%"><strong><i class="fa fa-gear"></i> Discount Account</strong></span></h4>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">  Customer Discount :</label>
+                            <div class="col-md-7">
+                                <select name="regular_discount_id" class="cbo_accounts" data-error-msg="Customer Discount Account is required." required>
+                                    <?php foreach($accounts as $account){ ?>
+                                        <option value="<?php echo $account->account_id; ?>" <?php echo ($current_accounts->regular_discount_id==$account->account_id?'selected':''); ?>  ><?php echo $account->account_title; ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">  Senior Citizen Discount  :</label>
+                            <div class="col-md-7">
+                                <select name="sc_discount_id" class="cbo_accounts" data-error-msg="Senior Citizen Discount  Account is required." required>
+                                    <?php foreach($accounts as $account){ ?>
+                                        <option value="<?php echo $account->account_id; ?>" <?php echo ($current_accounts->sc_discount_id==$account->account_id?'selected':''); ?>  ><?php echo $account->account_title; ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">  OTH Discount :</label>
+                            <div class="col-md-7">
+                                <select name="oth_discount_id" class="cbo_accounts" data-error-msg="OTH Account is required." required>
+                                    <?php foreach($accounts as $account){ ?>
+                                        <option value="<?php echo $account->account_id; ?>" <?php echo ($current_accounts->oth_discount_id==$account->account_id?'selected':''); ?>  ><?php echo $account->account_title; ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                        </div>
+                        <h4><span style="margin-left: 1%"><strong><i class="fa fa-gear"></i> Income Integration Account</strong></span></h4>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">  Kitchen Sales:</label>
+                            <div class="col-md-7">
+                                <select name="kitchen_id" class="cbo_accounts" data-error-msg=" Kitchen Sales Account is required." required>
+                                    <?php foreach($accounts as $account){ ?>
+                                        <option value="<?php echo $account->account_id; ?>" <?php echo ($current_accounts->kitchen_id==$account->account_id?'selected':''); ?>  ><?php echo $account->account_title; ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">  Bar Sales:</label>
+                            <div class="col-md-7">
+                                <select name="bar_id" class="cbo_accounts" data-error-msg=" Bar Sales Account is required." required>
+                                    <?php foreach($accounts as $account){ ?>
+                                        <option value="<?php echo $account->account_id; ?>" <?php echo ($current_accounts->bar_id==$account->account_id?'selected':''); ?>  ><?php echo $account->account_title; ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">  Recreational Sales:</label>
+                            <div class="col-md-7">
+                                <select name="recreational_id" class="cbo_accounts" data-error-msg=" Recreational Sales Account is required." required>
+                                    <?php foreach($accounts as $account){ ?>
+                                        <option value="<?php echo $account->account_id; ?>" <?php echo ($current_accounts->recreational_id==$account->account_id?'selected':''); ?>  ><?php echo $account->account_title; ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">  Merchandise Sales:</label>
+                            <div class="col-md-7">
+                                <select name="merchandise_id" class="cbo_accounts" data-error-msg=" Merchandise Sales Account is required." required>
+                                    <?php foreach($accounts as $account){ ?>
+                                        <option value="<?php echo $account->account_id; ?>" <?php echo ($current_accounts->merchandise_id==$account->account_id?'selected':''); ?>  ><?php echo $account->account_title; ?></option>
                                     <?php } ?>
                                 </select>
                             </div>
                         </div>
                         <h4><span style="margin-left: 1%"><strong><i class="fa fa-gear"></i> Tax Account</strong></span></h4>
-
-
                         <div class="form-group">
-                            <label class="col-md-3 control-label"> * Tax Account :</label>
+                            <label class="col-md-3 control-label">  Tax Account :</label>
                             <div class="col-md-7">
-                                <select name="tax" class="cbo_accounts" data-error-msg="Tax Account is required." required>
+                                <select name="tax_id" class="cbo_accounts" data-error-msg="Tax Account is required." required>
                                     <?php foreach($accounts as $account){ ?>
-                                        <option value="<?php echo $account->account_id; ?>" <?php echo ($current_accounts->tax==$account->account_id?'selected':''); ?>  ><?php echo $account->account_title; ?></option>
+                                        <option value="<?php echo $account->account_id; ?>" <?php echo ($current_accounts->tax_id==$account->account_id?'selected':''); ?>  ><?php echo $account->account_title; ?></option>
                                     <?php } ?>
                                 </select>
                             </div>

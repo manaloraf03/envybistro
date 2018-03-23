@@ -1268,9 +1268,7 @@ class Templates extends CORE_Controller {
                         'account_titles.is_deleted'=>FALSE
                     )
                 );
-
                 $content=$this->load->view('template/pos_control_content',$data,TRUE);
-
                 echo $content;
 
                 break;

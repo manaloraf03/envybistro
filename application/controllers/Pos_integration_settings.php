@@ -52,16 +52,21 @@ class Pos_integration_settings extends CORE_Controller
                 $m_integration->delete(1); //delete it first
 
                 $m_integration->pos_integration_id=1;
-
-                $m_integration->department_id=$this->input->post('department_id',TRUE);
-                $m_integration->customer_id=$this->input->post('customer_id',TRUE);
-                $m_integration->asset_cash=$this->input->post('asset_cash',TRUE);
-                $m_integration->asset_card=$this->input->post('asset_card',TRUE);
-                $m_integration->asset_check=$this->input->post('asset_check',TRUE);
-                $m_integration->asset_gc=$this->input->post('asset_gc',TRUE);
-                $m_integration->income_sales=$this->input->post('income_sales',TRUE);
-                $m_integration->tax=$this->input->post('tax',TRUE);
-
+                $m_integration->department_id =$this->input->post('department_id',TRUE);
+                $m_integration->customer_id =$this->input->post('customer_id',TRUE);
+                $m_integration->cash_id =$this->input->post('cash_id',TRUE);
+                $m_integration->check_id =$this->input->post('check_id',TRUE);
+                $m_integration->card_id =$this->input->post('card_id',TRUE);
+                $m_integration->gc_id =$this->input->post('gc_id',TRUE);
+                $m_integration->ar_id =$this->input->post('ar_id',TRUE);
+                $m_integration->regular_discount_id =$this->input->post('regular_discount_id',TRUE);
+                $m_integration->sc_discount_id =$this->input->post('sc_discount_id',TRUE);
+                $m_integration->oth_discount_id =$this->input->post('oth_discount_id',TRUE);
+                $m_integration->kitchen_id =$this->input->post('kitchen_id',TRUE);
+                $m_integration->bar_id =$this->input->post('bar_id',TRUE);
+                $m_integration->recreational_id =$this->input->post('recreational_id',TRUE);
+                $m_integration->merchandise_id =$this->input->post('merchandise_id',TRUE);
+                $m_integration->tax_id =$this->input->post('tax_id',TRUE);
                 $m_integration->save();
 
                 $response['stat']="success";

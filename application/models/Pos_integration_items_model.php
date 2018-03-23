@@ -33,19 +33,19 @@ ORDER BY sales_date ASC
 function get_pos_entries_journal($item_id){
 
 
-$sql="SELECT main.*,ac.account_title FROM (SELECT 
-(SELECT  asset_cash from pos_integration) as account_id,
+$sql="SELECT main.*,ac.account_title FROM 
+(SELECT 
+(SELECT  cash_id from pos_integration) as account_id,
 '' as memo,
 cash_amount as dr_amount,
 0 as cr_amount
 FROM pos_integration_items
 WHERE pos_integration_items_id = $item_id
 
-
 UNION ALL
 
 SELECT 
-(SELECT  asset_check from pos_integration) as account_id,
+(SELECT  check_id from pos_integration) as account_id,
 '' as memo,
 check_amount as dr_amount,
 0 as cr_amount
@@ -55,7 +55,7 @@ WHERE pos_integration_items_id = $item_id
 UNION ALL
 
 SELECT 
-(SELECT  asset_card from pos_integration) as account_id,
+(SELECT  card_id from pos_integration) as account_id,
 '' as memo,
 card_amount as dr_amount,
 0 as cr_amount
@@ -65,7 +65,7 @@ WHERE pos_integration_items_id = $item_id
 UNION ALL
 
 SELECT 
-(SELECT  asset_gc from pos_integration) as account_id,
+(SELECT  gc_id from pos_integration) as account_id,
 '' as memo,
 gc_amount as dr_amount,
 0 as cr_amount
@@ -74,23 +74,91 @@ WHERE pos_integration_items_id = $item_id
 
 UNION ALL
 
-SELECT (SELECT income_sales from pos_integration) as account_id,
+SELECT 
+(SELECT  ar_id from pos_integration) as account_id,
 '' as memo,
-0 as dr_amount,
-(IFNULL(total,0)- IFNULL(tax_amount,0)) as cr_amount
-from pos_integration_items
+ar_amount as dr_amount,
+0 as cr_amount
+FROM pos_integration_items
 WHERE pos_integration_items_id = $item_id
+
+UNION ALL
+
+SELECT 
+(SELECT  regular_discount_id from pos_integration) as account_id,
+'' as memo,
+regular_discount as dr_amount,
+0 as cr_amount
+FROM pos_integration_items
+WHERE pos_integration_items_id = $item_id
+
+UNION ALL
+
+SELECT 
+(SELECT  sc_discount_id from pos_integration) as account_id,
+'' as memo,
+sc_discount as dr_amount,
+0 as cr_amount
+FROM pos_integration_items
+WHERE pos_integration_items_id = $item_id
+
+UNION ALL
+
+SELECT 
+(SELECT  oth_discount_id from pos_integration) as account_id,
+'' as memo,
+oth_discount as dr_amount,
+0 as cr_amount
+FROM pos_integration_items
+WHERE pos_integration_items_id = $item_id
+
+
 
 
 UNION ALL
 
-SELECT (SELECT tax from pos_integration) as account_id,
+SELECT (SELECT kitchen_id from pos_integration) as account_id,
+'' as memo,
+0 as dr_amount,
+kitchen_sales as cr_amount
+from pos_integration_items
+WHERE pos_integration_items_id = $item_id
+
+UNION ALL
+
+SELECT (SELECT bar_id from pos_integration) as account_id,
+'' as memo,
+0 as dr_amount,
+bar_sales as cr_amount
+from pos_integration_items
+WHERE pos_integration_items_id = $item_id
+
+UNION ALL
+
+SELECT (SELECT recreational_id from pos_integration) as account_id,
+'' as memo,
+0 as dr_amount,
+recreational_sales as cr_amount
+from pos_integration_items
+WHERE pos_integration_items_id = $item_id
+
+UNION ALL
+
+SELECT (SELECT merchandise_id from pos_integration) as account_id,
+'' as memo,
+0 as dr_amount,
+merchandise_sales as cr_amount
+from pos_integration_items
+WHERE pos_integration_items_id = $item_id
+
+UNION ALL
+
+SELECT (SELECT tax_id from pos_integration) as account_id,
 '' as memo,
 0 as dr_amount,
 tax_amount as cr_amount
 from pos_integration_items
-WHERE pos_integration_items_id = $item_id
-) as main
+WHERE pos_integration_items_id = $item_id) as main
  
 LEFT JOIN account_titles ac ON ac.account_id = main.account_id
 
@@ -102,19 +170,25 @@ function get_pos_list_front_end($sales_date){
 
 
 $sql="
-
 SELECT main.*,
-CASE WHEN main.dr_amount = main.cr_amount THEN 1 ELSE 0 END as is_equal
+CASE WHEN main.dr_amount = main.cr_amount THEN 1 ELSE 0 END as is_equal 
 FROM
-
-(SELECT pii.pos_integration_items_id,
-pii.sales_date,
+(SELECT
+pii.pos_integration_items_id,
 pii.cashier,
-(IFNULL(pii.cash_amount,0) + IFNULL(pii.check_amount,0) + IFNULL(pii.card_amount,0) + IFNULL(pii.gc_amount,0)) dr_amount,
-IFNULL(pii.total,0) as cr_amount,
-ref_no  FROM pos_integration_items pii
+pii.ref_no,
+pii.sales_date,
+pii.item_type,
+(IFNULL(pii.cash_amount,0) + IFNULL(pii.check_amount,0) + IFNULL(pii.card_amount,0) +  IFNULL(pii.gc_amount,0) + 
+IFNULL(pii.ar_amount,0) + 
+IFNULL(pii.regular_discount,0) + IFNULL(pii.sc_discount,0) + IFNULL(pii.oth_discount,0)) as dr_amount,
+(IFNULL(pii.kitchen_sales,0) + IFNULL(pii.bar_sales,0) + IFNULL(pii.recreational_sales,0) + IFNULL(pii.merchandise_sales,0) +
+IFNULL(pii.tax_amount,0)) as cr_amount
 
-WHERE  pii.is_posted = FALSE AND pii.sales_date <= '$sales_date') as main
+ FROM pos_integration_items pii
+
+WHERE  pii.is_posted = FALSE AND pii.sales_date <= '$sales_date'
+ ) as main 
 ";
         return $this->db->query($sql)->result();
 }

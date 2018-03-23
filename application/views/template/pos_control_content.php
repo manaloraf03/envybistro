@@ -25,7 +25,7 @@
             <div class="tab-container tab-top tab-default">
             <ul class="nav nav-tabs">
                 <li class="active"><a href="#journal_review_<?php echo $item_id; ?>" data-toggle="tab"><i class="fa fa-gavel"></i> Review Journal</a></li>
-                <li class=""><a href="#pos_review_<?php echo $item_id; ?>" data-toggle="tab"><i class="fa fa-folder-open-o"></i> Transaction</a></li>
+                <!-- <li class=""><a href="#pos_review_<?php echo $item_id; ?>" data-toggle="tab"><i class="fa fa-folder-open-o"></i> Transaction</a></li> -->
             </ul>
                 <div class="tab-content">
                  <div class="tab-pane active" id="journal_review_<?php echo $item_id; ?>" data-parent-id="<?php echo $item_id; ?>" style="min-height: 300px;">
@@ -57,7 +57,7 @@
                             <div class="col-lg-10">
                                 <select name="customer_id" class="selectpicker cbo_customer_list show-tick form-control" data-live-search="true" data-error-msg="Customer is required." required>
                                     <?php foreach($customers as $customer){ ?>
-                                        <option value='<?php echo $customer->customer_id; ?>' <?php echo ($customer->customer_id==$int->customer_id)? 'selected':'' ?>><?php echo $customer->customer_name; ?></option>
+                                        <option value='<?php echo $customer->customer_id; ?>' <?php echo ($customer->customer_id==$customer_id)? 'selected':'' ?>><?php echo $customer->customer_name; ?></option>
                                     <?php } ?>
                                 </select>
                             </div>
@@ -129,7 +129,7 @@
                 </div>    
                 <!-- End OF First tab -->
                  <div class="tab-pane" id="pos_review_<?php echo $item_id; ?>" data-parent-id="<?php echo $item_id; ?>" style="min-height: 300px;">
-                 Cashier Name: <?php echo $item->cashier; ?><br>
+<!--                  Cashier Name: <?php echo $item->cashier; ?><br>
                  Batch Date and Time: <?php echo date_format($date,'m/d/Y H:i:s A');?><br>
                  Beverage Sales - <br>
                  Food Sales - <br>
@@ -142,7 +142,7 @@
                  Cigarettes - <br>
                  Souvenier - <br>
                  Pool Locker - <br>
-                 Charge to Customer - <br>
+                 Charge to Customer - <br> -->
 
 
 

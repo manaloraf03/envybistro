@@ -157,6 +157,7 @@
                             <tr>
                                 <th></th>
                                 <th>Sales Date</th>
+                                <th>Transaction</th>
                                 <th>Cashier</th>
                                 <th>Debit Amount</th>
                                 <th>Credit Amount</th>
@@ -293,13 +294,14 @@ var dtReviewPos;
                     "defaultContent": ""
                 },
                 { targets:[1],data: "sales_date" },
-                { targets:[2],data: "cashier" },
-                { sClass: 'right-align' , targets:[3],data: "dr_amount" ,render: $.fn.dataTable.render.number( ',', '.', 2 ) },
-                { sClass: 'right-align' , targets:[4],data: "cr_amount",render: $.fn.dataTable.render.number( ',', '.', 2 ) },
+                { targets:[2],data: "item_type" },
+                { targets:[3],data: "cashier" },
+                { sClass: 'right-align' , targets:[4],data: "dr_amount" ,render: $.fn.dataTable.render.number( ',', '.', 2 ) },
+                { sClass: 'right-align' , targets:[5],data: "cr_amount",render: $.fn.dataTable.render.number( ',', '.', 2 ) },
 
-                { targets:[5],data: "ref_no" },
+                { targets:[6],data: "ref_no" },
                                 {
-                    targets:[6],data: null,
+                    targets:[7],data: null,
                     render: function (data, type, full, meta){
                         var _attribute='';
                         //console.log(data.is_email_sent);
@@ -361,7 +363,7 @@ var dtReviewPos;
                     $.ajax({
                         "dataType":"html",
                         "type":"POST",
-                        "url":"Templates/layout/pos_control/"+ d.pos_integration_items_id,
+                        "url":"Pos_control_panel/transaction/pos_control/"+ d.pos_integration_items_id,
                         "beforeSend" : function(){
                             row.child( '<center><br /><img src="assets/img/loader/ajax-loader-lg.gif" /><br /><br /></center>' ).show();
                         }
