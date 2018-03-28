@@ -136,6 +136,7 @@ class Bar_sales_report extends CORE_Controller {
                     $excel->Align_right('E',$i);
                     $excel->Align_right('F',$i);
                     $excel->Align_right('G',$i);
+                    $excel->Align_right('H',$i);
                     $excel->getActiveSheet()->setCellValue('A'.$i,'Sales Date')->getStyle('A'.$i)->getFont()->setBold(TRUE);
                     $excel->getActiveSheet()->setCellValue('B'.$i,'Cashier')->getStyle('B'.$i)->getFont()->setBold(TRUE);
                     $excel->getActiveSheet()->setCellValue('c'.$i,'Total Amount')->getStyle('C'.$i)->getFont()->setBold(TRUE);
@@ -143,6 +144,7 @@ class Bar_sales_report extends CORE_Controller {
                     $excel->getActiveSheet()->setCellValue('E'.$i,'Check')->getStyle('E'.$i)->getFont()->setBold(TRUE);
                     $excel->getActiveSheet()->setCellValue('F'.$i,'Card')->getStyle('F'.$i)->getFont()->setBold(TRUE);
                     $excel->getActiveSheet()->setCellValue('G'.$i,'Gift Check')->getStyle('G'.$i)->getFont()->setBold(TRUE);
+                    $excel->getActiveSheet()->setCellValue('H'.$i,'A/R')->getStyle('H'.$i)->getFont()->setBold(TRUE);
 
                     $i++;
                     $total = 0;
@@ -150,27 +152,31 @@ class Bar_sales_report extends CORE_Controller {
                     $total_card = 0;
                     $total_check = 0;
                     $total_gc = 0;
+                    $total_ar = 0;
                     foreach ($reports as $report) {
                         $excel->Align_right('C',$i);
                         $excel->Align_right('D',$i);
                         $excel->Align_right('E',$i);
                         $excel->Align_right('F',$i);
                         $excel->Align_right('G',$i);
+                        $excel->Align_right('H',$i);
                         $excel->getActiveSheet()->setCellValue('A'.$i,$report->sales_date);
                         $excel->getActiveSheet()->setCellValue('B'.$i,$report->cashier);
-                        $excel->getActiveSheet()->setCellValue('c'.$i,(number_format($report->total,2) == 0 ? '0.00' : number_format($report->total,2)));
+                        $excel->getActiveSheet()->setCellValue('c'.$i,(number_format($report->total_amount,2) == 0 ? '0.00' : number_format($report->total_amount,2)));
                         $excel->getActiveSheet()->setCellValue('D'.$i,(number_format($report->cash_amount,2) == 0 ? '0.00' : number_format($report->cash_amount,2)));
                         $excel->getActiveSheet()->setCellValue('E'.$i,(number_format($report->check_amount,2) == 0 ? '0.00' : number_format($report->check_amount,2)));
                         $excel->getActiveSheet()->setCellValue('F'.$i,(number_format($report->card_amount,2) == 0 ? '0.00' : number_format($report->card_amount,2)));
                         $excel->getActiveSheet()->setCellValue('G'.$i,(number_format($report->gc_amount,2) == 0 ? '0.00' : number_format($report->gc_amount,2)));
+                        $excel->getActiveSheet()->setCellValue('H'.$i,(number_format($report->ar_amount,2) == 0 ? '0.00' : number_format($report->ar_amount,2)));
                         
                     $i++;
 
-                   $total += $report->total ;
+                   $total += $report->total_amount ;
                    $total_cash += $report->cash_amount;
                    $total_card += $report->card_amount;
                    $total_check+= $report->check_amount;
                    $total_gc+= $report->gc_amount;
+                   $total_ar+= $report->ar_amount;
                     }
 
                         $excel->Align_right('C',$i);
@@ -178,12 +184,13 @@ class Bar_sales_report extends CORE_Controller {
                         $excel->Align_right('E',$i);
                         $excel->Align_right('F',$i);
                         $excel->Align_right('G',$i);
+                        $excel->Align_right('H',$i);
                         $excel->getActiveSheet()->setCellValue('c'.$i,(number_format($total,2) == 0 ? '0.00' : number_format($total,2)))->getStyle('C'.$i)->getFont()->setBold(TRUE);
                         $excel->getActiveSheet()->setCellValue('D'.$i,(number_format($total_cash,2) == 0 ? '0.00' : number_format($total_cash,2)))->getStyle('D'.$i)->getFont()->setBold(TRUE);
                         $excel->getActiveSheet()->setCellValue('F'.$i,(number_format($total_card,2) == 0 ? '0.00' : number_format($total_card,2)))->getStyle('E'.$i)->getFont()->setBold(TRUE);
                         $excel->getActiveSheet()->setCellValue('E'.$i,(number_format($total_check,2) == 0 ? '0.00' : number_format($total_check,2)))->getStyle('F'.$i)->getFont()->setBold(TRUE);
                         $excel->getActiveSheet()->setCellValue('G'.$i,(number_format($total_gc,2) == 0 ? '0.00' : number_format($total_gc,2)))->getStyle('G'.$i)->getFont()->setBold(TRUE);
-                        
+                        $excel->getActiveSheet()->setCellValue('H'.$i,(number_format($total_ar,2) == 0 ? '0.00' : number_format($total_ar,2)))->getStyle('H'.$i)->getFont()->setBold(TRUE);
 
                     header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
                     header('Content-Disposition: attachment;filename='."Bar Sales Report.xlsx".'');
@@ -261,6 +268,7 @@ class Bar_sales_report extends CORE_Controller {
                     $excel->Align_right('E',$i);
                     $excel->Align_right('F',$i);
                     $excel->Align_right('G',$i);
+                    $excel->Align_right('H',$i);
                     $excel->getActiveSheet()->setCellValue('A'.$i,'Sales Date')->getStyle('A'.$i)->getFont()->setBold(TRUE);
                     $excel->getActiveSheet()->setCellValue('B'.$i,'Cashier')->getStyle('B'.$i)->getFont()->setBold(TRUE);
                     $excel->getActiveSheet()->setCellValue('c'.$i,'Total Amount')->getStyle('C'.$i)->getFont()->setBold(TRUE);
@@ -268,34 +276,39 @@ class Bar_sales_report extends CORE_Controller {
                     $excel->getActiveSheet()->setCellValue('E'.$i,'Check')->getStyle('E'.$i)->getFont()->setBold(TRUE);
                     $excel->getActiveSheet()->setCellValue('F'.$i,'Card')->getStyle('F'.$i)->getFont()->setBold(TRUE);
                     $excel->getActiveSheet()->setCellValue('G'.$i,'Gift Check')->getStyle('G'.$i)->getFont()->setBold(TRUE);
+                    $excel->getActiveSheet()->setCellValue('H'.$i,'A/R')->getStyle('H'.$i)->getFont()->setBold(TRUE);
 
-                    $i++;
+                   $i++;
                     $total = 0;
                     $total_cash = 0;
                     $total_card = 0;
                     $total_check = 0;
                     $total_gc = 0;
+                    $total_ar = 0;
                     foreach ($reports as $report) {
                         $excel->Align_right('C',$i);
                         $excel->Align_right('D',$i);
                         $excel->Align_right('E',$i);
                         $excel->Align_right('F',$i);
                         $excel->Align_right('G',$i);
+                        $excel->Align_right('H',$i);
                         $excel->getActiveSheet()->setCellValue('A'.$i,$report->sales_date);
                         $excel->getActiveSheet()->setCellValue('B'.$i,$report->cashier);
-                        $excel->getActiveSheet()->setCellValue('c'.$i,(number_format($report->total,2) == 0 ? '0.00' : number_format($report->total,2)));
+                        $excel->getActiveSheet()->setCellValue('c'.$i,(number_format($report->total_amount,2) == 0 ? '0.00' : number_format($report->total_amount,2)));
                         $excel->getActiveSheet()->setCellValue('D'.$i,(number_format($report->cash_amount,2) == 0 ? '0.00' : number_format($report->cash_amount,2)));
                         $excel->getActiveSheet()->setCellValue('E'.$i,(number_format($report->check_amount,2) == 0 ? '0.00' : number_format($report->check_amount,2)));
                         $excel->getActiveSheet()->setCellValue('F'.$i,(number_format($report->card_amount,2) == 0 ? '0.00' : number_format($report->card_amount,2)));
                         $excel->getActiveSheet()->setCellValue('G'.$i,(number_format($report->gc_amount,2) == 0 ? '0.00' : number_format($report->gc_amount,2)));
+                        $excel->getActiveSheet()->setCellValue('H'.$i,(number_format($report->ar_amount,2) == 0 ? '0.00' : number_format($report->ar_amount,2)));
                         
                     $i++;
 
-                   $total += $report->total ;
+                   $total += $report->total_amount ;
                    $total_cash += $report->cash_amount;
                    $total_card += $report->card_amount;
                    $total_check+= $report->check_amount;
                    $total_gc+= $report->gc_amount;
+                   $total_ar+= $report->ar_amount;
                     }
 
                         $excel->Align_right('C',$i);
@@ -303,11 +316,13 @@ class Bar_sales_report extends CORE_Controller {
                         $excel->Align_right('E',$i);
                         $excel->Align_right('F',$i);
                         $excel->Align_right('G',$i);
+                        $excel->Align_right('H',$i);
                         $excel->getActiveSheet()->setCellValue('c'.$i,(number_format($total,2) == 0 ? '0.00' : number_format($total,2)))->getStyle('C'.$i)->getFont()->setBold(TRUE);
                         $excel->getActiveSheet()->setCellValue('D'.$i,(number_format($total_cash,2) == 0 ? '0.00' : number_format($total_cash,2)))->getStyle('D'.$i)->getFont()->setBold(TRUE);
                         $excel->getActiveSheet()->setCellValue('F'.$i,(number_format($total_card,2) == 0 ? '0.00' : number_format($total_card,2)))->getStyle('E'.$i)->getFont()->setBold(TRUE);
                         $excel->getActiveSheet()->setCellValue('E'.$i,(number_format($total_check,2) == 0 ? '0.00' : number_format($total_check,2)))->getStyle('F'.$i)->getFont()->setBold(TRUE);
                         $excel->getActiveSheet()->setCellValue('G'.$i,(number_format($total_gc,2) == 0 ? '0.00' : number_format($total_gc,2)))->getStyle('G'.$i)->getFont()->setBold(TRUE);
+                        $excel->getActiveSheet()->setCellValue('H'.$i,(number_format($total_ar,2) == 0 ? '0.00' : number_format($total_ar,2)))->getStyle('H'.$i)->getFont()->setBold(TRUE);
                 // Redirect output to a client’s web browser (Excel2007)
                 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
                 header('Content-Disposition: attachment;filename="Bar Sales Report.xlsx"');
