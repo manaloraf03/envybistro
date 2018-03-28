@@ -75,7 +75,8 @@ span {
         <td class="text-right top bottom">Cash</td>
         <td class="text-right top bottom">Check</td>
         <td class="text-right top bottom">Card</td>
-        <td class="text-right top bottom right">Gift Check</td>
+        <td class="text-right top bottom ">Gift Check</td>
+        <td class="text-right top bottom right">A/R</td>
 
     </thead>
         <tbody>
@@ -85,26 +86,27 @@ $total_cash = 0;
 $total_card = 0;
 $total_check = 0;
 $total_gc = 0;
-
-
+$total_ar = 0;
 
 
      foreach ($reports as $report) { ?>
     <tr>
     <td class="  left bottom"><?php echo $report->sales_date; ?></td>
     <td class=" bottom"><?php echo $report->cashier; ?></td>
-    <td class="text-right  bottom"><?php echo number_format($report->total,2); ?></td>
+    <td class="text-right  bottom"><?php echo number_format($report->total_amount,2); ?></td>
     <td class="text-right  bottom"><?php echo number_format($report->cash_amount,2); ?></td>
     <td class="text-right  bottom"><?php echo number_format($report->check_amount,2); ?></td>
     <td class="text-right  bottom"><?php echo number_format($report->card_amount,2); ?></td>
-    <td class="text-right right bottom"><?php echo number_format($report->gc_amount,2); ?></td>
+    <td class="text-right bottom"><?php echo number_format($report->gc_amount,2); ?></td>
+    <td class="text-right right bottom"><?php echo number_format($report->ar_amount,2); ?></td>
     </tr>
    <?php 
-   $total += $report->total ;
+   $total += $report->total_amount ;
    $total_cash += $report->cash_amount;
    $total_card += $report->card_amount;
    $total_check+= $report->check_amount;
    $total_gc+= $report->gc_amount;
+   $total_ar+= $report->ar_amount;
 
     } ?>
     <tr>
@@ -114,7 +116,8 @@ $total_gc = 0;
         <td  class="text-right  bottom" style="font-weight: bolder;"><?php echo number_format($total_cash,2); ?></td>
         <td  class="text-right  bottom" style="font-weight: bolder;"><?php echo number_format($total_check,2); ?></td>
         <td  class="text-right  bottom" style="font-weight: bolder;"><?php echo number_format($total_card,2); ?></td>
-        <td class="text-right right bottom" style="font-weight: bolder;"><?php echo number_format($total_gc,2); ?></td>
+        <td class="text-right  bottom" style="font-weight: bolder;"><?php echo number_format($total_gc,2); ?></td>
+        <td class="text-right right bottom" style="font-weight: bolder;"><?php echo number_format($total_ar,2); ?></td>
     </tr>
     </tbody>
     </table>

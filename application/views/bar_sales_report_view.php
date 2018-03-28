@@ -148,6 +148,7 @@
                                                         <th>Check</th>
                                                         <th>Card</th>
                                                         <th>Gift Check</th>
+                                                        <th>AR Amount</th>
                                                         
                                                     </tr>
                                                     </thead>
@@ -163,6 +164,7 @@
                                                                 <td  style="text-align:right;" id="check"></td>
                                                                 <td  style="text-align:right;" id="card"></td>
                                                                 <td  style="text-align:right;" id="gc"></td>
+                                                                <td  style="text-align:right;" id="ar"></td>
                                                             </tr>
                                                             <tr>
                                                                 <td colspan="3" style="text-align:right;">All Pages Total :</td>
@@ -171,6 +173,7 @@
                                                                 <td  style="text-align:right;" id="check1"></td>
                                                                 <td  style="text-align:right;" id="card1"></td>
                                                                 <td  style="text-align:right;" id="gc1"></td>
+                                                                <td  style="text-align:right;" id="ar1"></td>
                                                             </tr>
                                                         </tfoot>
                                                 </table>
@@ -245,11 +248,12 @@ $(document).ready(function(){
                 { visible:false, targets:[0],data: "pos_integration_items_id" },
                 { targets:[1],data: "sales_date" },
                 { targets:[2],data: "cashier" },
-                { sClass:"right-align", targets:[3],data: "total", render: $.fn.dataTable.render.number( ',', '.', 2) },
+                { sClass:"right-align", targets:[3],data: "total_amount", render: $.fn.dataTable.render.number( ',', '.', 2) },
                 {  sClass:"right-align",targets:[4],data: "cash_amount",  render: $.fn.dataTable.render.number( ',', '.', 2) },
                 {  sClass:"right-align",targets:[5],data: "check_amount", render: $.fn.dataTable.render.number( ',', '.', 2) },
                 {  sClass:"right-align",targets:[6],data: "card_amount", render: $.fn.dataTable.render.number( ',', '.', 2) },
                 {  sClass:"right-align",targets:[7],data: "gc_amount", render: $.fn.dataTable.render.number( ',', '.', 2) },
+                {  sClass:"right-align",targets:[8],data: "ar_amount", render: $.fn.dataTable.render.number( ',', '.', 2) },
 
             ],
                     "footerCallback": function ( row, data, start, end, display ) {
@@ -305,6 +309,15 @@ $(document).ready(function(){
                             }, 0 );
 
 
+                        pageTotalar = api
+                            .column( 8, { page: 'current'} )
+                            .data()
+                            .reduce( function (a, b) {
+                                // console.log(intVal(a) + intVal(b));
+                                return intVal(a) + intVal(b);
+                            }, 0 );
+
+
 
 
 
@@ -344,6 +357,13 @@ $(document).ready(function(){
                                 return intVal(a) + intVal(b);
                             }, 0 );
 
+                        pageTotalar1 = api
+                            .column(8)
+                            .data()
+                            .reduce( function (a, b) {
+                                return intVal(a) + intVal(b);
+                            }, 0 );
+
 
 
                         // Total over all pages
@@ -359,6 +379,7 @@ $(document).ready(function(){
                          $('#check').html('<b> '+accounting.formatNumber(pageTotalcheck,2)+'</b>');
                          $('#card').html('<b> '+accounting.formatNumber(pageTotalcard,2)+'</b>');
                          $('#gc').html('<b> '+accounting.formatNumber(pageTotalgc,2)+'</b>');
+                         $('#ar').html('<b> '+accounting.formatNumber(pageTotalar,2)+'</b>');
 
 
 
@@ -367,6 +388,7 @@ $(document).ready(function(){
                          $('#check1').html('<b> '+accounting.formatNumber(pageTotalcheck1,2)+'</b>');
                          $('#card1').html('<b> '+accounting.formatNumber(pageTotalcard1,2)+'</b>');
                          $('#gc1').html('<b> '+accounting.formatNumber(pageTotalgc1,2)+'</b>');
+                         $('#ar1').html('<b> '+accounting.formatNumber(pageTotalar1,2)+'</b>');
                          // $('#Sumofallpages').html('<b> '+accounting.formatNumber(totalAmount,2)+'</b>');
 
                     }
