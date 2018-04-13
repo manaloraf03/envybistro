@@ -345,7 +345,7 @@ $(document).ready(function(){
                                                         <th>Unit</th>
                                                         <th>Category</th>
                                                         <th>Supplier</th>
-                                                        <th>Minumun Stock</th>
+                                                        <th>Minimum Stock</th>
                                                         <th>Actual Stock</th>
                                                         <th>Recommended Order</th>
                                                     </tr>

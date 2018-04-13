@@ -17,7 +17,9 @@
 					'Account_integration_model',
 					'Batch_info_model',
 					'Users_model',
+					'Payment_method_model',
 					'Tax_model',
+					'Bank_model',
 					'Trans_model'
 				)
 			);
@@ -31,7 +33,7 @@
 	        $data['_side_bar_navigation'] = $this->load->view('template/elements/side_bar_navigation', '', true);
 	        $data['_top_navigation'] = $this->load->view('template/elements/top_navigation', '', true);
 	        $data['title'] = 'Petty Cash Journal';
-
+        	$data['payment_methods']=$this->Payment_method_model->get_list('is_deleted=0');
 	        $data['suppliers']=$this->Suppliers_model->get_list(
 	        	'is_deleted=FALSE AND is_active=TRUE'
 	        );
@@ -52,6 +54,7 @@
 	        		array('account_classes as ac','ac.account_class_id=account_titles.account_class_id','left')
 	        	)
 	        );
+	        $data['bank_refs']=$this->Bank_model->get_list('is_deleted=FALSE AND is_active=TRUE');
         (in_array('1-6',$this->session->user_rights)? 
         $this->load->view('petty_cash_journal_view',$data)
         :redirect(base_url('dashboard')));
@@ -103,6 +106,30 @@
 	                    $response['msg'] = "Can't Post expense, petty cash amount must not be zero.";
 					} else
 						$response['stat'] = 'success';
+
+                    echo json_encode($response);
+				break;
+
+				case 'validate-before-save':
+					$m_journal=$this->Journal_info_model;
+
+					$AsOfDate=date('Y-m-d',strtotime($this->input->post('aod',TRUE)));
+					$depid=$this->input->post('depid',TRUE);
+					$post_amount=$this->get_numeric_value($this->input->post('post_amount',TRUE));
+
+					$remaining_amount=$m_journal->get_remaining_amount($AsOfDate,$depid);
+
+
+					if($remaining_amount[0]->Balance == 0){
+						$response['title'] = "Error";
+	                    $response['stat'] = "error";
+	                    $response['msg'] = "Can't Post expense, petty cash amount must not be zero in your chosen department.";
+	                } else if($remaining_amount[0]->Balance < $post_amount) {
+						$response['title'] = "Error";
+	                    $response['stat'] = "error";
+	                    $response['msg'] = "Can't Post expense, Expense amount must not exceed petty cash amount .";    
+					}else{	$response['stat'] = 'success';
+					}
 
                     echo json_encode($response);
 				break;
@@ -335,7 +362,11 @@
 						$m_journal->remarks= 'To Replenish Petty Cash on or before '. $AsOfDate;
 						$m_journal->book_type='CDJ';
 		                $m_journal->created_by_user=$this->session->user_id;
-		                $m_journal->payment_method_id=1;
+		                $m_journal->payment_method_id =$this->input->post('payment_method');
+		                if($this->input->post('payment_method')){
+			                $m_journal->check_no =$this->input->post('check_no');
+			                $m_journal->check_date = date('Y-m-d',strtotime($this->input->post('check_date',TRUE)));		                
+		            	}
 		                $m_journal->amount=$this->get_numeric_value($unreplenished_value);
 						$m_journal->set('date_txn','NOW()');
 						$m_journal->set('date_created','NOW()');

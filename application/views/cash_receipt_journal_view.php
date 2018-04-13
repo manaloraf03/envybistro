@@ -388,7 +388,7 @@
                                 <tbody>
                                 <tr>
                                     <td>
-                                        <select name="accounts[]" class="selectpicker show-tick form-control selectpicker_accounts" data-live-search="true" title="Please select Account" data-error-msg="Account is required." required>
+                                        <select name="accounts[]" class="selectpicker show-tick form-control selectpicker_accounts" data-live-search="true" >
                                             <?php foreach($accounts as $account){ ?>
                                                 <option value='<?php echo $account->account_id; ?>'><?php echo $account->account_title; ?></option>
                                             <?php } ?>
@@ -412,7 +412,7 @@
                                 </tr>
                                 <tr>
                                     <td>
-                                        <select name="accounts[]" class="selectpicker show-tick form-control selectpicker_accounts" data-live-search="true" title="Please select Account" data-error-msg="Account is required." required>
+                                        <select name="accounts[]" class="selectpicker show-tick form-control selectpicker_accounts" data-live-search="true" >
                                             <?php foreach($accounts as $account){ ?>
                                                 <option value='<?php echo $account->account_id; ?>'><?php echo $account->account_title; ?></option>
                                             <?php } ?>
@@ -476,7 +476,7 @@
         <table id="table_hidden" class="hidden">
             <tr>
                 <td>
-                    <select name="accounts[]" class="selectpicker show-tick form-control selectpicker_accounts" data-live-search="true" title="Please select Account" data-error-msg="Account is required." required>
+                    <select name="accounts[]" class="selectpicker show-tick form-control selectpicker_accounts" data-live-search="true" >
                         <?php foreach($accounts as $account){ ?>
                             <option value='<?php echo $account->account_id; ?>'><?php echo $account->account_title; ?></option>
                         <?php } ?>

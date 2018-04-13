@@ -234,8 +234,51 @@
                                 <h4 class="modal-title" style="color:white;"><span id="modal_mode"> </span>Confirm Replenishment</h4>
                             </div>
 
-                            <div class="modal-body">
-                                <p id="modal-body-message">Replenish Petty Cash</p> <br>
+                            <div class="modal-body row">
+                            <form id="frm_replenishment">
+
+
+                            <div class="row col-sm-12">
+                                <div class="col-lg-6 ">
+                                    <b class="required"> * </b> <label>Method of Payment  :</label><br />
+                                    <select id="cbo_pay_type" name="payment_method" class="form-control" data-error-msg="Payment method is required." required>
+                                        <?php foreach($payment_methods as $payment_method){ ?>
+                                            <option value='<?php echo $payment_method->payment_method_id; ?>'><?php echo $payment_method->payment_method; ?></option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                                <div class="col-lg-6 " id="check_info_2">
+                                    <label>Bank :</label><br />
+                                    <select id="cbo_bank" class="form-control" name="bank_id">
+                                        <?php foreach($bank_refs as $bank) { ?>
+                                            <option value="<?php echo $bank->bank_id; ?>"><?php echo $bank->bank_name; ?></option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+
+                            </div>
+                            <div class="row col-sm-12" id="check_info">
+                                <div class="col-lg-6">
+                                    <label>Check Date :</label><br />
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-calendar"></i>
+                                        </span>
+                                        <input type="text" name="check_date" id="check_date" class="date-picker form-control" data-error-msg="Check date is required!" >
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <label>Check # :</label><br />
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-list-alt"></i>
+                                        </span>
+                                        <input type="text" name="check_no" id="check_no" maxlength="15" class="form-control" data-error-msg="Check number is required!">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row col-sm-12" style="padding-top: 10px;">
                                     <div class="col-xs-12 col-md-12" style="margin-bottom: 10px;">
                                         <strong>Choose an Account for Credit Entry :</strong>
                                         <select id="cbo_account_title" class="form-control" style="width: 100%;" data-error-msg="Account for Credit Account is required" required>
@@ -245,7 +288,9 @@
                                         </select>
                                     </div>
                             </div>
-                            <br><br><br>
+                            </form>
+
+                            </div>
                             <div class="modal-footer">
                                 <button id="btn_yes_replenishment" type="button" class="btn btn-danger">Yes</button>
                                 <button id="btn_close_replenishment" type="button" class="btn btn-default" data-dismiss="modal">No</button>
@@ -596,6 +641,14 @@
             _cboDepartment.select2('val', null);
             $('#cbo_account').select2('val',null);
 
+            _cboPaymentMethod = $('#cbo_pay_type').select2({
+                placeholder: "Please select Payment Type.",
+                minimumResultsForSearch: -1
+            });
+
+            _cboBanks=$('#cbo_bank').select2({
+                placeholder: "Please Select Bank"
+            });
             $('.numeric').autoNumeric('init',{mDec:2});
 
             recomputeTotals();
@@ -762,6 +815,36 @@
                 recomputeTotals();
             });
 
+
+        _cboPaymentMethod.on("select2:select", function (e) {
+
+            var selectbank = $('#cbo_bank');
+            var checkno = $('#check_no');
+            var checkdate = $('#check_date');
+            var i=$(this).select2('val');
+            if(i==2){ 
+                selectbank.attr('required', true);
+                checkno.attr('required', true);
+                checkdate.attr('required', true);
+                checkno.attr('disabled', false);
+                checkdate.attr('disabled', false);
+                $('#check_info').show();
+                $('#check_info_2').show();
+                $('#check_date').datepicker('setDate','today');
+            }else{
+                $('#check_info').hide();
+                $('#check_info_2').hide();
+                selectbank.attr('required', false);
+                checkno.attr('required', false);
+                checkdate.attr('required', false);
+                checkno.attr('disabled', true);
+                checkdate.attr('disabled', true);
+                checkno.val('');
+                checkdate.val('');
+            }
+
+        });
+
             $('#btn_browse').click(function(event){
                 event.preventDefault();
                 $('input[name="file_upload[]"]').click();
@@ -813,24 +896,33 @@
 
             $('#btn_replenish').click(function(){
                 $('#modal_confirmation_replenishment').modal('show');
+                $('#check_info').hide();
+                $('#check_info_2').hide();
+                $('#cbo_pay_type').select2('val',1);
             });
 
             $('#btn_yes_replenishment').click(function(){
-                var account_title_credit=$('#cbo_account_title').val();
-                if(account_title_credit==null){
-                    showNotification({title:"Error!",stat:"error",msg:'Account Title for Credit Entry is Required'});
-                }else{
-                replenishPettyCash().done(function(response){
-                    var message = JSON.parse(response);
-                    showNotification(message);
-                    dt.destroy();
-                    dtReplenished.destroy();
-                    InitializeDataTable();
-                    $('#modal_confirmation_replenishment').modal('hide');
-                    recomputeTotals();
-                });
 
-                }
+
+                            var account_title_credit=$('#cbo_account_title').val();
+                            if(account_title_credit==null){
+                                showNotification({title:"Error!",stat:"error",msg:'Account Title for Credit Entry is Required'});
+                            }else{
+                                if(validateRequiredFields($('#frm_replenishment'))){
+                                    replenishPettyCash().done(function(response){
+                                        var message = JSON.parse(response);
+                                        showNotification(message);
+                                        dt.destroy();
+                                        dtReplenished.destroy();
+                                        InitializeDataTable();
+                                        $('#modal_confirmation_replenishment').modal('hide');
+                                        recomputeTotals();
+                                    });  
+                                }
+                            }
+
+
+
 
 
             });
@@ -842,6 +934,11 @@
             $('#btn_save').on('click', function() {
                 if(validateRequiredFields($('#frm_petty_cash'))) {
                     if(_txnMode=="new") {
+                validateUnreplenishedExpenseSave().done(function(response){
+                    var message = JSON.parse(response);
+                    if (message.stat == "success") {
+                    
+
                         createPettyCash().done(function(response){
                             showNotification(response);
                             dt.row.add(response.row_added[0]).draw();
@@ -853,6 +950,12 @@
                         }).always(function(){
                             showSpinningProgress($('#btn_save'));
                         });
+
+                } else
+                        showNotification(message);
+                });
+
+
                     } else {
                         updatePettyCash().done(function(response){
                             showNotification(response);
@@ -1013,7 +1116,7 @@
         };
 
         var replenishPettyCash=function(){
-            var _data=[];
+            var _data=$('#frm_replenishment').serializeArray();
             _data.push({name: "aod", value: _as_of_date.val() });
             _data.push({name: "depid", value: $('#cbo_department_filter').val() });
             _data.push({name: "account_id_credit", value: $('#cbo_account_title').val() });
@@ -1039,6 +1142,19 @@
             });
         };
 
+        var validateUnreplenishedExpenseSave=function(){
+            var _data=[];
+            _data.push({name: "aod", value: _as_of_date.val() });
+            _data.push({name: "depid", value: $('#cbo_department').val() });
+            _data.push({name: "post_amount", value: $('#txtAmount').val() });
+
+            return $.ajax({
+                "dateType":"json",
+                "type":"POST",
+                "url":"Petty_cash_journal/transaction/validate-before-save",
+                "data": _data
+            });
+        };
         var showNotification=function(obj){
             PNotify.removeAll(); //remove all notifications
             new PNotify({
@@ -1087,6 +1203,8 @@
             return stat;
         };
 
+
+
         function recomputeTotals() {
             $.ajax({
                 "dataType":"json",
@@ -1108,6 +1226,34 @@
             $('#txtAmount').val('0.00');
             $('form').find('input:first').focus();
         };
+
+        var validateRequiredFields=function(f){
+            var stat=true;
+
+            $('div.form-group').removeClass('has-error');
+            $('input[required],textarea[required],select[required]',f).each(function(){
+
+                if($(this).is('select')){
+                    if($(this).select2('val')==0||$(this).select2('val')==null){
+                        showNotification({title:"Error!",stat:"error",msg:$(this).data('error-msg')});
+                        $(this).closest('div.form-group').addClass('has-error');
+                        $(this).focus();
+                        stat=false;
+                        return false;
+                    }
+                }else{
+                    if($(this).val()==""){
+                        showNotification({title:"Error!",stat:"error",msg:$(this).data('error-msg')});
+                        $(this).closest('div.form-group').addClass('has-error');
+                        $(this).focus();
+                        stat=false;
+                        return false;
+                    }
+                }
+            });
+            return stat;
+        };
+
     })();
 
     </script>

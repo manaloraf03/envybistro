@@ -1,7 +1,7 @@
 <?php
 
 class Depreciation_expense_model extends CORE_Model {
-    protected  $table="Depreciation_expense";
+    protected  $table="depreciation_expense";
     protected  $pk_id="de_id";
 
     function __construct() {
