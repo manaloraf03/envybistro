@@ -118,12 +118,12 @@
                                 <li class="<?php echo (in_array('15-2',$this->session->user_rights)?'':'hidden'); ?>"><a href="Hotel_integration">Settings</a></li>
                             </ul>
                         </li> -->
-                        <li class="<?php echo (in_array('16',$this->session->parent_rights)?'':'hidden'); ?>"><a href="#/"><i class="ti ti-money"></i><span>POS Integration</span></a>
+<!--                         <li class="<?php echo (in_array('16',$this->session->parent_rights)?'':'hidden'); ?>"><a href="#/"><i class="ti ti-money"></i><span>POS Integration</span></a>
                             <ul class="acc-menu">
                                 <li class="<?php echo (in_array('16-2',$this->session->user_rights)?'':'hidden'); ?>"><a href="Pos_control_panel">Control Panel</a></li>
                                 <li class="<?php echo (in_array('16-1',$this->session->user_rights)?'':'hidden'); ?>"><a href="Pos_integration_settings">Settings</a></li>
                             </ul>
-                        </li>
+                        </li> -->
                         <li class="<?php echo (in_array('6',$this->session->parent_rights)?'':'hidden'); ?>">
                             <a href="#/"><i class="ti ti-settings"></i><span>Settings</span></a>
                             <ul class="acc-menu">

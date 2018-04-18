@@ -84,19 +84,20 @@ class Rights_link_model extends CORE_Model{
                                           (74,'9','9-20','Replenishment Batch Report'),
                                           (75,'9','9-21','General Ledger'),
                                           (76,'6','6-11','Email Report'),
-                                          (77,'15','15-1','Hotel Control Panel'),
-                                          (78,'15','15-2','Hotel Integration Settings'),
+                                          -- (77,'15','15-1','Hotel Control Panel'),
+                                          -- (78,'15','15-2','Hotel Integration Settings'),
                                           -- (79,'4','4-7','Menu Management'),
-                                          (80,'16','16-1','POS Integration Settings'),
-                                          (81,'16','16-2','Pos Control Panel'),
-                                          (82,'8','8-5','Bar Sales Report'),
+                                          -- (80,'16','16-1','POS Integration Settings'),
+                                          -- (81,'16','16-2','Pos Control Panel'),
+                                          -- (82,'8','8-5','Bar Sales Report'),
                                           (83,'12','12-6','Product List Detailed'),
                                           (84,'12','12-7','Pick-list (Reorder)'),
-                                          (85,'2','2-6','Purchase History'),
+                                          (85,'2','2-8','Purchase History'),
                                           (86,'2','2-7','Purchase Monitoring'),
                                           (87,'6','6-12','Purchase Configuration'),
                                           (88,'9','9-22','Income Statement Per Field Report'),
                                           (89,'6','6-13','Audit Trail')
+
 
 
 
