@@ -714,8 +714,8 @@ dt_si = $('#tbl_si_list').DataTable({
             $('#modal_si_list').modal('show');
         });
         var createToolBarButton=function(){
-            var _btnNew='<button class="btn btn-primary"  id="btn_new" style="text-transform: none;font-family: Tahoma, Georgia, Serif;" data-toggle="modal" data-target="" data-placement="left" title="Record item to issue" >'+
-                '<i class="fa fa-plus"></i> Record item to issue</button>';
+            var _btnNew='<button class="btn btn-primary"  id="btn_new" style="text-transform: none;font-family: Tahoma, Georgia, Serif;" data-toggle="modal" data-target="" data-placement="left" title="Record Item To Issue" >'+
+                '<i class="fa fa-plus"></i> Record Item To Issue</button>';
             $("div.toolbar").html(_btnNew);
         }();
         /*_cboCustomers = $("#cbo_customers").select2({

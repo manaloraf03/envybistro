@@ -37,6 +37,11 @@
 	    hr {
 	    	border-top: 1px solid #eaeaea;
 	    }
+        .new-login-box{
+            -webkit-box-shadow: 0px 0px 102px 2px rgba(63,193,232,0.71);
+            -moz-box-shadow: 0px 0px 102px 2px rgba(63,193,232,0.71);
+            box-shadow: 0px 0px 102px 2px rgba(63,193,232,0.71);
+        }
     </style>
     </head>
 <body class="focused-form animated-content login-background">
