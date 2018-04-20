@@ -89,7 +89,7 @@
                                                 <b style="color: white; font-size: 12pt;"><i class="fa fa-bars"></i>&nbsp; Account Receivable Reports</b>
                                             </div> -->
                                             <div class="panel-body table-responsive">
-                                            <h2 class="h2-panel-heading">Account Receivable Reports</h2><hr>
+                                            <h2 class="h2-panel-heading">Account Receivable Reports</h2><hr style="border-top: 1px solid gray!important;">
 												<div class="col-md-4">
 													<div class="form-group">
 													    <label for="customer" style="font-weight:bold;">Customer:</label>
@@ -114,7 +114,7 @@
 													  <Input type="text" id="todate_filter" class="form-control date-picker" value="<?php echo date("m/d/Y"); ?>">
 													</div>
 												</div>
-                                                <reports id="ar_receivable_reports">
+                                                <reports id="ar_receivable_reports" style="display: none;">
 													<!-- reports here -->
 												</reports>
                                             </div>
@@ -184,7 +184,7 @@ $(document).ready(function(){
                     $('#ar_receivable_reports').html("<center><img src='assets/img/loader/ajax-loader-lg.gif'><h3>Loading...</h3></center>");
                 },
             }).done(function(response){
-                $('#ar_receivable_reports').html(response);
+                // $('#ar_receivable_reports').html(response);
             });
             //END GET
 			
@@ -203,7 +203,7 @@ $(document).ready(function(){
                         $('#ar_receivable_reports').html("<center><img src='assets/img/loader/ajax-loader-lg.gif'><h3>Loading...</h3></center>");
                     },
             }).done(function(response){
-                $('#ar_receivable_reports').html(response);
+                // $('#ar_receivable_reports').html(response);
             });
             //END GET
         });
@@ -223,7 +223,7 @@ $(document).ready(function(){
                     $('#ar_receivable_reports').html("<center><img src='assets/img/loader/ajax-loader-lg.gif'><h3>Loading...</h3></center>");
                 },
             }).done(function(response){
-                $('#ar_receivable_reports').html(response);
+                // $('#ar_receivable_reports').html(response);
             });
             //END GET
         });
@@ -243,7 +243,7 @@ $(document).ready(function(){
                     $('#ar_receivable_reports').html("<center><img src='assets/img/loader/ajax-loader-lg.gif'><h3>Loading...</h3></center>");
                 },
             }).done(function(response){
-                $('#ar_receivable_reports').html(response);
+                // $('#ar_receivable_reports').html(response);
             });
             //END GET
         });
