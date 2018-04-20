@@ -51,8 +51,8 @@ class Income_statement_field extends CORE_Controller
                 $start=$this->input->get('start',TRUE);
                 $end=$this->input->get('end',TRUE);
 
-                $income_accounts = $m_journal->get_account_balance_per_line(4);
-                $expense_accounts = $m_journal->get_account_balance_per_line(5);
+                $income_accounts = $m_journal->get_account_balance(4,null,date("Y-m-d",strtotime($start)),date("Y-m-d",strtotime($end)));
+                $expense_accounts = $m_journal->get_account_balance(5,null,date("Y-m-d",strtotime($start)),date("Y-m-d",strtotime($end)));
 
                 $excel=$this->excel;
    
@@ -238,8 +238,8 @@ class Income_statement_field extends CORE_Controller
                 $start=$this->input->get('start',TRUE);
                 $end=$this->input->get('end',TRUE);
 
-                $income_accounts = $m_journal->get_account_balance_per_line(4);
-                $expense_accounts = $m_journal->get_account_balance_per_line(5);
+                $income_accounts = $m_journal->get_account_balance(4,null,date("Y-m-d",strtotime($start)),date("Y-m-d",strtotime($end)));
+                $expense_accounts = $m_journal->get_account_balance(5,null,date("Y-m-d",strtotime($start)),date("Y-m-d",strtotime($end)));
 
                 $excel=$this->excel;
 
