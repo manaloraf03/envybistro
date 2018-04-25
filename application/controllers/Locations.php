@@ -9,6 +9,8 @@ class Locations extends CORE_Controller
         $this->validate_session();
         $this->load->model('Locations_model');
         $this->load->model('Users_model');
+        $this->load->model('Trans_model');
+
     }
 
     public function index() {
@@ -45,6 +47,15 @@ class Locations extends CORE_Controller
                 $response['stat'] = 'success';
                 $response['msg'] = 'location information successfully created.';
                 $response['row_added'] = $m_locations->get_location_list($location_id);
+
+                $m_trans=$this->Trans_model;
+                $m_trans->user_id=$this->session->user_id;
+                $m_trans->set('trans_date','NOW()');
+                $m_trans->trans_key_id=1; //CRUD
+                $m_trans->trans_type_id=48; // TRANS TYPE
+                $m_trans->trans_log='Created Location: '.$this->input->post('location_name', TRUE);
+                $m_trans->save();
+
                 echo json_encode($response);
 
                 break;
@@ -59,7 +70,13 @@ class Locations extends CORE_Controller
                     $response['title']='Success!';
                     $response['stat']='success';
                     $response['msg']='location information successfully deleted.';
-
+                    $m_trans=$this->Trans_model;
+                    $m_trans->user_id=$this->session->user_id;
+                    $m_trans->set('trans_date','NOW()');
+                    $m_trans->trans_key_id=3; //CRUD
+                    $m_trans->trans_type_id=48; // TRANS TYPE
+                    $m_trans->trans_log='Deleted Location: ID('.$location_id.')';
+                    $m_trans->save();
                     echo json_encode($response);
                 }
 
@@ -73,6 +90,14 @@ class Locations extends CORE_Controller
 
                 $m_locations->modify($location_id);
 
+                $m_trans=$this->Trans_model;
+                $m_trans->user_id=$this->session->user_id;
+                $m_trans->set('trans_date','NOW()');
+                $m_trans->trans_key_id=2; //CRUD
+                $m_trans->trans_type_id=48; // TRANS TYPE
+                $m_trans->trans_log='Updated Location: '.$this->input->post('location_name',TRUE).' ID('.$location_id.')';
+                $m_trans->save();
+                
                 $response['title']='Success!';
                 $response['stat']='success';
                 $response['msg']='location information successfully updated.';

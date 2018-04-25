@@ -16,6 +16,7 @@ class Customers extends CORE_Controller {
         $this->load->model('Sales_invoice_model');
         $this->load->model('Receivable_payment_model');
         $this->load->model('Users_model');
+        $this->load->model('Trans_model');
     }
  
     public function index()
@@ -95,6 +96,15 @@ class Customers extends CORE_Controller {
                 $response['stat']='success';
                 $response['msg']='Customer Information successfully created.';
                 $response['row_added']=$this->response_rows($customer_id);
+
+                $m_trans=$this->Trans_model;
+                $m_trans->user_id=$this->session->user_id;
+                $m_trans->set('trans_date','NOW()');
+                $m_trans->trans_key_id=1; //CRUD
+                $m_trans->trans_type_id=52; // TRANS TYPE
+                $m_trans->trans_log='Created a new customer: '.$this->input->post('contact_name',TRUE);
+                $m_trans->save();
+
                 echo json_encode($response);
 
                 break;
@@ -156,6 +166,15 @@ class Customers extends CORE_Controller {
                         $response['stat']='success';
                         $response['msg']='Customer Information successfully deleted.';
 
+                        $customer_name = $m_customers->get_list($customer_id,'customer_name');
+                        $m_trans=$this->Trans_model;
+                        $m_trans->user_id=$this->session->user_id;
+                        $m_trans->set('trans_date','NOW()');
+                        $m_trans->trans_key_id=3; //CRUD
+                        $m_trans->trans_type_id=52; // TRANS TYPE
+                        $m_trans->trans_log='Deleted : '.$customer_name[0]->customer_name;
+                        $m_trans->save();
+
                         echo json_encode($response);
                     }
                 }
@@ -194,6 +213,15 @@ class Customers extends CORE_Controller {
                 $response['stat']='success';
                 $response['msg']='Customer Information successfully updated.';
                 $response['row_updated']=$this->response_rows($customer_id);
+
+                $m_trans=$this->Trans_model;
+                $m_trans->user_id=$this->session->user_id;
+                $m_trans->set('trans_date','NOW()');
+                $m_trans->trans_key_id=2; //CRUD
+                $m_trans->trans_type_id=52; // TRANS TYPE
+                $m_trans->trans_log='Updated customer: '.$this->input->post('customer_name',TRUE).' ID('.$customer_id.')';
+                $m_trans->save();
+                
                 echo json_encode($response);
 
                 break;

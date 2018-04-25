@@ -10,6 +10,7 @@ class Account_classes extends CORE_Controller
         $this->load->model('Account_class_model');
         $this->load->model('Account_type_model');
         $this->load->model('Users_model');
+        $this->load->model('Trans_model');
     }
 
     public function index() {
@@ -75,6 +76,13 @@ class Account_classes extends CORE_Controller
                         array('account_types', 'account_types.account_type_id = account_classes.account_type_id','left')
                     )
                 );
+                $m_trans=$this->Trans_model;
+                $m_trans->user_id=$this->session->user_id;
+                $m_trans->set('trans_date','NOW()');
+                $m_trans->trans_key_id=1; //CRUD
+                $m_trans->trans_type_id=44; // TRANS TYPE
+                $m_trans->trans_log='Created Account Classification: '.$this->input->post('account_class', TRUE);
+                $m_trans->save();
                 echo json_encode($response);
 
                 break;
@@ -104,6 +112,13 @@ class Account_classes extends CORE_Controller
                         array('account_types', 'account_types.account_type_id = account_classes.account_type_id','left')
                     )
                 );
+                $m_trans=$this->Trans_model;
+                $m_trans->user_id=$this->session->user_id;
+                $m_trans->set('trans_date','NOW()');
+                $m_trans->trans_key_id=2; //CRUD
+                $m_trans->trans_type_id=44; // TRANS TYPE
+                $m_trans->trans_log='Updated Account Classification to : '.$this->input->post('account_class',TRUE).'  ID('.$account_class_id.')';
+                $m_trans->save();
                 echo json_encode($response);
 
                 break;
@@ -119,6 +134,15 @@ class Account_classes extends CORE_Controller
                     $response['stat']='success';
                     $response['msg']='Account Class information successfully deleted.';
 
+                    $account_class = $m_classes->get_list($account_class_id,'account_class');
+                    $m_trans=$this->Trans_model;
+                    $m_trans->user_id=$this->session->user_id;
+                    $m_trans->set('trans_date','NOW()');
+                    $m_trans->trans_key_id=3; //CRUD
+                    $m_trans->trans_type_id=44; // TRANS TYPE
+                    $m_trans->trans_log='Deleted Account Classification: '.$account_class[0]->account_class;
+                    $m_trans->save();
+                    
                     echo json_encode($response);
                 }
 

@@ -10,6 +10,7 @@ class Company extends CORE_Controller
         $this->load->model('Company_model');
         $this->load->model('Tax_model');
         $this->load->model('Users_model');
+        $this->load->model('Trans_model');
     }
 
     public function index() {
@@ -58,6 +59,15 @@ class Company extends CORE_Controller
                 $response['title']='Success!';
                 $response['stat']='success';
                 $response['msg']='Company information successfully saved.';
+
+                $m_trans=$this->Trans_model;
+                $m_trans->user_id=$this->session->user_id;
+                $m_trans->set('trans_date','NOW()');
+                $m_trans->trans_key_id=2; //CRUD
+                $m_trans->trans_type_id=60; // TRANS TYPE
+                $m_trans->trans_log='Modified Company Information';
+                $m_trans->save();
+
                 echo json_encode($response);
 
                 break;

@@ -10,7 +10,8 @@ class User_groups extends CORE_Controller
         $this->load->model(array(
             'User_groups_model',
             'Users_model',
-            'User_group_right_model'
+            'User_group_right_model',
+            'Trans_model'
         ));
     }
 
@@ -50,6 +51,15 @@ class User_groups extends CORE_Controller
                 $response['stat'] = 'success';
                 $response['msg'] = 'User group information successfully created.';
                 $response['row_added'] = $this->get_response_rows($user_group_id);
+
+                $m_trans=$this->Trans_model;
+                $m_trans->user_id=$this->session->user_id;
+                $m_trans->set('trans_date','NOW()');
+                $m_trans->trans_key_id=1; //CRUD
+                $m_trans->trans_type_id=59; // TRANS TYPE
+                $m_trans->trans_log='Created User Group : '.$this->input->post('user_group', TRUE);
+                $m_trans->save();
+
                 echo json_encode($response);
 
                 break;
@@ -63,6 +73,15 @@ class User_groups extends CORE_Controller
                     $response['title']='Success!';
                     $response['stat']='success';
                     $response['msg']='User Group successfully Deleted.';
+
+                    $m_trans=$this->Trans_model;
+                    $m_trans->user_id=$this->session->user_id;
+                    $m_trans->set('trans_date','NOW()');
+                    $m_trans->trans_key_id=3; //CRUD
+                    $m_trans->trans_type_id=59; // TRANS TYPE
+                    $m_trans->trans_log='Deleted User Group: ID('.$this->input->post('user_group_id',TRUE).')';
+                    $m_trans->save();
+
                     echo json_encode($response);
                 }
                 break;
@@ -76,12 +95,19 @@ class User_groups extends CORE_Controller
                 $m_user_groups->user_group_desc = $this->input->post('user_group_desc', TRUE);
                 $m_user_groups->modify($user_group_id);
 
-
-
                 $response['title'] = 'Success!';
                 $response['stat'] = 'success';
                 $response['msg'] = 'User group information successfully updated.';
                 $response['row_updated'] = $this->get_response_rows($user_group_id);
+
+                $m_trans=$this->Trans_model;
+                $m_trans->user_id=$this->session->user_id;
+                $m_trans->set('trans_date','NOW()');
+                $m_trans->trans_key_id=2; //CRUD
+                $m_trans->trans_type_id=59; // TRANS TYPE
+                $m_trans->trans_log='Updated User Group: '.$this->input->post('user_group', TRUE).' ID ('.$user_group_id.')';
+                $m_trans->save();
+
                 echo json_encode($response);
 
 
@@ -107,6 +133,14 @@ class User_groups extends CORE_Controller
                 $response['title'] = 'Success!';
                 $response['stat'] = 'success';
                 $response['msg'] = 'User rights successfully saved.';
+
+                $m_trans=$this->Trans_model;
+                $m_trans->user_id=$this->session->user_id;
+                $m_trans->set('trans_date','NOW()');
+                $m_trans->trans_key_id=2; //CRUD
+                $m_trans->trans_type_id=59; // TRANS TYPE
+                $m_trans->trans_log='Updated User Rights Links: ID('.$id.')';
+                $m_trans->save();
                 echo json_encode($response);
                 break;
         }

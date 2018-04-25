@@ -7,6 +7,8 @@ class Departments extends CORE_Controller {
         $this->validate_session();
         $this->load->model('Departments_model');
         $this->load->model('Users_model');
+        $this->load->model('Trans_model');
+
     }
 
     public function index() {
@@ -46,6 +48,14 @@ class Departments extends CORE_Controller {
                 $response['stat'] = 'success';
                 $response['msg'] = 'Department Information successfully created.';
                 $response['row_added'] = $m_departments->get_department_list($department_id);
+
+                $m_trans=$this->Trans_model;
+                $m_trans->user_id=$this->session->user_id;
+                $m_trans->set('trans_date','NOW()');
+                $m_trans->trans_key_id=1; //CRUD
+                $m_trans->trans_type_id=46; // TRANS TYPE
+                $m_trans->trans_log='Created Department: '.$this->input->post('department_name', TRUE);
+                $m_trans->save();
                 echo json_encode($response);
 
                 break;
@@ -60,6 +70,15 @@ class Departments extends CORE_Controller {
                     $response['title']='Success!';
                     $response['stat']='success';
                     $response['msg']='Department Information successfully deleted.';
+
+                    $department_name = $m_departments->get_list($department_id,'department_name');
+                    $m_trans=$this->Trans_model;
+                    $m_trans->user_id=$this->session->user_id;
+                    $m_trans->set('trans_date','NOW()');
+                    $m_trans->trans_key_id=3; //CRUD
+                    $m_trans->trans_type_id=46; // TRANS TYPE
+                    $m_trans->trans_log='Deleted Department: '.$department_name[0]->department_name;
+                    $m_trans->save();
 
                     echo json_encode($response);
                 }
@@ -79,7 +98,16 @@ class Departments extends CORE_Controller {
                 $response['title']='Success!';
                 $response['stat']='success';
                 $response['msg']='Department Information successfully updated.';
-                $response['row_updated']=$m_departments->get_department_list($department_id);
+                $response['row_updated']=$m_departments->get_department_list($department_id);   
+
+                $m_trans=$this->Trans_model;
+                $m_trans->user_id=$this->session->user_id;
+                $m_trans->set('trans_date','NOW()');
+                $m_trans->trans_key_id=2; //CRUD
+                $m_trans->trans_type_id=46; // TRANS TYPE
+                $m_trans->trans_log='Updated Department: '.$this->input->post('department_name',TRUE).' ID('.$department_id.')';
+                $m_trans->save();
+                
                 echo json_encode($response);
 
                 break;

@@ -14,6 +14,7 @@ class Account_titles extends CORE_Controller
         $this->load->model('Journal_account_model');
         $this->load->model('Users_model');
         $this->load->model('Company_model');
+        $this->load->model('Trans_model');
         $this->load->library('excel');
     }
 
@@ -99,7 +100,13 @@ class Account_titles extends CORE_Controller
                 $response['row_added']=$this->response_rows($account_id);
                 $response['parents']=$m_accounts->get_list(null,array('account_titles.account_id','account_titles.account_title'),null,'account_titles.account_title');
                 $response['row_hierarchy']=$this->get_account_hierarchy();
-
+                $m_trans=$this->Trans_model;
+                $m_trans->user_id=$this->session->user_id;
+                $m_trans->set('trans_date','NOW()');
+                $m_trans->trans_key_id=1; //CRUD
+                $m_trans->trans_type_id=56; // TRANS TYPE
+                $m_trans->trans_log='Created a new Account : '.$this->input->post('account_title',TRUE);
+                $m_trans->save();
                 echo json_encode($response);
                 break;
             case 'update':
@@ -157,6 +164,12 @@ class Account_titles extends CORE_Controller
                 $response['row_updated']=$this->response_rows($account_id);
                 $response['row_hierarchy']=$this->get_account_hierarchy();
 
+                $m_trans=$this->Trans_model;
+                $m_trans->user_id=$this->session->user_id;
+                $m_trans->set('trans_date','NOW()');
+                $m_trans->trans_key_id=2; //CRUD
+                $m_trans->trans_type_id=56; // TRANS TYPE
+                $m_trans->trans_log='Updated Account : '.$this->input->post('account_title',TRUE).' ID('.$account_id.')';
                 echo json_encode($response);
                 break;
             case 'delete':
@@ -205,6 +218,15 @@ class Account_titles extends CORE_Controller
                     $response['stat']='success';
                     $response['msg']='Account successfully deleted.';
                     $response['row_hierarchy']=$this->get_account_hierarchy();
+
+                    $account_title = $m_accounts->get_list($account_id,'account_title');
+                    $m_trans=$this->Trans_model;
+                    $m_trans->user_id=$this->session->user_id;
+                    $m_trans->set('trans_date','NOW()');
+                    $m_trans->trans_key_id=3; //CRUD
+                    $m_trans->trans_type_id=56; // TRANS TYPE
+                    $m_trans->trans_log='Deleted Account: '.$account_title[0]->account_title;
+                    $m_trans->save();
                     echo json_encode($response);
                 }
 

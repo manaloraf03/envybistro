@@ -9,6 +9,8 @@ class Salesperson extends CORE_Controller {
         $this->load->model('Salesperson_model');
         $this->load->model('Departments_model');
         $this->load->model('Users_model');
+        $this->load->model('Trans_model');
+
     }
 
     public function index() {
@@ -74,6 +76,15 @@ class Salesperson extends CORE_Controller {
                         array('departments','departments.department_id=salesperson.department_id','left')
                     )
                 );
+
+                $m_trans=$this->Trans_model;
+                $m_trans->user_id=$this->session->user_id;
+                $m_trans->set('trans_date','NOW()');
+                $m_trans->trans_key_id=1; //CRUD
+                $m_trans->trans_type_id=53; // TRANS TYPE
+                $m_trans->trans_log='Created Salesperson: '.$this->input->post('firstname',TRUE).' '.$this->input->post('middlename',TRUE).' '.$this->input->post('lastname',TRUE);
+                $m_trans->save();
+                
                 echo json_encode($response);
 
                 break;
@@ -88,6 +99,13 @@ class Salesperson extends CORE_Controller {
                     $response['stat']='success';
                     $response['msg']='Salesperson information successfully deleted.';
 
+                    $m_trans=$this->Trans_model;
+                    $m_trans->user_id=$this->session->user_id;
+                    $m_trans->set('trans_date','NOW()');
+                    $m_trans->trans_key_id=1; //CRUD
+                    $m_trans->trans_type_id=53; // TRANS TYPE
+                    $m_trans->trans_log='Created Salesperson: '.$this->input->post('firstname',TRUE).' '.$this->input->post('middlename',TRUE).' '.$this->input->post('lastname',TRUE);
+                    $m_trans->save();
                     echo json_encode($response);
                 }
 
@@ -118,6 +136,15 @@ class Salesperson extends CORE_Controller {
                         array('departments','departments.department_id=salesperson.department_id','left')
                     )
                 );
+
+                $m_trans=$this->Trans_model;
+                $m_trans->user_id=$this->session->user_id;
+                $m_trans->set('trans_date','NOW()');
+                $m_trans->trans_key_id=2; //CRUD
+                $m_trans->trans_type_id=53; // TRANS TYPE
+                $m_trans->trans_log='Updated Salesperson: ID('.$salesperson_id.')'; 
+                $m_trans->save();
+
                 echo json_encode($response);
 
                 break;

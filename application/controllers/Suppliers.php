@@ -12,6 +12,7 @@ class Suppliers extends CORE_Controller {
         $this->load->model('Journal_info_model');
         $this->load->model('Delivery_invoice_model');
         $this->load->model('Payable_payment_model');
+        $this->load->model('Trans_model');
         $this->load->model('Users_model');
     }
 
@@ -87,6 +88,13 @@ class Suppliers extends CORE_Controller {
                     )
 
                 );
+                $m_trans=$this->Trans_model;
+                $m_trans->user_id=$this->session->user_id;
+                $m_trans->set('trans_date','NOW()');
+                $m_trans->trans_key_id=1; //CRUD
+                $m_trans->trans_type_id=51; // TRANS TYPE
+                $m_trans->trans_log='Created a Supplier: '.$this->input->post('supplier_name',TRUE);
+                $m_trans->save();
                 echo json_encode($response);
 
                 break;
@@ -139,6 +147,15 @@ class Suppliers extends CORE_Controller {
                         $response['stat']='success';
                         $response['msg']='Supplier information successfully deleted.';
 
+                        $supplier_name = $m_suppliers->get_list($supplier_id,'supplier_name');
+                        $m_trans=$this->Trans_model;
+                        $m_trans->user_id=$this->session->user_id;
+                        $m_trans->set('trans_date','NOW()');
+                        $m_trans->trans_key_id=3; //CRUD
+                        $m_trans->trans_type_id=51; // TRANS TYPE
+                        $m_trans->trans_log='Deleted Supplier: '.$supplier_name[0]->supplier_name;
+                        $m_trans->save();
+
                         echo json_encode($response);
                     }
                 }
@@ -174,6 +191,15 @@ class Suppliers extends CORE_Controller {
                             array('tax_types','tax_types.tax_type_id=suppliers.tax_type_id','left')
 
                         ));
+
+
+                $m_trans=$this->Trans_model;
+                $m_trans->user_id=$this->session->user_id;
+                $m_trans->set('trans_date','NOW()');
+                $m_trans->trans_key_id=2; //CRUD
+                $m_trans->trans_type_id=51; // TRANS TYPE
+                $m_trans->trans_log='Updated a Supplier : '.$this->input->post('supplier_name',TRUE).' ID('.$supplier_id.')';
+                $m_trans->save();
                 echo json_encode($response);
 
                 break;

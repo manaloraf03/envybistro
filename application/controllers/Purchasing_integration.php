@@ -15,6 +15,7 @@ class Purchasing_integration extends CORE_Controller
                 'Sched_expense_integration',
                 'Departments_model',
                 'Customers_model',
+                'Trans_model',
                 'Suppliers_model'
 
             )
@@ -70,6 +71,14 @@ class Purchasing_integration extends CORE_Controller
                 $response['stat']="success";
                 $response['title']="Success!";
                 $response['msg']="Pos Accounts successfully integrated.";
+
+                $m_trans=$this->Trans_model;
+                $m_trans->user_id=$this->session->user_id;
+                $m_trans->set('trans_date','NOW()');
+                $m_trans->trans_key_id=2; //CRUD
+                $m_trans->trans_type_id=58; // TRANS TYPE
+                $m_trans->trans_log='Updated System Purchasing Configuration';
+                $m_trans->save();
 
                 echo json_encode($response);
 

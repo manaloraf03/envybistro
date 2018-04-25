@@ -10,8 +10,7 @@ class Users extends CORE_Controller
         $this->load->model('Users_model');
         $this->load->model('User_groups_model');
         $this->load->model('Company_model');
-
-
+        $this->load->model('Trans_model');
     }
 
     public function index() {
@@ -102,6 +101,14 @@ class Users extends CORE_Controller
                 $response['stat']='success';
                 $response['msg']='User account information successfully created.';
                 $response['row_added']=$m_users->get_user_list($user_account_id);
+
+                $m_trans=$this->Trans_model;
+                $m_trans->user_id=$this->session->user_id;
+                $m_trans->set('trans_date','NOW()');
+                $m_trans->trans_key_id=1; //CRUD
+                $m_trans->trans_type_id=43; // TRANS TYPE
+                $m_trans->trans_log='Created User: '.$this->input->post('user_name',TRUE);
+                $m_trans->save();
                 echo json_encode($response);
 
                 break;
@@ -133,6 +140,15 @@ class Users extends CORE_Controller
                 $response['stat']='success';
                 $response['msg']='User account information successfully updated.';
                 $response['row_updated']=$m_users->get_user_list($user_account_id);
+
+                $m_trans=$this->Trans_model;
+                $m_trans->user_id=$this->session->user_id;
+                $m_trans->set('trans_date','NOW()');
+                $m_trans->trans_key_id=2; //CRUD
+                $m_trans->trans_type_id=43; // TRANS TYPE
+                $m_trans->trans_log='Updated User : '.$this->input->post('user_name',TRUE).' ID('.$user_account_id.')';
+                $m_trans->save();
+
                 echo json_encode($response);
 
                 break;
@@ -148,6 +164,15 @@ class Users extends CORE_Controller
                     $response['title']='Success!';
                     $response['stat']='success';
                     $response['msg']='User account information successfully deleted.';
+                    $user_name = $m_users->get_list($user_account_id,'user_name');
+                    $m_trans=$this->Trans_model;
+                    $m_trans->user_id=$this->session->user_id;
+                    $m_trans->set('trans_date','NOW()');
+                    $m_trans->trans_key_id=3; //CRUD
+                    $m_trans->trans_type_id=43; // TRANS TYPE
+                    $m_trans->trans_log='Deleted User: '.$user_name[0]->user_name.' (ID'.$user_account_id.')';
+                    $m_trans->save();
+
                     echo json_encode($response);
                 }
                 break;
@@ -213,6 +238,14 @@ class Users extends CORE_Controller
                 $response['stat']='success';
                 $response['msg']='Profile successfully updated.';
 
+                $m_trans=$this->Trans_model;
+                $m_trans->user_id=$this->session->user_id;
+                $m_trans->set('trans_date','NOW()');
+                $m_trans->trans_key_id=2; //CRUD
+                $m_trans->trans_type_id=43; // TRANS TYPE
+                $m_trans->trans_log='Updated User : '.$this->input->post('user_name',TRUE).' ID('.$user_account_id.')';
+                $m_trans->save();
+                
                 echo json_encode($response);
 
                 break;
