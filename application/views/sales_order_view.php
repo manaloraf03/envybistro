@@ -632,7 +632,7 @@
 <footer role="contentinfo">
     <div class="clearfix">
         <ul class="list-unstyled list-inline pull-left">
-            <li><h6 style="margin: 0;">&copy; 2016 JDEV OFFICE SOLUTION - </h6></li>
+            <li><h6 style="margin: 0;">&copy; 2018 - JDEV OFFICE SOLUTION INC.</h6></li>
         </ul>
         <button class="pull-right btn btn-link btn-xs hidden-print" id="back-to-top"><i class="ti ti-arrow-up"></i></button>
     </div>
@@ -1571,7 +1571,7 @@ $(document).ready(function(){
         }
         return '<tr>'+
         // DISPLAY
-        '<td ><input name="so_qty[]" type="text" class="number form-control" value="'+ d.so_qty+'"></td>'+unit+
+        '<td ><input name="so_qty[]" type="text" class="number form-control" value="'+accounting.formatNumber(d.so_qty,2)+'"></td>'+unit+
         '<td >'+d.product_desc+'<input type="text" style="display:none;" class="form-control" name="is_parent[]" value="'+d.is_parent+'"></td>'+
         '<td ><input name="so_price[]" type="text" class="numeric form-control" value="'+accounting.formatNumber(d.so_price,2)+'" style="text-align:right;"></td>'+
         '<td  style=""><input name="so_discount[]" type="text" class="numeric form-control" value="'+ accounting.formatNumber(d.so_discount,2)+'" style="text-align:right;"></td>'+
@@ -1622,7 +1622,7 @@ $(document).ready(function(){
     };
     var reInitializeNumeric=function(){
         $('.numeric').autoNumeric('init', {mDec:2});
-        $('.number').autoNumeric('init', {mDec:0});
+        $('.number').autoNumeric('init', {mDec:2});
     };
 
     var initializeChange=function(){

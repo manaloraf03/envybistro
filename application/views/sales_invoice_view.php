@@ -734,7 +734,7 @@
 <footer role="contentinfo">
     <div class="clearfix">
         <ul class="list-unstyled list-inline pull-left">
-            <li><h6 style="margin: 0;">&copy; 2017 - JDEV OFFICE SOLUTIONS</h6></li>
+            <li><h6 style="margin: 0;">&copy; 2018 - JDEV OFFICE SOLUTION INC.</h6></li>
         </ul>
         <button class="pull-right btn btn-link btn-xs hidden-print" id="back-to-top"><i class="ti ti-arrow-up"></i></button>
     </div>
@@ -1806,7 +1806,7 @@ $(document).ready(function(){
         }
 return '<tr>'+
 //DISPLAY
-'<td ><input name="inv_qty[]" type="text" class="numeric form-control trigger-keyup" value="'+ d.inv_qty+'"></td>'+unit+
+'<td ><input name="inv_qty[]" type="text" class="numeric form-control trigger-keyup" value="'+accounting.formatNumber(d.inv_qty,2)+'"></td>'+unit+
 '<td ">'+d.product_desc+'<input type="text" style="display:none;" class="form-control" name="is_parent[]" value="'+d.is_parent+'"></td>'+
 '<td ><input name="inv_price[]" type="text" class="numeric form-control" value="'+accounting.formatNumber(d.inv_price,2)+'" style="text-align:right;"></td>'+
 '<td  style=""><input name="inv_discount[]" type="text" class="numeric form-control" value="'+ accounting.formatNumber(d.inv_discount,2)+'" style="text-align:right;"></td>'+
