@@ -311,151 +311,181 @@ class Products_model extends CORE_Model {
         return $this->db->query($sql)->result();
     }
 
-     function get_product_history_with_child($product_id,$depid=0,$as_of_date=null,$account,$is_parent=null){
+
+     function get_product_history_with_child($product_id,$depid=0,$as_of_date=null,$account,$is_parent=null,$ciaccount){
 
         $this->db->query("SET @pBalance:=0.00;");
         $this->db->query("SET @cBalance:=0.00;");
         $sql="
 
-SELECT main.*,@pBalance:=(@pBalance+(main.parent_in_qty-main.parent_out_qty)) as parent_balance,
-@cBalance:=(@cBalance+(main.child_in_qty-main.child_out_qty)) as child_balance
- FROM 
+            SELECT main.*,@pBalance:=(@pBalance+(main.parent_in_qty-main.parent_out_qty)) as parent_balance,
+            @cBalance:=(@cBalance+(main.child_in_qty-main.child_out_qty)) as child_balance
+             FROM 
 
-(SELECT
-(ai.date_adjusted) as txn_date,
-ai.date_created,
-ai.adjustment_code as ref_no,
-('Adjustment IN')as type,
-'' as Description,
-aii.product_id,
-IF(aii.is_parent = 1, 'Bulk' ,'Retail') as identifier,
-IF(aii.is_parent = 1, IFNULL(aii.adjust_qty,0),IFNULL(aii.adjust_qty,0)/IFNULL(p.child_unit_desc,0)) as parent_in_qty,
-IF(aii.is_parent = 1, IFNULL(aii.adjust_qty,0)*IFNULL(p.child_unit_desc,0),IFNULL(aii.adjust_qty,0)) as child_in_qty,
-0 as parent_out_qty,
-0 as child_out_qty
+            (SELECT
+            (ai.date_adjusted) as txn_date,
+            ai.date_created,
+            ai.adjustment_code as ref_no,
+            ('Adjustment IN')as type,
+            '' as Description,
+            aii.product_id,
+            IF(aii.is_parent = 1, 'Bulk' ,'Retail') as identifier,
+            IF(aii.is_parent = 1, IFNULL(aii.adjust_qty,0),IFNULL(aii.adjust_qty,0)/IFNULL(p.child_unit_desc,0)) as parent_in_qty,
+            IF(aii.is_parent = 1, IFNULL(aii.adjust_qty,0)*IFNULL(p.child_unit_desc,0),IFNULL(aii.adjust_qty,0)) as child_in_qty,
+            0 as parent_out_qty,
+            0 as child_out_qty
 
- FROM adjustment_info as ai
-INNER JOIN `adjustment_items` as aii ON aii.adjustment_id=ai.adjustment_id
-LEFT JOIN products p on p.product_id = aii.product_id
-WHERE ai.adjustment_type='IN' AND ai.is_active=TRUE AND ai.is_deleted=FALSE
-AND aii.product_id=$product_id ".($depid==0?"":" AND ai.department_id=".$depid)."
-".($as_of_date==null?"":" AND ai.date_adjusted<='".$as_of_date."'")."
+             FROM adjustment_info as ai
+            INNER JOIN `adjustment_items` as aii ON aii.adjustment_id=ai.adjustment_id
+            LEFT JOIN products p on p.product_id = aii.product_id
+            WHERE ai.adjustment_type='IN' AND ai.is_active=TRUE AND ai.is_deleted=FALSE
+            AND aii.product_id=$product_id ".($depid==0?"":" AND ai.department_id=".$depid)."
+            ".($as_of_date==null?"":" AND ai.date_adjusted<='".$as_of_date."'")."
 
-UNION ALL
-
-
-SELECT
-
-(ai.date_adjusted) as txn_date,
-ai.date_created,
-ai.adjustment_code as ref_no,
-('Adjustment Out')as type,
-'' as Description,
-aii.product_id,
-IF(aii.is_parent = 1, 'Bulk' ,'Retail') as identifier,
-0 as parent_in_qty,
-0 as child_in_qty,
-IF(aii.is_parent = 1, IFNULL(aii.adjust_qty,0),IFNULL(aii.adjust_qty,0)/IFNULL(p.child_unit_desc,0)) as parent_out_qty,
-IF(aii.is_parent = 1, IFNULL(aii.adjust_qty,0)*IFNULL(p.child_unit_desc,0),IFNULL(aii.adjust_qty,0)) as child_out_qty 
+            UNION ALL
 
 
- FROM adjustment_info as ai
-INNER JOIN `adjustment_items` as aii ON aii.adjustment_id=ai.adjustment_id
-LEFT JOIN products p on p.product_id = aii.product_id
-WHERE ai.adjustment_type='OUT' AND ai.is_active=TRUE AND ai.is_deleted=FALSE
-AND aii.product_id=$product_id ".($depid==0?"":" AND ai.department_id=".$depid)."
-".($as_of_date==null?"":" AND ai.date_adjusted<='".$as_of_date."'")."
+            SELECT
 
-UNION ALL
+            (ai.date_adjusted) as txn_date,
+            ai.date_created,
+            ai.adjustment_code as ref_no,
+            ('Adjustment Out')as type,
+            '' as Description,
+            aii.product_id,
+            IF(aii.is_parent = 1, 'Bulk' ,'Retail') as identifier,
+            0 as parent_in_qty,
+            0 as child_in_qty,
+            IF(aii.is_parent = 1, IFNULL(aii.adjust_qty,0),IFNULL(aii.adjust_qty,0)/IFNULL(p.child_unit_desc,0)) as parent_out_qty,
+            IF(aii.is_parent = 1, IFNULL(aii.adjust_qty,0)*IFNULL(p.child_unit_desc,0),IFNULL(aii.adjust_qty,0)) as child_out_qty 
 
-SELECT
-di.date_delivered as txn_date,
-di.date_created,
-di.dr_invoice_no as ref_no,
-('Purchase Invoice') as type,
-CONCAT(IFNULL(s.supplier_name,''),' (Supplier)') as Description,
-dii.product_id,
-IF(dii.is_parent = 1, 'Bulk' ,'Retail') as identifier,
-IF(dii.is_parent = 1, IFNULL(dii.dr_qty,0),IFNULL(dii.dr_qty,0)/IFNULL(p.child_unit_desc,0)) as parent_in_qty,
-IF(dii.is_parent = 1, IFNULL(dii.dr_qty,0)*IFNULL(p.child_unit_desc,0),IFNULL(dii.dr_qty,0)) as child_in_qty,
-0 as parent_out_qty,
-0 as child_out_qty
-FROM (delivery_invoice as di
-LEFT JOIN suppliers as s ON s.supplier_id=di.supplier_id)
-INNER JOIN delivery_invoice_items as dii
-ON dii.dr_invoice_id=di.dr_invoice_id
-LEFT JOIN products p on p.product_id = dii.product_id
-WHERE di.is_active=TRUE AND di.is_deleted=FALSE 
-".($depid==0?"":" AND di.department_id=".$depid)."
-AND dii.product_id=$product_id
-".($as_of_date==null?"":" AND di.date_delivered<='".$as_of_date."'")."
 
-UNION ALL
+             FROM adjustment_info as ai
+            INNER JOIN `adjustment_items` as aii ON aii.adjustment_id=ai.adjustment_id
+            LEFT JOIN products p on p.product_id = aii.product_id
+            WHERE ai.adjustment_type='OUT' AND ai.is_active=TRUE AND ai.is_deleted=FALSE
+            AND aii.product_id=$product_id ".($depid==0?"":" AND ai.department_id=".$depid)."
+            ".($as_of_date==null?"":" AND ai.date_adjusted<='".$as_of_date."'")."
 
-SELECT
-ii.date_issued as txn_date,
-ii.date_created ,
-ii.slip_no as ref_no,
-'Issuance' as type,
-ii.issued_to_person as Description,
-iit.product_id,
-IF(iit.is_parent = 1, 'Bulk' ,'Retail') as identifier,
-0 as parent_in_qty,
-0 as child_in_qty,
-IF(iit.is_parent = 1, IFNULL(iit.issue_qty,0),IFNULL(iit.issue_qty,0)/IFNULL(p.child_unit_desc,0)) as parent_out_qty,
-IF(iit.is_parent = 1, IFNULL(iit.issue_qty,0)*IFNULL(p.child_unit_desc,0),IFNULL(iit.issue_qty,0)) as child_out_qty 
+            UNION ALL
 
-FROM issuance_info as ii
-INNER JOIN issuance_items as iit ON iit.issuance_id=ii.issuance_id
-LEFT JOIN products p on p.product_id = iit.product_id
-WHERE ii.is_active=TRUE AND ii.is_deleted=FALSE
-".($depid==0?"":" AND ii.issued_department_id=".$depid)."
-AND iit.product_id=$product_id ".($as_of_date==null?"":" AND ii.date_issued<='".$as_of_date."'")."
+            SELECT
+            di.date_delivered as txn_date,
+            di.date_created,
+            di.dr_invoice_no as ref_no,
+            ('Purchase Invoice') as type,
+            CONCAT(IFNULL(s.supplier_name,''),' (Supplier)') as Description,
+            dii.product_id,
+            IF(dii.is_parent = 1, 'Bulk' ,'Retail') as identifier,
+            IF(dii.is_parent = 1, IFNULL(dii.dr_qty,0),IFNULL(dii.dr_qty,0)/IFNULL(p.child_unit_desc,0)) as parent_in_qty,
+            IF(dii.is_parent = 1, IFNULL(dii.dr_qty,0)*IFNULL(p.child_unit_desc,0),IFNULL(dii.dr_qty,0)) as child_in_qty,
+            0 as parent_out_qty,
+            0 as child_out_qty
+            FROM (delivery_invoice as di
+            LEFT JOIN suppliers as s ON s.supplier_id=di.supplier_id)
+            INNER JOIN delivery_invoice_items as dii
+            ON dii.dr_invoice_id=di.dr_invoice_id
+            LEFT JOIN products p on p.product_id = dii.product_id
+            WHERE di.is_active=TRUE AND di.is_deleted=FALSE 
+            ".($depid==0?"":" AND di.department_id=".$depid)."
+            AND dii.product_id=$product_id
+            ".($as_of_date==null?"":" AND di.date_delivered<='".$as_of_date."'")."
 
-UNION ALL
-                ".($account==TRUE?" 
-      
-SELECT 
-si.date_invoice as txn_date,
-si.date_created as date_created,
-si.sales_inv_no as ref_no,
-('Sales Invoice') as type,
-CONCAT(IFNULL(c.customer_name,''),' (Customer)') as Description,
-sii.product_id,
-IF(sii.is_parent = 1, 'Bulk' ,'Retail') as identifier,
-0 as parent_in_qty,
-0 as child_in_qty,
-IF(sii.is_parent = 1, IFNULL(sii.inv_qty,0),IFNULL(sii.inv_qty,0)/IFNULL(p.child_unit_desc,0)) as parent_out_qty,
-IF(sii.is_parent = 1, IFNULL(sii.inv_qty,0)*IFNULL(p.child_unit_desc,0),IFNULL(sii.inv_qty,0)) as child_out_qty 
+            UNION ALL
 
- FROM 
-(sales_invoice as si
-LEFT JOIN customers c ON c.customer_id=si.customer_id)
+            SELECT
+            ii.date_issued as txn_date,
+            ii.date_created ,
+            ii.slip_no as ref_no,
+            'Issuance' as type,
+            ii.issued_to_person as Description,
+            iit.product_id,
+            IF(iit.is_parent = 1, 'Bulk' ,'Retail') as identifier,
+            0 as parent_in_qty,
+            0 as child_in_qty,
+            IF(iit.is_parent = 1, IFNULL(iit.issue_qty,0),IFNULL(iit.issue_qty,0)/IFNULL(p.child_unit_desc,0)) as parent_out_qty,
+            IF(iit.is_parent = 1, IFNULL(iit.issue_qty,0)*IFNULL(p.child_unit_desc,0),IFNULL(iit.issue_qty,0)) as child_out_qty 
 
-INNER JOIN
-sales_invoice_items sii ON sii.sales_invoice_id = si.sales_invoice_id
-LEFT JOIN products p on p.product_id = sii.product_id
-WHERE si.is_active = TRUE AND si.is_deleted = FALSE
- ".($depid==0?"":" AND si.department_id=".$depid)."
-AND sii.product_id = $product_id
-".($as_of_date==null?"":" AND si.date_invoice<='".$as_of_date."'")."
-    ":" ")."
-) as main
+            FROM issuance_info as ii
+            INNER JOIN issuance_items as iit ON iit.issuance_id=ii.issuance_id
+            LEFT JOIN products p on p.product_id = iit.product_id
+            WHERE ii.is_active=TRUE AND ii.is_deleted=FALSE
+            ".($depid==0?"":" AND ii.issued_department_id=".$depid)."
+            AND iit.product_id=$product_id ".($as_of_date==null?"":" AND ii.date_issued<='".$as_of_date."'")."
 
-    ".($is_parent==1?" 
-        WHERE main.parent_in_qty > 0 or main.parent_out_qty > 0
-    ":"
-        WHERE main.child_in_qty > 0 or main.child_out_qty > 0
-    ")."
+            
+            ".($account==TRUE?" 
+            
+            UNION ALL  
+            SELECT 
+            si.date_invoice as txn_date,
+            si.date_created as date_created,
+            si.sales_inv_no as ref_no,
+            ('Sales Invoice') as type,
+            CONCAT(IFNULL(c.customer_name,''),' (Customer)') as Description,
+            sii.product_id,
+            IF(sii.is_parent = 1, 'Bulk' ,'Retail') as identifier,
+            0 as parent_in_qty,
+            0 as child_in_qty,
+            IF(sii.is_parent = 1, IFNULL(sii.inv_qty,0),IFNULL(sii.inv_qty,0)/IFNULL(p.child_unit_desc,0)) as parent_out_qty,
+            IF(sii.is_parent = 1, IFNULL(sii.inv_qty,0)*IFNULL(p.child_unit_desc,0),IFNULL(sii.inv_qty,0)) as child_out_qty 
 
-ORDER BY main.txn_date,main.date_created ASC";
+             FROM 
+            (sales_invoice as si
+            LEFT JOIN customers c ON c.customer_id=si.customer_id)
+
+            INNER JOIN
+            sales_invoice_items sii ON sii.sales_invoice_id = si.sales_invoice_id
+            LEFT JOIN products p on p.product_id = sii.product_id
+            WHERE si.is_active = TRUE AND si.is_deleted = FALSE
+            ".($depid==0?"":" AND si.department_id=".$depid)."
+            AND sii.product_id = $product_id
+            ".($as_of_date==null?"":" AND si.date_invoice<='".$as_of_date."'")."
+                
+            ":" ")."
+
+
+            ".($ciaccount==TRUE?" 
+            
+            UNION                         
+            
+            SELECT 
+            (ci.date_invoice) as txn_date,
+            ci.date_created,
+            ci.cash_inv_no as ref_no,
+            'Cash Invoice' as type,
+            CONCAT(IFNULL(c.customer_name,''),' (Customer)') as Description,
+            cii.product_id,
+            IF(cii.is_parent = 1, 'Bulk' ,'Retail') as identifier,
+            0 as parent_in_qty,
+            0 as child_in_qty,    
+            IF(cii.is_parent = 1, IFNULL(cii.inv_qty,0),IFNULL(cii.inv_qty,0)/IFNULL(p.child_unit_desc,0)) as parent_out_qty,
+            IF(cii.is_parent = 1, IFNULL(cii.inv_qty,0)*IFNULL(p.child_unit_desc,0),IFNULL(cii.inv_qty,0)) as child_out_qty 
+
+            FROM cash_invoice as ci
+            
+            
+            LEFT JOIN 
+            customers as c ON c.customer_id = ci.customer_id
+            LEFT JOIN cash_invoice_items cii ON cii.cash_invoice_id = ci.cash_invoice_id
+            LEFT JOIN products p on p.product_id = cii.product_id
+            
+            WHERE ci.is_active = TRUE AND ci.is_deleted = FALSE
+            ".($depid==0?"":" AND ci.department_id=".$depid)."
+            AND cii.product_id = $product_id
+            ".($as_of_date==null?"":" AND ci.date_invoice<='".$as_of_date."'")."
+            ":" ")."
+
+            ) as main
+
+            ".($is_parent==1?" WHERE main.parent_in_qty > 0 or main.parent_out_qty > 0 ":"WHERE main.child_in_qty > 0 or main.child_out_qty > 0")."
+
+            ORDER BY main.txn_date,main.date_created ASC";
 
 
 
         return $this->db->query($sql)->result();
     }
-
-
 
     function get_product_current_qty($batch_no,$product_id,$expire_date){
         $sql="SELECT `get_product_qty_per_batch`('$batch_no',$product_id,'$expire_date') as batch_qty";
@@ -1037,18 +1067,12 @@ Product Pick List
 
 
 */
-
-function product_list($account,$as_of_date=null,$product_id=null,$supplier_id=null,$category_id=null,$item_type_id=null,$pick_list=null,$depid=null){
+function product_list($account,$as_of_date=null,$product_id=null,$supplier_id=null,$category_id=null,$item_type_id=null,$pick_list=null,$depid=null,$account_cii){
     $sql="SELECT main.*
-             ".($pick_list==TRUE?" 
-                    ,(main.product_ideal - main.CurrentQty) as recommended_qty 
-             ":" ")."
+         ".($pick_list==TRUE?",(main.product_ideal - main.CurrentQty) as recommended_qty":"")."
+            FROM 
 
-
-
-    FROM (
-
-            SELECT 
+            (SELECT 
                 rp.product_type,
                 s.supplier_name,
                 it.item_type,
@@ -1058,23 +1082,14 @@ function product_list($account,$as_of_date=null,$product_id=null,$supplier_id=nu
                 tax_types.tax_rate,
                 (SELECT uc.unit_name as child_unit_name FROM units as uc WHERE uc.unit_id = core.parent_unit_id) as parent_unit_name,
                 (SELECT uc.unit_name as child_unit_name FROM units as uc WHERE uc.unit_id = core.child_unit_id) as child_unit_name,
-             ".($account==TRUE?" 
 
-                ROUND((ReceiveQtyP+AdjustInQtyP-SalesOUtQtyP-IssueQtyP-AdjustOutP),2) as CurrentQty,
-                ROUND((ReceiveQtyC+AdjustInQtyC-SalesOUtQtyC-IssueQtyC-AdjustOutC),2) as CurrentQtyChild
+                ROUND((ReceiveQtyP+AdjustInQtyP".($account==TRUE?"-SalesOUtQtyP":"")."".($account_cii==TRUE?"-CInvOutP":"")."-IssueQtyP-AdjustOutP),2) as CurrentQty,
+                ROUND((ReceiveQtyC+AdjustInQtyC".($account==TRUE?" -SalesOUtQtyC":"")."".($account_cii==TRUE?"-CInvOutC":"")."-IssueQtyC-AdjustOutC),2) as CurrentQtyChild
 
-             ":" 
-
-                    ROUND((ReceiveQtyP+AdjustInQtyP-IssueQtyP-AdjustOutP),2) as CurrentQty,
-                    ROUND((ReceiveQtyC+AdjustInQtyC-IssueQtyC-AdjustOutC),2) as CurrentQtyChild
-
-             ")."
-       
+            
 
                 FROM
 
-
-  
                 (SELECT pQ.*,
 
                 IFNULL(di.parent_in_qty,0) as ReceiveQtyP,
@@ -1086,22 +1101,16 @@ function product_list($account,$as_of_date=null,$product_id=null,$supplier_id=nu
                 IFNULL(ii.parent_out_qty,0) as IssueQtyP,
                 IFNULL(ii.child_out_qty,0) as IssueQtyC,
                 IFNULL(aiout.parent_out_qty,0) as AdjustOutP,
-                IFNULL(aiout.child_out_qty,0) as AdjustOutC 
-
+                IFNULL(aiout.child_out_qty,0) as AdjustOutC
+,                IFNULL(ciout.parent_out_qty,0) as CInvOutP,
+                IFNULL(ciout.child_out_qty,0) as CInvOutC 
 
                 FROM
 
                 (SELECT p.*,c.category_name FROM products as p
                 LEFT JOIN categories as c ON c.category_id=p.category_id
                 WHERE p.is_deleted = FALSE 
-
-                ".($product_id==NULL?" 
-                
-             ":" 
-                   AND p.product_id = $product_id
-             ")."
-
-
+                ".($product_id==NULL?"":" AND p.product_id = $product_id")."
 
                  )as pQ
 
@@ -1168,7 +1177,18 @@ function product_list($account,$as_of_date=null,$product_id=null,$supplier_id=nu
                  ".($depid==null||$depid==0?"":" AND ai.department_id=".$depid)."
                 GROUP BY aii.product_id) as aiout ON aiout.product_id = pQ.product_id
 
+                LEFT JOIN
 
+                (SELECT cii.product_id,
+                SUM(IF(cii.is_parent = 1, IFNULL(cii.inv_qty,0),IFNULL(cii.inv_qty,0)/IFNULL(p.child_unit_desc,0))) as parent_out_qty,
+                SUM(IF(cii.is_parent = 1, IFNULL(cii.inv_qty,0)*IFNULL(p.child_unit_desc,0),IFNULL(cii.inv_qty,0))) as child_out_qty
+                FROM cash_invoice ci
+                INNER JOIN cash_invoice_items  cii ON cii.cash_invoice_id =  ci.cash_invoice_id
+                LEFT JOIN products p on p.product_id = cii.product_id
+                WHERE  ci.is_deleted = 0
+                AND ci.is_deleted=0   ".($as_of_date==null?"":" AND ci.date_invoice<='".$as_of_date."'")."
+                ".($depid==null||$depid==0?"":" AND ci.department_id=".$depid)."
+                GROUP BY cii.product_id) as ciout ON ciout.product_id = pQ.product_id
 
                 )as core 
                 
@@ -1184,14 +1204,8 @@ function product_list($account,$as_of_date=null,$product_id=null,$supplier_id=nu
                 ".($category_id==null?"":" AND core.category_id='".$category_id."'")."
                 ".($item_type_id==null?"":" AND core.item_type_id='".$item_type_id."'")."
 
-
                 ORDER BY core.product_desc) as main
-                
-
-
-             ".($pick_list==TRUE?" 
-                 WHERE main.CurrentQty < main.product_warn
-             ":" ")."
+                ".($pick_list==TRUE?" WHERE main.CurrentQty < main.product_warn ":" ")."
 
 
     ";

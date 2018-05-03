@@ -1234,7 +1234,7 @@ $(document).ready(function(){
         $('#btn_new').click(function(){
             _txnMode="new";
             clearFields($('#div_sales_invoice_fields'));
-            $('#span_invoice_no').html('INV-XXXX');
+            $('#span_invoice_no').html('SAL-INV-YYYYMMDD-XX');
             showList(false);
 
             $('#tbl_items > tbody').html('');

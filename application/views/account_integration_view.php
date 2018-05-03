@@ -339,6 +339,19 @@ background: #616161 !important;color: white !important;border-top: 0.5px solid w
                                 <span class="help-block m-b-none">Please select if Sales Invoices will be included in the Inventory computation.</span>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label"> * Cash Invoice Integration :</label>
+                            <div class="col-md-7">
+                                <select name="cash_invoice_inventory" class="cbo_accounts"   id="cbo_inventory" data-error-msg="Inventory is required." required>
+                               
+
+                                <option value="1" <?php echo ($current_accounts->cash_invoice_inventory == 1 ? 'selected' :'')   ?> >Enable</option>
+                                <option value="0" <?php echo ($current_accounts->cash_invoice_inventory == 0 ? 'selected' :'')   ?>> Disable</option>
+                                </select>
+
+                                <span class="help-block m-b-none">Please select if Cash Invoices will be included in the Inventory computation.</span>
+                            </div>
+                        </div>
 
                         <br >
                         <h4><span style="margin-left: 1%"><strong><i class="fa fa-gear"></i> Depreciation Expense Account</strong></span></h4>
@@ -369,7 +382,7 @@ background: #616161 !important;color: white !important;border-top: 0.5px solid w
                             </div>
                         </div>
 
-<!--                         <h4><span style="margin-left: 1%"><strong><i class="fa fa-gear"></i> Cash Invoice Account</strong></span></h4>
+                        <h4><span style="margin-left: 1%"><strong><i class="fa fa-gear"></i> Cash Invoice Account</strong></span></h4>
                         <div class="form-group">
                             <label class="col-md-3 control-label"> * Debit Account :</label>
                             <div class="col-md-7">
@@ -383,7 +396,7 @@ background: #616161 !important;color: white !important;border-top: 0.5px solid w
                                 <span class="help-block m-b-none">Account that represents the Debit Entry of the Cash Invoice.</span>
                             </div>
                         </div>
-                        <div class="form-group">
+<!--                         <div class="form-group">
                             <label class="col-md-3 control-label"> * Credit Account :</label>
                             <div class="col-md-7">
                                 <select name="cash_invoice_credit_id"  class="cbo_accounts" data-error-msg="Cash Invoice Credit account is required." required>
@@ -630,7 +643,7 @@ background: #616161 !important;color: white !important;border-top: 0.5px solid w
 <footer role="contentinfo">
     <div class="clearfix">
         <ul class="list-unstyled list-inline pull-left">
-            <li><h6 style="margin: 0;">&copy; 2018 - JDEV OFFICE SOLUTION INC.</h6></li>
+            <li><h6 style="margin: 0;">&copy; 2018 - JDEV OFFICE SOLUTION INC</h6></li>
         </ul>
         <button class="pull-right btn btn-link btn-xs hidden-print" id="back-to-top"><i class="ti ti-arrow-up"></i></button>
     </div>

@@ -32,7 +32,7 @@ class Inventory extends CORE_Controller
 
         $data['departments']=$this->Departments_model->get_list(array('is_deleted'=>FALSE,'is_active'=>TRUE));
         
-        (in_array('8-2',$this->session->user_rights)? 
+        (in_array('15-4',$this->session->user_rights)? 
         $this->load->view('inventory_report_view',$data)
         :redirect(base_url('dashboard')));
     }
@@ -49,7 +49,8 @@ class Inventory extends CORE_Controller
                 $account_integration =$this->Account_integration_model;
                 $a_i=$account_integration->get_list();
                 $account =$a_i[0]->sales_invoice_inventory;
-                $response['data']=$m_products->product_list($account,$date,null,null,null,1,null,$depid);
+                $account_cii =$a_i[0]->cash_invoice_inventory;
+                $response['data']=$m_products->product_list($account,$date,null,null,null,1,null,$depid,$account_cii);
                 // $response['data'] = $m_products->get_product_list_inventory($date,$depid,$account);
 
 
@@ -60,7 +61,7 @@ class Inventory extends CORE_Controller
                 $account_integration =$this->Account_integration_model;
                 $a_i=$account_integration->get_list();
                 $account =$a_i[0]->sales_invoice_inventory;
-
+                $ci_account =$a_i[0]->cash_invoice_inventory;
 
                 $m_products = $this->Products_model;
                 $m_department = $this->Departments_model;
@@ -68,7 +69,7 @@ class Inventory extends CORE_Controller
                 $date = date('Y-m-d',strtotime($this->input->get('date',TRUE)));
                 $depid = $this->input->get('depid',TRUE);
                 $info = $m_department->get_department_list($depid);
-                $data['products']=$m_products->product_list($account,$date,null,null,null,1,null,$depid);
+                $data['products']=$m_products->product_list($account,$date,null,null,null,1,null,$depid,$ci_account);
                 // $data['products'] = $m_products->get_product_list_inventory($date,$depid,$account);
                 $data['date'] = date('m/d/Y',strtotime($date));
 
@@ -90,7 +91,7 @@ class Inventory extends CORE_Controller
                 $account_integration =$this->Account_integration_model;
                 $a_i=$account_integration->get_list();
                 $account =$a_i[0]->sales_invoice_inventory;
-
+                $ci_account =$a_i[0]->cash_invoice_inventory;
 
                 $m_products = $this->Products_model;
                 $m_department = $this->Departments_model;
@@ -99,7 +100,7 @@ class Inventory extends CORE_Controller
                 $depid = $this->input->get('depid',TRUE);
                 $info = $m_department->get_department_list($depid);
 
-                $products=$m_products->product_list($account,$date,null,null,null,1,null,$depid);
+                $products=$m_products->product_list($account,$date,null,null,null,1,null,$depid,$ci_account);
                 $data['date'] = date('m/d/Y',strtotime($date));
 
                 if(isset($info[0])){
@@ -231,7 +232,7 @@ class Inventory extends CORE_Controller
                 $account_integration =$this->Account_integration_model;
                 $a_i=$account_integration->get_list();
                 $account =$a_i[0]->sales_invoice_inventory;
-
+                $ci_account =$a_i[0]->cash_invoice_inventory;
 
                 $m_products = $this->Products_model;
                 $m_department = $this->Departments_model;
@@ -240,7 +241,7 @@ class Inventory extends CORE_Controller
                 $depid = $this->input->get('depid',TRUE);
                 $info = $m_department->get_department_list($depid);
 
-                $products=$m_products->product_list($account,$date,null,null,null,1,null,$depid);
+                $products=$m_products->product_list($account,$date,null,null,null,1,null,$depid,$ci_account);
                 $data['date'] = date('m/d/Y',strtotime($date));
 
                 if(isset($info[0])){

@@ -20,6 +20,10 @@ class Cash_invoice extends CORE_Controller
         $this->load->model('Company_model');
         $this->load->model('Salesperson_model');
         $this->load->model('Users_model');
+        $this->load->model('Trans_model');
+        $this->load->model('Sales_invoice_model');
+
+
 
 
     }
@@ -39,6 +43,10 @@ class Cash_invoice extends CORE_Controller
             array('departments.is_active'=>TRUE,'departments.is_deleted'=>FALSE)
         );
 
+        $data['salespersons']=$this->Salesperson_model->get_list(
+            array('salesperson.is_active'=>TRUE,'salesperson.is_deleted'=>FALSE),
+            'salesperson_id, acr_name, CONCAT(firstname, " ", middlename, " ", lastname) AS fullname, firstname, middlename, lastname'
+        );
 
         //data required by active view
         $data['customers']=$this->Customers_model->get_list(
@@ -63,41 +71,65 @@ class Cash_invoice extends CORE_Controller
 
         $data['tax_percentage']=(count($tax_rate)>0?$tax_rate[0]->tax_rate:0);
 
+        /*$data['products']=$this->Products_model->get_list(
 
-        $data['products']=$this->Products_model->get_list(
-            null, //no id filter
+            'products.is_deleted=FALSE AND products.is_active=TRUE',
+
             array(
-                       'products.product_id',
-                       'products.product_code',
-                       'products.product_desc',
-                       'products.product_desc1',
-                       'products.is_tax_exempt',
-                       'products.size',
-                       'FORMAT(products.sale_price,2)as sale_price',
-                       //'FORMAT(products.sale_price,2)as sale_price',
-                       'FORMAT(products.purchase_cost,2)as purchase_cost',
-                       'products.unit_id',
-                       'products.on_hand',
-                       'units.unit_name',
-                       'tax_types.tax_type_id',
-                       'tax_types.tax_rate'
+                'products.product_id',
+                'products.product_code',
+                'products.product_desc' ,
+                'products.product_desc1',
+                'products.is_tax_exempt',
+                'FORMAT(products.sale_price,2)as sale_price',
+                'FORMAT(products.purchase_cost,2)as purchase_cost',
+                'products.unit_id',
+                'units.unit_name'
             ),
             array(
                 // parameter (table to join(left) , the reference field)
                 array('units','units.unit_id=products.unit_id','left'),
-                array('categories','categories.category_id=products.category_id','left'),
-                array('tax_types','tax_types.tax_type_id=products.tax_type_id','left')
+                array('categories','categories.category_id=products.category_id','left')
 
             )
 
-        );
+        );*/
+
+
+        // $data['products']=$this->Products_model->get_list(
+        //     null, //no id filter
+        //     array(
+        //                'products.product_id',
+        //                'products.product_code',
+        //                'products.product_desc',
+        //                'products.product_desc1',
+        //                'products.is_tax_exempt',
+        //                'products.size',
+        //                'FORMAT(products.sale_price,2)as sale_price',
+        //                //'FORMAT(products.sale_price,2)as sale_price',
+        //                'FORMAT(products.purchase_cost,2)as purchase_cost',
+        //                'products.unit_id',
+        //                'products.on_hand',
+        //                'units.unit_name',
+        //                'tax_types.tax_type_id',
+        //                'tax_types.tax_rate'
+        //     ),
+        //     array(
+        //         // parameter (table to join(left) , the reference field)
+        //         array('units','units.unit_id=products.unit_id','left'),
+        //         array('categories','categories.category_id=products.category_id','left'),
+        //         array('tax_types','tax_types.tax_type_id=products.tax_type_id','left')
+
+        //     )
+
+        // );
 
         $data['invoice_counter']=$this->Invoice_counter_model->get_list(array('user_id'=>$this->session->user_id));
 
 
         $data['title'] = 'Cash Invoice';
         
-        (in_array('15-3',$this->session->user_rights)? 
+        (in_array('3-4',$this->session->user_rights)? 
         $this->load->view('cash_invoice_view', $data)
         :redirect(base_url('dashboard')));
     }
@@ -125,7 +157,13 @@ class Cash_invoice extends CORE_Controller
                         'products.product_code',
                         'products.product_desc',
                         'units.unit_id',
-                        'units.unit_name'
+                        'units.unit_name',
+                        'products.is_bulk',
+                        'products.child_unit_id',
+                        'products.parent_unit_id',
+                        'products.child_unit_desc',
+                        '(SELECT units.unit_name  FROM units WHERE  units.unit_id = products.parent_unit_id) as parent_unit_name',
+                        '(SELECT units.unit_name  FROM units WHERE  units.unit_id = products.child_unit_id) as child_unit_name'
                     ),
                     array(
                         array('products','products.product_id=cash_invoice_items.product_id','left'),
@@ -145,18 +183,19 @@ class Cash_invoice extends CORE_Controller
             case 'create':
                 $m_invoice=$this->Cash_invoice_model;
                 $m_customers=$this->Customers_model;
-
-
-                //get sales order id base on SO number
-
-
-
                 $m_invoice->begin();
 
                 //treat NOW() as function and not string
                 $m_invoice->set('date_created','NOW()'); //treat NOW() as function and not string
-
+                $m_so=$this->Sales_order_model;
+                $arr_so_info=$m_so->get_list(
+                    array('sales_order.so_no'=>$this->input->post('so_no',TRUE)),
+                    'sales_order.sales_order_id'
+                );
+                $sales_order_id=(count($arr_so_info)>0?$arr_so_info[0]->sales_order_id:0);
+                $m_invoice->sales_order_id=$sales_order_id;
                 $m_invoice->customer_id=$this->input->post('customer',TRUE);
+                $m_invoice->sales_order_no=$this->input->post('so_no',TRUE);
                 $m_invoice->department_id=$this->input->post('department',TRUE);
                 $m_invoice->issue_to_department=$this->input->post('issue_to_department',TRUE);
                 $m_invoice->address=$this->input->post('address',TRUE);
@@ -195,7 +234,7 @@ class Cash_invoice extends CORE_Controller
                 $exp_date=$this->input->post('exp_date',TRUE);
                 $batch_no=$this->input->post('batch_no',TRUE);
                 $cost_upon_invoice=$this->input->post('cost_upon_invoice',TRUE);
-                
+                $is_parent=$this->input->post('is_parent',TRUE);
 
                 $m_products=$this->Products_model;
 
@@ -215,10 +254,17 @@ class Cash_invoice extends CORE_Controller
                     $m_invoice_items->inv_tax_amount=$this->get_numeric_value($inv_tax_amount[$i]);
                     $m_invoice_items->inv_non_tax_amount=$this->get_numeric_value($inv_non_tax_amount[$i]);
 
+                    $m_invoice_items->is_parent=$this->get_numeric_value($is_parent[$i]);
+                    if($is_parent[$i] == '1'){
+                            $unit_id=$m_products->get_list(array('product_id'=>$prod_id[$i]));
+                            $m_invoice_items->unit_id=$unit_id[0]->parent_unit_id;
+                    }else{
+                             $unit_id=$m_products->get_list(array('product_id'=>$prod_id[$i]));
+                            $m_invoice_items->unit_id=$unit_id[0]->child_unit_id;
+                    }   
 
-                    //unit id retrieval is change, because of TRIGGER restriction
                     $unit_id=$m_products->get_list(array('product_id'=>$prod_id[$i]));
-                    $m_invoice_items->unit_id=$unit_id[0]->unit_id;
+
                     $m_invoice_items->save();
                 }
 
@@ -227,10 +273,17 @@ class Cash_invoice extends CORE_Controller
                 $m_invoice->modify($cash_invoice_id);
 
 
+                $m_so->order_status_id=$this->get_so_status($sales_order_id);
+                $m_so->modify($sales_order_id);
 
+                $m_trans=$this->Trans_model;
+                $m_trans->user_id=$this->session->user_id;
+                $m_trans->set('trans_date','NOW()');
+                $m_trans->trans_key_id=1; //CRUD
+                $m_trans->trans_type_id=65; // TRANS TYPE
+                $m_trans->trans_log='Created Cash Invoice No: CI-INV-'.date('Ymd').'-'.$cash_invoice_id;
+                $m_trans->save();
                 $m_invoice->commit();
-
-
 
                 if($m_invoice->status()===TRUE){
                     $response['title'] = 'Success!';
@@ -253,6 +306,13 @@ class Cash_invoice extends CORE_Controller
 
                     $m_invoice->begin();
 
+                    $m_so=$this->Sales_order_model;
+                    $arr_so_info=$m_so->get_list(
+                        array('sales_order.so_no'=>$this->input->post('so_no',TRUE)),
+                        'sales_order.sales_order_id'
+                    );
+                    $sales_order_id=(count($arr_so_info)>0?$arr_so_info[0]->sales_order_id:0);
+                    $m_invoice->sales_order_id=$sales_order_id;
 
                     $m_invoice->customer_id=$this->input->post('customer',TRUE);
                     $m_invoice->department_id=$this->input->post('department',TRUE);
@@ -294,7 +354,7 @@ class Cash_invoice extends CORE_Controller
                 $exp_date=$this->input->post('exp_date',TRUE);
                 $batch_no=$this->input->post('batch_no',TRUE);
                 $cost_upon_invoice=$this->input->post('cost_upon_invoice',TRUE);
-                
+                $is_parent=$this->input->post('is_parent',TRUE);
 
                 $m_products=$this->Products_model;
 
@@ -313,12 +373,31 @@ class Cash_invoice extends CORE_Controller
                     $m_invoice_items->inv_tax_amount=$this->get_numeric_value($inv_tax_amount[$i]);
                     $m_invoice_items->inv_non_tax_amount=$this->get_numeric_value($inv_non_tax_amount[$i]);
 
+                    $m_invoice_items->is_parent=$this->get_numeric_value($is_parent[$i]);
+                    if($is_parent[$i] == '1'){
+                        $unit_id=$m_products->get_list(array('product_id'=>$prod_id[$i]));
+                        $m_invoice_items->unit_id=$unit_id[0]->parent_unit_id;
+                    }else{
+                         $unit_id=$m_products->get_list(array('product_id'=>$prod_id[$i]));
+                        $m_invoice_items->unit_id=$unit_id[0]->child_unit_id;
+                    }   
 
                     //unit id retrieval is change, because of TRIGGER restriction
                     $unit_id=$m_products->get_list(array('product_id'=>$prod_id[$i]));
-                    $m_invoice_items->unit_id=$unit_id[0]->unit_id;
                     $m_invoice_items->save();
                 }
+
+                    $m_so->order_status_id=$this->get_so_status($sales_order_id);
+                    $m_so->modify($sales_order_id);
+
+                    $cash_inv=$m_invoice->get_list($cash_invoice_id,'cash_inv_no');
+                    $m_trans=$this->Trans_model;
+                    $m_trans->user_id=$this->session->user_id;
+                    $m_trans->set('trans_date','NOW()');
+                    $m_trans->trans_key_id=2; //CRUD
+                    $m_trans->trans_type_id=65; // TRANS TYPE
+                    $m_trans->trans_log='Updated Cash Invoice No: '.$cash_inv[0]->cash_inv_no;
+                    $m_trans->save();
 
                     $m_invoice->commit();
 
@@ -355,6 +434,27 @@ class Cash_invoice extends CORE_Controller
                 $m_invoice->modify($cash_invoice_id);
 
 
+
+                $so_info=$m_invoice->get_list($cash_invoice_id,'cash_invoice.sales_order_id');// get purchase order first
+
+                if(count($so_info)>0){
+                    $sales_order_id=$so_info[0]->sales_order_id;// pass to variable
+                    $m_so=$this->Sales_order_model;
+                    $m_so->order_status_id=$this->get_so_status(
+                        $sales_order_id);
+                    $m_so->modify($sales_order_id);
+
+                }
+
+                $cash_inv=$m_invoice->get_list($cash_invoice_id,'cash_inv_no');
+                $m_trans=$this->Trans_model;
+                $m_trans->user_id=$this->session->user_id;
+                $m_trans->set('trans_date','NOW()');
+                $m_trans->trans_key_id=3; //CRUD
+                $m_trans->trans_type_id=65; // TRANS TYPE
+                $m_trans->trans_log='Deleted Cash Invoice No: '.$cash_inv[0]->cash_inv_no;
+                $m_trans->save();
+
                 $response['title']='Success!';
                 $response['stat']='success';
                 $response['msg']='Record successfully deleted.';
@@ -366,6 +466,33 @@ class Cash_invoice extends CORE_Controller
                 $response['data']=$this->response_rows($id_filter,TRUE); //show only unposted data
                 echo json_encode($response);
                 break;
+        }
+
+    }
+
+
+    function get_so_status($id){
+        //NOTE : 1 means open, 2 means Closed, 3 means partially invoice
+        $m_sales_invoice=$this->Sales_invoice_model;
+        $m_cash_invoice=$this->Cash_invoice_model;
+
+        if(count($m_sales_invoice->get_list(
+                array('sales_invoice.sales_order_id'=>$id,'sales_invoice.is_active'=>TRUE,'sales_invoice.is_deleted'=>FALSE),
+                'sales_invoice.sales_invoice_id'))==0  &&
+
+            count($m_cash_invoice->get_list(
+                array('cash_invoice.sales_order_id'=>$id,'cash_invoice.is_active'=>TRUE,'cash_invoice.is_deleted'=>FALSE),
+                'cash_invoice.cash_invoice_id'))==0 
+
+
+                ){ //means no SO found on sales invoice that means this so is still open
+
+            return 1;
+
+        }else{
+            $m_so=$this->Sales_order_model;
+            $row=$m_so->get_so_balance_qty($id);
+            return ($row[0]->Balance>0?3:2);
         }
 
     }
@@ -393,9 +520,6 @@ class Cash_invoice extends CORE_Controller
             'cash_invoice.cash_invoice_id DESC'
         );
     }
-
-
-
 
 
 }

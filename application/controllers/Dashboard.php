@@ -13,6 +13,7 @@ class Dashboard extends CORE_Controller {
             'Users_model',
             'Company_model',
             'Customers_model',
+            'Sales_invoice_model',
             'Suppliers_model'
         ));
 
@@ -253,6 +254,15 @@ class Dashboard extends CORE_Controller {
             $expense_monthly[]=$this->get_expense($i);
         }
 
+        $current_year_sales_invoice = array();
+        for($i=1;$i<=12;$i++){
+            $current_year_sales_invoice[]=$this->get_current_year_sales_invoice($i);
+        }
+        $data['current_year_sales_invoice']=$current_year_sales_invoice;
+
+
+
+
         $data['current_year_income_monthly']=$current_year_income_monthly;
         $data['previous_year_income_monthly']=$previous_year_income_monthly;
         $data['expense_monthly']=$expense_monthly;
@@ -297,7 +307,14 @@ class Dashboard extends CORE_Controller {
         return (float)(($info[0]->income_amount==null?0:$info[0]->income_amount));
     }
 
+    function get_current_year_sales_invoice($month){
 
+        $m_sales=$this->Sales_invoice_model;
+        $month=(strlen($month)==1?'0'.$month:$month);
+        $year = 2018;
+        $info=$m_sales->get_invoices_per_month($month,$year);
+        return (float)(($info[0]->income_amount==null?0:$info[0]->income_amount));
+    }
 
     function get_previous_year_income($month){
 

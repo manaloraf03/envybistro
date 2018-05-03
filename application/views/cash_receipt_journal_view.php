@@ -209,7 +209,29 @@
             </div>
         </div>
 <br>
+        <div class="panel panel-default" style="border-radius:6px;">
+            <div id="collapseOne" class="collapse in">
+                <div class="panel-body" style="">
+                <h2 class="h2-panel-heading">Cash Invoice (Pending)</h2><hr>
+                    <div >
+                        <table id="tbl_cash_invoice_for_review" class="table table-striped" cellspacing="0" width="100%">
+                            <thead class="">
+                            <tr>
+                                <th></th>
+                                <th>Cash Invoice No: #</th>
+                                <th>Customer Name</th>
+                                <th>Invoice Date</th>
+                                <th>Remarks</th>
+                            </tr>
+                            </thead>
+                            <tbody>
 
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
         <br>
         <div class="panel panel-default" style="border-radius:6px;">
             <div id="collapseOne" class="collapse in">

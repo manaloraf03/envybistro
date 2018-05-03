@@ -37,9 +37,28 @@ class Sales_order_model extends CORE_Model
         INNER JOIN sales_order as so ON si.sales_order_id=so.sales_order_id)
         INNER JOIN sales_invoice_items as sii ON si.sales_invoice_id=sii.sales_invoice_id
         WHERE so.sales_order_id=$id AND si.is_active=TRUE AND si.is_deleted=FALSE
-        GROUP BY so.so_no,sii.product_id)as
+        GROUP BY so.so_no,sii.product_id
+
+        UNION ALL
+
+        SELECT 
+        so.sales_order_id,
+        so.so_no,
+        cii.product_id,
+        0 as SoQty,
+        SUM(cii.inv_qty) as InvQty
+
+        FROM
+        (cash_invoice as ci
+        INNER JOIN sales_order as so ON ci.sales_order_id = so.sales_order_id)
+        INNER JOIN cash_invoice_items cii ON ci.cash_invoice_id = cii.cash_invoice_id
+        WHERE so.sales_order_id = $id AND ci.is_active = TRUE AND ci.is_deleted = FALSE
+        GROUP BY so.so_no, cii.product_id
+
+        )as
 
         m GROUP BY m.so_no,m.product_id) as x";
+
 
         return $this->db->query($sql)->result();
     }

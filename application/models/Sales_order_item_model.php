@@ -30,7 +30,7 @@ ORIGINAL QUERY OF THE FUNCTION
                 ((n.so_price*n.so_qty)-((n.so_price*n.so_qty)*(n.so_discount/100)))as so_line_total,
                 ((n.so_price*n.so_qty)*(n.so_discount/100)) as so_line_total_discount
 
-/* END OF EDIT FOR COMPUTATION FOR SALES ORDER AS BUTTON ACCEPT IS CLICKED */          
+            /* END OF EDIT FOR COMPUTATION FOR SALES ORDER AS BUTTON ACCEPT IS CLICKED */          
                 FROM
                 (SELECT main.*,
                 p.purchase_cost,
@@ -100,7 +100,32 @@ ORIGINAL QUERY OF THE FUNCTION
                     INNER JOIN sales_order as so ON si.sales_order_id=so.sales_order_id)
                     INNER JOIN sales_invoice_items as sii ON si.sales_invoice_id=sii.sales_invoice_id
                     WHERE so.sales_order_id=$sales_order_id AND si.is_active=TRUE AND si.is_deleted=FALSE
-                    GROUP BY so.so_no,sii.product_id)as
+                    GROUP BY so.so_no,sii.product_id
+
+                    UNION ALL
+
+                    SELECT so.sales_order_id,
+                    so.so_no,
+                    cii.product_id,
+                    orig_so_price as price,
+                    0 as SoQty,
+                    SUM(cii.inv_qty) as InvQty,
+                    0 as so_price,
+                    0 as so_discount,
+                    0 as so_tax_rate,
+                    cii.batch_no,
+                    cii.exp_date,
+                        0 as unit_id,
+                        0 as is_parent
+
+                    FROM (cash_invoice as ci
+                    INNER JOIN sales_order as so ON ci.sales_order_id=so.sales_order_id)
+                    INNER JOIN cash_invoice_items as cii ON ci.cash_invoice_id=cii.cash_invoice_id
+                    WHERE so.sales_order_id=$sales_order_id AND ci.is_active=TRUE AND ci.is_deleted=FALSE
+                    GROUP BY so.so_no,cii.product_id
+
+
+                    )as
 
                     m GROUP BY m.so_no,m.product_id HAVING so_qty>0
 

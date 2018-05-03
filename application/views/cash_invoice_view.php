@@ -52,7 +52,10 @@
         }
         .select2-container{
             min-width: 100%;
-            z-index: 9999999999;
+
+        }
+        .select2-dropdown{
+            z-index: 999999;
         }
         .dropdown-menu > .active > a,.dropdown-menu > .active > a:hover{
             background-color: dodgerblue;
@@ -124,7 +127,7 @@
 <div data-widget-group="group1">
 <div class="row">
 <div class="col-md-12">
-<div id="div_list">
+<div id="div_cash_invoice_list">
     <div class="panel panel-default">
         <div class="panel-body table-responsive">
         <div class="row panel-row">
@@ -137,7 +140,7 @@
                     <th>Invoice Date</th>
                     <th>Due Date</th>
                     <th>Customer</th>
-                    <th>Contact Person</th>
+                    <th>Department</th>
                     <th>Remarks</th>
                     <th><center>Action</center></th>
                 </tr>
@@ -150,30 +153,33 @@
         <!-- <div class="panel-footer"></div> -->
     </div>
 </div>
-<div id="div_form" style="display: none;">
+<div id="div_cash_invoice_fields" style="display: none;">
     <div class="panel panel-default">
         <div class="pull-right">
-            <h4 class="title" style="margin-top: 0%;"></h4>
+            <h4 class="cash_invoice_title" style="margin-top: 0%;"></h4>
             <div class="btn btn-green" style="margin-left: 10px;">
-                <strong><a id="btn_receive_so" href="#" style="text-decoration: none; color: white;"></a></strong>
+                <strong><a id="btn_receive_so" href="#" style="text-decoration: none; color: white;">Create from Sales Order</a></strong>
             </div>
         </div>
         <div class="panel-body" >
         <div class="row panel-row">
             <form id="frm_cash_invoice" role="form" class="form-horizontal">
-                <h2 class="h2-panel-heading">Invoice # : <span id="span_invoice_no">INV-XXXX</span></h4>
+                <h2 class="h2-panel-heading">Invoice # : <span id="span_invoice_no">CI-INV-YYYYMMDD-XX</span></h4>
                 <div>
                 <hr>
-
                     <div class="row">
-                        <div class="col-sm-4" >
-                            <b class="required">*</b><label>Customer :</label> <br />
-                            <select name="customer" id="cbo_customers" >
-                                <option value="0">[ Create New Customer ]</option>
-                                <?php foreach($customers as $customer){ ?>
-                                    <option data-address="<?php echo $customer->address; ?>" data-email="<?php echo $customer->email_address; ?>" data-num="<?php echo $customer->contact_no; ?>" value="<?php echo $customer->customer_id; ?>" data-contact="<?php echo $customer->contact_name; ?>" data-term-default="<?php echo ($customer->term=="none"?"":$customer->term); ?>"><?php echo $customer->customer_name; ?></option>
+                        <div class="col-sm-4">
+                            <b class="required">*</b><label> Department :</label> <br />
+                            <select name="department" id="cbo_departments" data-error-msg="Department is required." required>
+                                <option value="0">[ Create New Department ]</option>
+                                <?php foreach($departments as $department){ ?>
+                                    <option value="<?php echo $department->department_id; ?>"><?php echo $department->department_name; ?></option>
                                 <?php } ?>
                             </select>
+                        </div>
+                        <div class="col-sm-4">
+                            <label>Contact Person :</label><br/>
+                            <input type="text" name="contact_person" id="contact_person" class="form-control" required data-error-msg="Contact Person is required!" placeholder="Contact Person">
                         </div>
                         <div class="col-sm-2 col-sm-offset-2">
                             <b class="required">*</b> <label>Invoice Date :</label> <br />
@@ -186,33 +192,47 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-sm-4" style="display: none;">
-                            <b class="required">*</b><label> Department :</label> <br />
-                            <select name="department" id="cbo_departments" >
-                                <option value="0">[ Create New Department ]</option>
-                                <?php foreach($departments as $department){ ?>
-                                    <option value="<?php echo $department->department_id; ?>"><?php echo $department->department_name; ?></option>
+                        <div class="col-sm-4">
+                            <b class="required">*</b><label>Customer :</label> <br />
+                            <select name="customer" id="cbo_customers" data-error-msg="Customer is required." required>
+                                <option value="0">[ Create New Customer ]</option>
+                                <?php foreach($customers as $customer){ ?>
+                                    <option data-address="<?php echo $customer->address; ?>" data-contact="<?php echo $customer->contact_name; ?>" value="<?php echo $customer->customer_id; ?>" data-term-default="<?php echo ($customer->term=="none"?"":$customer->term); ?>"><?php echo $customer->customer_name; ?></option>
                                 <?php } ?>
                             </select>
                         </div>
-                        <div class="col-sm-4" >
-                            <label>Contact Person :</label><br/>
-                            <input type="text" name="contact_person" id="txt_contact_name" class="form-control" placeholder="Contact Person">
+                        <div class="col-sm-4">
+                            <label>Salesperson :</label><br/>
+                            <select name="salesperson_id" id="cbo_salesperson">
+                                <option value="0">[ Create New Salesperson ]</option>
+                                <?php foreach($salespersons as $salesperson){ ?>
+                                    <option value="<?php echo $salesperson->salesperson_id; ?>"><?php echo $salesperson->acr_name.' - '.$salesperson->fullname; ?></option>
+                                <?php } ?>
+                            </select>
                         </div>
-                        <div class="col-sm-4" >
-                            <label>Email Address :</label><br/>
-                            <input type="text" name="email_address" id="txt_email" class="form-control" placeholder="Email Address">
+                        <div class="col-sm-2">
+                            <label>SO # :</label> <br />
+                            <div class="input-group">
+                                <input type="text" name="so_no" class="form-control">
+                                <span class="input-group-addon">
+                                    <a href="#" id="link_browse" style="text-decoration: none;color:black;"><b>...</b></a>
+                                </span>
+                            </div>
                         </div>
-                        <div class="col-sm-4" >
-                            <label>Contact Number :</label><br/>
-                            <input type="text" name="contact_no" id="txt_contact_no" class="form-control" placeholder="Contact No">
+                        <div class="col-sm-2">
+                            <b class="required">*</b><label> Due Date :</label> <br />
+                            <div class="input-group">
+                                <input type="text" name="date_due" id="due_default" class="date-picker form-control" value="<?php echo date("m/d/Y"); ?>" placeholder="Date Due" data-error-msg="Please set the date this items are issued!" required>
+                                 <span class="input-group-addon">
+                                     <i class="fa fa-calendar"></i>
+                                </span>
+                            </div>
                         </div>
-
                     </div>
                     <div class="row">
                         <div class="col-sm-8">
-                            <label><b class="required">*</b> Deliver To Address :</label><br>
-                            <input class="form-control" id="txt_address" type="text" name="address" placeholder=" Address" required data-error-msg="Deliver to Address is required">
+                            <label>Address :</label><br>
+                            <input class="form-control" id="txt_address" type="text" name="address" placeholder="Customer Address">
                         </div>
                     </div>
                 </div>
@@ -221,9 +241,10 @@
         <div>
         <hr>
             <label class="control-label" style="font-family: Tahoma;"><strong>Enter PLU or Search Item :</strong></label>
-            <div id="custom-templates">
-                <input class="typeahead" type="text" placeholder="Enter PLU or Search Item">
-            </div><br />
+        <button id="refreshproducts" class="btn-primary btn pull-right" style="text-transform: capitalize;font-family: Tahoma, Georgia, Serif;"><span class=""></span>  Refresh</button>
+        <div id="custom-templates">
+            <input class="typeahead" id="typeaheadsearch" type="text" placeholder="Enter PLU or Search Item">
+        </div><br />
             <form id="frm_items">
                 <div class="table-responsive">
                     <table id="tbl_items" class="table table-striped" cellspacing="0" width="100%" style="font-font:tahoma;">
@@ -231,25 +252,44 @@
                         <tr>
                             <th width="10%">Qty</th><!-- 10% -->
                             <th width="10%">UM</th> <!-- 10% -->
-                            <th width="10%">Item</th> <!-- 25% -->
+                            <th width="25%">Item</th> <!-- 25% -->
                             <th width="15%" style="text-align: right;">Unit Price</th> <!-- 15% -->
-                            <th width="15%" style="text-align: right;">Discount % </th>
+                            <th width="10%" style="text-align: right;">Discount % </th>
                             <!-- DISPLAY NONE  -->
-                            <th style=display:none;"" width="10%">Total Discount</th> <!-- total discount -->
+                            <th style="display:none;"" width="10%">Total Discount</th> <!-- total discount -->
                             <th style="display: none;" width="10%">Tax %</th>
                             <!-- DISPLAY -->
-                            <th width="10%" style="text-align: right;">Gross</th>
-                            <th width="10%" style="text-align: right;">Net Total</th>
+                            <th width="15%" style="text-align: right;">Gross</th>
+                            <th width="15%" style="text-align: right;">Net Total</th>
                             <!-- DISPLAY NONE  -->
                             <th style="display:none;" width="10%">Vat Input(Total Line Tax)</th> <!-- vat input -->
                             <th style="display:none;" width="10%">Net of Vat (Price w/out Tax)</th> <!-- net of vat -->
                             <td style="display:none;" width="10%">Item ID</td><!-- product id -->
                             <th style="display:none;" width="10%">Total after Global</th> 
 
-                            <th><center>Action</center></th>
+                            <th width="5%"><center>Action</center></th>
                         </tr>
                         </thead>
                         <tbody>
+                        <!--<tr>
+                                    <td width="10%"><input type="text" class="numeric form-control" align="right"></td>
+                                    <td width="5%">pcs</td>
+                                    <td width="30%">Computer Case</td>
+                                    <td width="12%"><input type="text" class="numeric form-control"></td>
+                                    <td width="12%"><input type="text" class="numeric form-control"></td>
+                                    <td></td>
+                                    <td width="15%">
+                                        <select class="form-control">
+                                            <?php foreach($tax_types as $tax_type){ ?>
+                                                <option value="<?php echo $tax_type->tax_type_id; ?>"><?php echo $tax_type->tax_type; ?></option>
+                                            <?php } ?>
+                                        </select>
+                                    </td>
+                                    <td width="12%" align="right"><input type="text" class="numeric form-control"></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td><button type="button" class="btn btn-default"><i class="fa fa-trash"></i></button></td>
+                                </tr>-->
                         </tbody>
                         <tfoot>
                             <tr>
@@ -276,7 +316,23 @@
                                 <td></td>
                             </tr>
                         </tfoot>
-
+<!--                         <tfoot>
+                            <tr>
+                                <td colspan="6" style="height: 50px;">&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="text-align: right;"><strong><i class="glyph-icon icon-star"></i> Discount :</strong></td>
+                                <td align="right" colspan="1" id="td_discount color="red">0.00</td>
+                                <td colspan="2" id="" style="text-align: right;"><strong><i class="glyph-icon icon-star"></i> Total Before Tax :</strong></td>
+                                <td align="right" colspan="1" id="td_before_tax" color="red">0.00</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="text-align: right;"><strong><i class="glyph-icon icon-star"></i> Tax :</strong></td>
+                                <td align="right" colspan="1" id="td_tax" color="red">0.00</td>
+                                <td colspan="2" style="text-align: right;"><strong><i class="glyph-icon icon-star"></i> Total After Tax :</strong></td>
+                                <td align="right" colspan="1" id="td_after_tax" color="red">0.00</td>
+                            </tr>
+                        </tfoot> -->
                     </table>
                 </div>
             </form>
@@ -356,8 +412,40 @@
         </div>
     </div>
 </div>
-
+<div id="modal_so_list" class="modal fade" tabindex="-1" role="dialog"><!--modal-->
+    <div class="modal-dialog" style="width: 80%;">
+        <div class="modal-content">
+            <div class="modal-header ">
+                <button type="button" class="close"   data-dismiss="modal" aria-hidden="true">X</button>
+                <h2 class="modal-title" style="color: white;"><span id="modal_mode"> </span>Sales Order</h2>
+            </div>
+            <div class="modal-body">
+                <table id="tbl_so_list" class="table table-striped" cellspacing="0" width="100%">
+                    <thead class="">
+                    <tr>
+                        <th></th>
+                        <th>SO#</th>
+                        <th>Customer</th>
+                        <th>Remarks</th>
+                        <th>Order</th>
+                        <th>Status</th>
+                        <th><center>Action</center></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Sales Order Content -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+      <!--           <button id="btn_accept" type="button" class="btn btn-green" style="text-transform: none;font-family: Tahoma, Georgia, Serif;">Receive this Order</button> -->
+                <button id="cancel_modal" class="btn btn-default" style="text-transform: none;font-family: Tahoma, Georgia, Serif;">Cancel</button>
+            </div>
+        </div>
+    </div>
 <div class="clearfix"></div>
+</div>
+
 
 <div id="modal_new_customer" class="modal fade" tabindex="-1" role="dialog"><!--modal-->
     <div class="modal-dialog modal-lg">
@@ -475,10 +563,92 @@
                 <button id="btn_create_customer" type="button" class="btn btn-primary"  style="text-transform: capitalize;font-family: Tahoma, Georgia, Serif;"><span class=""></span> Create</button>
                 <button id="btn_close_customer" type="button" class="btn btn-default" data-dismiss="modal" style="text-transform: capitalize;font-family: Tahoma, Georgia, Serif;">Cancel</button>
             </div>
-        </div><!---content---->
+        </div>
     </div>
 </div><!---modal-->
-
+<div id="modal_new_salesperson" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color:#2ecc71;">
+                <button type="button" class="close"   data-dismiss="modal" aria-hidden="true">X</button>
+                <h4 id="salesperson_title" class="modal-title" style="color: #ecf0f1;"><span id="modal_mode"></span></h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <form id="frm_salesperson" role="form">
+                        <div class="">
+                            <div class="col-xs-12">
+                                <div class="form-group">
+                                    <label class="col-xs-12 col-md-4 control-label "><strong><b>*</b>Salesperson Code :</strong></label>
+                                    <div class="col-xs-12 col-md-8">
+                                        <input type="text" name="salesperson_code" class="form-control" placeholder="Salesperson Code" data-error-msg="Salesperson Code is required!" required>
+                                    </div>
+                                </div>
+                            </div><br><br>
+                            <div class="col-xs-12">
+                                <div class="form-group">
+                                    <label class="col-xs-12 col-md-4 control-label "><strong><b>*</b> First name :</strong></label>
+                                    <div class="col-xs-12 col-md-8">
+                                        <input type="text" name="firstname" class="form-control" placeholder="Firstname" data-error-msg="Firstname is required!" required>
+                                    </div>
+                                </div>
+                            </div><br><br>
+                            <div class="col-xs-12">
+                                <div class="form-group">
+                                    <label class="col-xs-12 col-md-4 control-label "><strong>&nbsp;&nbsp;Middle name :</strong></label>
+                                    <div class="col-xs-12 col-md-8">
+                                        <input type="text" name="middlename" class="form-control" placeholder="Middlename">
+                                    </div>
+                                </div>
+                            </div><br><br>
+                            <div class="col-xs-12">
+                                <div class="form-group">
+                                    <label class="col-xs-12 col-md-4 control-label "><strong><b>*</b> Last name :</strong></label>
+                                    <div class="col-xs-12 col-md-8">
+                                        <input type="text" name="lastname" class="form-control" placeholder="Lastname" data-error-msg="Lastname is required!" required>
+                                    </div>
+                                </div>
+                            </div><br><br>
+                            <div class="col-xs-12">
+                                <div class="form-group">
+                                    <label class="col-xs-12 col-md-4 control-label "><strong>Contact Number :</strong></label>
+                                    <div class="col-xs-12 col-md-8">
+                                        <input type="text" name="contact_no" id="contact_no" class="form-control" placeholder="Contact Number">
+                                    </div>
+                                </div>
+                            </div><br><br>
+                            <div class="col-xs-12">
+                                <div class="form-group">
+                                    <label class="col-xs-12 col-md-4 control-label "><b>*</b><strong>Department :</strong></label>
+                                    <div class="col-xs-12 col-md-8">
+                                        <select name="department_id" id="cbo_department" class="form-control" data-error-msg="Department is required!" required>
+                                            <option value="0">[ Create New Department ]</option>
+                                            <?php foreach($departments as $department) { ?>
+                                                <option value="<?php echo $department->department_id; ?>"><?php echo $department->department_name; ?></option>
+                                            <?php } ?>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div><br><br>
+                            <div class="col-xs-12">
+                                <div class="form-group">
+                                    <label class="col-xs-12 col-md-4 control-label "><strong>TIN Number:</strong></label>
+                                    <div class="col-xs-12 col-md-8">
+                                        <input type="text" name="tin_no" id="tin_no" class="form-control" placeholder="TIN Number">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btn_create_salesperson" class="btn btn-primary" name="btn_save">Save</button>
+                <button id="btn_close_salesperson" class="btn btn-default">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
 <div id="modal_new_department" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -548,7 +718,7 @@
 <footer role="contentinfo">
     <div class="clearfix">
         <ul class="list-unstyled list-inline pull-left">
-            <li><h6 style="margin: 0;">&copy; 2017 - JDEV OFFICE SOLUTIONS</h6></li>
+            <li><h6 style="margin: 0;">&copy; 2018 - JDEV OFFICE SOLUTIONS</h6></li>
         </ul>
         <button class="pull-right btn btn-link btn-xs hidden-print" id="back-to-top"><i class="ti ti-arrow-up"></i></button>
     </div>
@@ -580,9 +750,12 @@
 <script src="assets/plugins/formatter/accounting.js" type="text/javascript"></script>
 <script>
 $(document).ready(function(){
-    var dt; var _txnMode; var _selectedID; var _selectRowObj; var _cboDepartments; var _cboDepartments; var _cboCustomers;
+    var dt; var _txnMode; var _selectedID; var _selectRowObj; var _cboDepartments; var _cboDepartments; var _cboCustomers; var dt_so; var products; var changetxn;
+     var _line_unit;
     var oTableItems={
         qty : 'td:eq(0)',
+        unit_value: 'td:eq(1)',
+        unit_identifier : 'td:eq(2)',
         unit_price : 'td:eq(3)',
         discount : 'td:eq(4)',
         total_line_discount : 'td:eq(5)',
@@ -591,7 +764,10 @@ $(document).ready(function(){
         total : 'td:eq(8)',
         vat_input : 'td:eq(9)',
         net_vat : 'td:eq(10)',
-        total_after_global :' td:eq(12)'
+        total_after_global :' td:eq(12)',
+        bulk_price : 'td:eq(14)',
+        retail_price : 'td:eq(15)'
+ 
     };
     var oTableDetails={
         discount : 'tr:eq(0) > td:eq(1)',
@@ -603,7 +779,7 @@ $(document).ready(function(){
         dt=$('#tbl_cash_invoice').DataTable({
             "dom": '<"toolbar">frtip',
             "bLengthChange":false,
-            "order": [[ 8, "desc" ]],
+            "order": [[ 1, "desc" ]],
             "ajax" : "Cash_invoice/transaction/list",
             "language": {
                 "searchPlaceholder":"Search Invoice"
@@ -618,9 +794,9 @@ $(document).ready(function(){
                 },
                 { targets:[1],data: "cash_inv_no" },
                 { targets:[2],data: "date_invoice" },
-                { visible:false, targets:[3],data: "date_due" },
+                { targets:[3],data: "date_due" },
                 { targets:[4],data: "customer_name" },
-                { targets:[5],data: "contact_person" },
+                { targets:[5],data: "department_name" },
                 { targets:[6],data: "remarks" },
                 {
                     targets:[7],
@@ -629,16 +805,38 @@ $(document).ready(function(){
                         var btn_trash='<button class="btn btn-danger btn-sm" name="remove_info" style="margin-right:0px;" data-toggle="tooltip" data-placement="top" title="Move to trash"><i class="fa fa-trash-o"></i> </button>';
                         return '<center>'+btn_edit+"&nbsp;"+btn_trash+'</center>';
                     }
-                },
-                { visible: false, targets:[8],data: "cash_invoice_id" },
-
+                }
             ]
         });
-
+        dt_so=$('#tbl_so_list').DataTable({
+            "bLengthChange":false,
+            "ajax" : "Sales_order/transaction/open",
+            "columns": [
+                {
+                    "targets": [0],
+                    "class":          "details-control",
+                    "orderable":      false,
+                    "data":           null,
+                    "defaultContent": ""
+                },
+                { targets:[1],data: "so_no" },
+                { targets:[2],data: "customer_name" },
+                { targets:[3],data: "remarks" },
+                { targets:[4],data: "date_order" },
+                { targets:[5],data: "order_status" },
+                {
+                    targets:[6],
+                    render: function (data, type, full, meta){
+                        var btn_accept='<button class="btn btn-success btn-sm" name="accept_so"  style="margin-left:-15px;text-transform: none;" data-toggle="tooltip" data-placement="top" title="Create Cash Invoice on SO"><i class="fa fa-check"></i> Accept SO</button>';
+                        return '<center>'+btn_accept+'</center>';
+                    }
+                }
+            ]
+        });
         $('.numeric').autoNumeric('init');
         $('#contact_no').keypress(validateNumber);
         var createToolBarButton=function(){
-            var _btnNew='<button class="btn btn-success" id="btn_new" style="text-transform: none;font-family: Tahoma, Georgia, Serif; " data-toggle="modal" data-placement="left" title="Record Cash Invoice" >'+
+            var _btnNew='<button class="btn btn-success" id="btn_new" style="text-transform: none;font-family: Tahoma, Georgia, Serif; " data-toggle="modal" data-target="#salesInvoice" data-placement="left" title="Record Cash Invoice" >'+
                 '<i class="fa fa-plus"></i> Record Cash Invoice</button>';
             $("div.toolbar").html(_btnNew);
         }();
@@ -646,13 +844,21 @@ $(document).ready(function(){
             placeholder: "Please select Department.",
             allowClear: true
         });
-
+        _cboDepartment=$("#cbo_department").select2({
+            placeholder: "Please select Department.",
+            allowClear: true
+        });
         _cboCustomers=$("#cbo_customers").select2({
             placeholder: "Please select customer.",
             allowClear: true
         });
-
+        _cboSalesperson=$("#cbo_salesperson").select2({
+            placeholder: "Please select sales person.",
+            allowClear: true
+        });
+        _cboSalesperson.select2('val',null);
         _cboDepartments.select2('val', null);
+        _cboDepartment.select2('val', null);
         _cboCustomers.select2('val',null);
         $('.date-picker').datepicker({
             todayBtn: "linked",
@@ -667,11 +873,11 @@ $(document).ready(function(){
                 $('.tt-suggestion:first').click();
             }
         });
-        var raw_data = <?php echo json_encode($products); ?>;
-        var products = new Bloodhound({
+
+        products = new Bloodhound({
             datumTokenizer: Bloodhound.tokenizers.obj.whitespace('product_code','product_desc','product_desc1'),
             queryTokenizer: Bloodhound.tokenizers.whitespace,
-            local : raw_data
+            local : products
         });
         var _objTypeHead=$('#custom-templates .typeahead');
         _objTypeHead.typeahead(null, {
@@ -680,9 +886,9 @@ $(document).ready(function(){
         source: products,
         templates: {
             header: [
-                '<table class="tt-head"><tr><td width=20%" style="padding-left: 1%;"><b>PLU</b></td><td width="20%" align="left"><b>Description</b></td><td width="10%" align="left" style="padding-right: 2%;"><b>SRP</b></td></tr></table>'
+                '<table class="tt-head"><tr><td width=20%" style="padding-left: 1%;"><b>PLU</b></td><td width="20%" align="left"><b>Description</b></td><td width="10%" style="padding-right: 2%;text-align:right;"><b>On Hand</b></td><td width="10%"  style="padding-right: 2%;text-align:right;"><b>SRP</b></td></tr></table>'
             ].join('\n'),
-            suggestion: Handlebars.compile('<table class="tt-items"><tr><td width="20%" style="padding-left: 1%;">{{product_code}}</td><td width="20%" align="left">{{product_desc}}</td><td width="10%" align="left" style="padding-right: 2%;">{{sale_price}}</td></tr></table>')
+            suggestion: Handlebars.compile('<table class="tt-items"><tr><td width="20%" style="padding-left: 1%;">{{product_code}}</td><td width="20%" align="left">{{product_desc}}</td><td width="10%"  style="padding-right: 2%;text-align:right;">{{CurrentQty}}</td><td width="10%" align="right" style="padding-right: 2%;">{{sale_price}}</td></tr></table>')
         }
         }).on('keyup', this, function (event) {
             if (_objTypeHead.typeahead('val') == '') {
@@ -705,6 +911,8 @@ $(document).ready(function(){
             var total=getFloat(sale_price);
             var net_vat=0;
             var vat_input=0;
+            var bulk_price = 0;
+            var retail_price = 0;
             if(suggestion.is_tax_exempt=="0"){ //not tax excempt
                 net_vat=total/(1+(getFloat(tax_rate)/100));
                 vat_input=total-net_vat;
@@ -713,12 +921,20 @@ $(document).ready(function(){
                 net_vat=total;
                 vat_input=0;
             }
+                a = '';
+                bulk_price = suggestion.sale_price;
+
+                if(suggestion.is_bulk == 1){
+                    retail_price = getFloat(suggestion.sale_price) / getFloat(suggestion.child_unit_desc);
+
+                }else if (suggestion.is_bulk== 0){
+                    retail_price = 0;
+                }
+            changetxn = 'active';
             $('#tbl_items > tbody').append(newRowItem({
                 inv_qty : "1",
                 inv_gross : total,
                 product_code : suggestion.product_code,
-                unit_id : suggestion.unit_id,
-                unit_name : suggestion.unit_name,
                 product_id: suggestion.product_id,
                 product_desc : suggestion.product_desc,
                 inv_line_total_discount : "0.00",
@@ -730,8 +946,22 @@ $(document).ready(function(){
                 inv_line_total_price : total,
                 inv_non_tax_amount: net_vat,
                 inv_tax_amount:vat_input,
-                inv_line_total_after_global:0.00
+                inv_line_total_after_global:0.00,
+                    bulk_price: bulk_price,
+                    retail_price: retail_price,
+                    is_bulk: suggestion.is_bulk,
+                    parent_unit_id : suggestion.parent_unit_id,
+                    child_unit_id : suggestion.child_unit_id,
+                    child_unit_name : suggestion.child_unit_name,
+                    parent_unit_name : suggestion.parent_unit_name,
+                    is_parent: 1 ,// INITIALLY , UNIT USED IS THE PARENT , 1 for PARENT 0 for CHILD
+                    a:a
             }));
+
+            _line_unit=$('.line_unit'+a).select2({
+                 minimumResultsForSearch: -1
+            });
+ 
             reInitializeNumeric();
             reComputeTotal();
             //alert("dd")
@@ -751,28 +981,81 @@ $(document).ready(function(){
             var tr = $(this).closest('tr');
             var row = dt.row(tr);
             var d=row.data();
-
             window.open('Templates/layout/cash-invoice/'+ d.cash_invoice_id+'?type=contentview');
         } );
         $('#link_browse').click(function(){
             $('#btn_receive_so').click();
         });
-       
 
-
+        $('#tbl_so_list tbody').on( 'click', 'tr td.details-control', function () {
+            var tr = $(this).closest('tr');
+            var row = dt_so.row( tr );
+            var idx = $.inArray( tr.attr('id'), detailRows );
+            if ( row.child.isShown() ) {
+                tr.removeClass( 'details' );
+                row.child.hide();
+                // Remove from the 'open' array
+                detailRows.splice( idx, 1 );
+            }
+            else {
+                tr.addClass( 'details' );
+                //console.log(row.data());
+                //console.log(tr);
+                _selectRowObj=$(this).closest('tr');
+                var d=dt_so.row(_selectRowObj).data();
+                $.ajax({
+                    "dataType":"html",
+                    "type":"POST",
+                    "url":"Templates/layout/sales-order/"+ d.sales_order_id+'/contentview',
+                    "beforeSend" : function(){
+                        row.child( '<center><br /><img src="assets/img/loader/ajax-loader-lg.gif" /><br /><br /></center>' ).show();
+                    }
+                }).done(function(response){
+                    row.child( response,'no-padding' ).show();
+                    tr.addClass( 'details' );
+                    // Add to the 'open' array
+                    if ( idx === -1 ) {
+                        detailRows.push( tr.attr('id') );
+                    }
+                });
+            }
+        } );
+        _cboSalesperson.on('select2:select',function(e){
+            var i=$(this).select2('val');
+            if(i == 0) {
+                //clearFields($('#modal_new_salesperson').find('form'));
+                _cboSalesperson.select2('val',null);
+                $('#modal_new_salesperson').modal('show');
+                $('#salesperson_title').text('Create New Salesperson');
+            }
+        });
+        $('#btn_close_salesperson').on('click',function(){
+            $('#modal_new_salesperson').modal('hide');
+        });
         //loads modal to create new department
         _cboDepartments.on('select2:select', function(){
             if (_cboDepartments.val() == 0) {
                 clearFields($('#frm_department_new'));
                 $('#modal_new_department').modal('show');
+                $('#modal_new_salesperson').modal('hide');
             }
         });
-
+        _cboDepartment.on('select2:select', function(){
+            if (_cboDepartment.val() == 0) {
+                clearFields($('#frm_department_new'));
+                $('#modal_new_department_sp').modal('show');
+                $('#modal_new_salesperson').modal('hide');
+            }
+        });
         $('#btn_cancel_department').on('click', function(){
             $('#modal_new_department').modal('hide');
             _cboDepartments.select2('val',null);
         });
-
+        $('#btn_cancel_department_sp').on('click', function(){
+            $('#modal_new_department_sp').modal('hide');
+            $('#modal_new_salesperson').modal('show');
+            _cboDepartment.select2('val',null);
+        });
         _cboCustomers.on("select2:select", function (e) {
             var i=$(this).select2('val');
             if(i==0){ //new customer
@@ -782,11 +1065,42 @@ $(document).ready(function(){
             }
             var obj_customers=$('#cbo_customers').find('option[value="' + i + '"]');
             $('#txt_address').val(obj_customers.data('address'));
-            $('#txt_contact_name').val(obj_customers.data('contact'));
-            $('#txt_email').val(obj_customers.data('email'));
-            
-            $('#txt_contact_no').val(obj_customers.data('num'));
+            $('#contact_person').val(obj_customers.data('contact'));
         });
+        $('#btn_create_salesperson').click(function(){
+            var btn=$(this);
+            if(validateRequiredFields($('#frm_salesperson'))){
+                var data=$('#frm_salesperson').serializeArray();
+                $.ajax({
+                    "dataType":"json",
+                    "type":"POST",
+                    "url":"Salesperson/transaction/create",
+                    "data":data,
+                    "beforeSend" : function(){
+                        showSpinningProgress(btn);
+                    }
+                }).done(function(response){
+                    showNotification(response);
+                    $('#modal_new_salesperson').modal('hide');
+                    var _salesperson=response.row_added[0];
+                    $('#cbo_salesperson').append('<option value="'+_salesperson.salesperson_id+'" selected>'+ _salesperson.salesperson_code + ' - ' +_salesperson.fullname+'</option>');
+                    $('#cbo_salesperson').select2('val',_salesperson.salesperson_id);
+                }).always(function(){
+                    showSpinningProgress(btn);
+                });
+            }
+        });
+
+         $('#refreshproducts').click(function(){
+            getproduct().done(function(data){
+                products.clear();
+                products.local = data.data;
+                products.initialize(true);
+                    showNotification({title:"Success !",stat:"success",msg:"Products List successfully updated."});
+            }).always(function(){
+                $('#typeaheadsearch').val('');
+                });
+         });
 
         //create new department
         $('#btn_create_department').click(function(){
@@ -812,7 +1126,30 @@ $(document).ready(function(){
                 });
             }
         });
-
+        $('#btn_create_department_sp').click(function(){
+            var btn=$(this);
+            if(validateRequiredFields($('#frm_department_new_sp'))){
+                var data=$('#frm_department_new_sp').serializeArray();
+                $.ajax({
+                    "dataType":"json",
+                    "type":"POST",
+                    "url":"Departments/transaction/create",
+                    "data":data,
+            "beforeSend" : function(){
+                        showSpinningProgress(btn);
+                    }
+                }).done(function(response){
+                    showNotification(response);
+                    $('#modal_new_department_sp').modal('hide');
+                    $('#modal_new_salesperson').modal('show');
+                    var _department=response.row_added[0];
+                    $('#cbo_department').append('<option value="'+_department.department_id+'" selected>'+_department.department_name+'</option>');
+                    $('#cbo_department').select2('val',_department.department_id);
+                }).always(function(){
+                    showSpinningProgress(btn);
+                });
+            }
+        });
         $('#btn_create_customer').click(function(){
             var btn=$(this);
             if(validateRequiredFields($('#frm_customer_new'))){
@@ -838,16 +1175,22 @@ $(document).ready(function(){
                 });
             }
         });
-
+        $('#btn_receive_so').click(function(){
+            $('#tbl_so_list tbody').html('<tr><td colspan="7"><center><br /><img src="assets/img/loader/ajax-loader-lg.gif" /><br /><br /></center></td></tr>');
+            dt_so.ajax.reload( null, false );
+            $('#modal_so_list').modal('show');
+        });
         $('#btn_new').click(function(){
             _txnMode="new";
-            clearFields($('#div_form'));
-            $('#span_invoice_no').html('CI-INV-YYYYMMDD-X');
+            clearFields($('#div_cash_invoice_fields'));
+            $('#span_invoice_no').html('CI-INV-YYYYMMDD-XX');
             showList(false);
 
             $('#tbl_items > tbody').html('');
             $('#cbo_departments').select2('val', null);
+            $('#cbo_department').select2('val', null);
             $('#cbo_customers').select2('val', null);
+            $('#cbo_salesperson').select2('val', null);
             $('#img_user').attr('src','assets/img/anonymous-icon.png');
             $('#td_discount').html('0.00');
             $('#td_total_before_tax').html('0.00');
@@ -856,26 +1199,142 @@ $(document).ready(function(){
             $('#txt_overall_discount').val('0.00'); 
             $('#txt_overall_discount_amount').val('0.00'); 
             $('#invoice_default').datepicker('setDate', 'today');
+            $('#due_default').datepicker('setDate', 'today');
+            $('#typeaheadsearch').val('');
+            getproduct().done(function(data){
+                products.clear();
+                products.local = data.data;
+                products.initialize(true);
+                countproducts = data.data.length;
+                    if(countproducts > 100){
+                    showNotification({title:"Success !",stat:"success",msg:"Products List successfully updated."});
+                    }
+
+            }).always(function(){  });
+
             /*$('#cbo_prodType').select2('val', 3);
             $('#cboLookupPrice').select2('val', 1);*/
             reComputeTotal(); //this is to make sure, display summary are recomputed as 0
         });
-     
+        $('#tbl_so_list > tbody').on('click','button[name="accept_so"]',function(){
+            _selectRowObj=$(this).closest('tr');
+            var data=dt_so.row(_selectRowObj).data();
+            //alert(data.sales_order_id);
+            $('input,textarea').each(function(){
+                var _elem=$(this);
+                $.each(data,function(name,value){
+                    if(_elem.attr('name')==name&&_elem.attr('type')!='password'){
+                        _elem.val(value);
+                    }
+                });
+                $('#cbo_customers').select2('val',data.customer_id);
+                $('#cbo_departments').select2('val',data.department_id);
+                $('#cbo_department').select2('val',data.department_id);
+                $('#cbo_salesperson').select2('val',data.salesperson_id);
+            });
+            $('#modal_so_list').modal('hide');
+            resetSummary();
+            $.ajax({
+                url : 'Sales_order/transaction/item-balance/'+data.sales_order_id,
+                type : "GET",
+                cache : false,
+                dataType : 'json',
+                processData : false,
+                contentType : false,
+                beforeSend : function(){
+                    $('#tbl_items > tbody').html('<tr><td align="center" colspan="8"><br /><img src="assets/img/loader/ajax-loader-sm.gif" /><br /><br /></td></tr>');
+                },
+                success : function(response){
+                    var rows=response.data;
+                    $('#tbl_items > tbody').html('');
+                    //var rowCount = $('#tbl-items .row-item');
+                    //console.log(rowCount);
+                    var a = 0; 
+
+
+                        changetxn ='inactive';
+                    $.each(rows,function(i,value){
+                    bulk_price = value.sale_price;
+                        var retail_price = 0;
+                        if(value.is_bulk == 1){
+                            retail_price = getFloat(value.purchase_cost) / getFloat(value.child_unit_desc);
+
+                        }else if (value.is_bulk== 0){
+                            retail_price = 0;
+                        }
+                        $('#tbl_items > tbody').append(newRowItem({
+                            inv_gross : value.inv_gross,
+                            inv_qty : value.so_qty, 
+                            product_code : value.product_code,
+                            product_id: value.product_id,
+                            product_desc : value.product_desc,
+                            inv_line_total_discount : value.so_line_total_discount,
+                            tax_exempt : false,
+                            inv_tax_rate : value.so_tax_rate,
+                            inv_price : value.so_price,
+                            inv_discount : value.so_discount,
+                            tax_type_id : null,
+                            inv_line_total_price : value.so_line_total,
+                            inv_non_tax_amount: value.non_tax_amount,
+                            inv_tax_amount:value.tax_amount,
+                            /*batch_no : value.batch_no,
+                            exp_date : value.exp_date,*/
+                            orig_so_price : value.so_price,
+                            inv_line_total_after_global: 0.00,
+                            cost_upon_invoice : value.purchase_cost,
+                                child_unit_id : value.child_unit_id,
+                                child_unit_name : value.child_unit_name,
+                                parent_unit_name : value.parent_unit_name,
+                                parent_unit_id : getFloat(value.parent_unit_id),
+                                is_bulk: value.is_bulk,
+                                is_parent : value.is_parent,
+                                bulk_price: value.sale_price,
+                                retail_price: retail_price,
+                            a:a
+                        }));
+                        _line_unit=$('.line_unit'+a).select2({
+                            minimumResultsForSearch: -1
+                        });
+                        _line_unit.select2('val',value.unit_id);
+                        a++;
+                    });
+                changetxn = 'active';
+                $('#txt_overall_discount').val(accounting.formatNumber($('#txt_overall_discount').val(),2));
+                reInitializeNumeric();
+                reComputeTotal();
+                
+                }
+            });
+        });
         $('#tbl_cash_invoice tbody').on('click','button[name="edit_info"]',function(){
             _selectRowObj=$(this).closest('tr');
             var data=dt.row(_selectRowObj).data();
             _selectedID=data.cash_invoice_id;
-
+            _count=data.count;
             _is_journal_posted=data.is_journal_posted;
             if(_is_journal_posted > 0){
                 showNotification({title:"<b style='color:white;'> Error!</b>",stat:"error",msg:"Cannot Edit: Invoice is already Posted in Cash Receipt Journal."});
             }
-
+            else if(_count > 0){
+                showNotification({title:"<b style='color:white;'> Error!</b> ",stat:"error",msg:"Cannot Edit: Invoice is already in use in Collection Entry."});
+            }
             else
             {
 
+            getproduct().done(function(data){
+                products.clear();
+                products.local = data.data;
+                products.initialize(true);
+                countproducts = data.data.length;
+                    if(countproducts > 100){
+                    showNotification({title:"Success !",stat:"success",msg:"Products List successfully updated."});
+                    }
+
+            }).always(function(){ });
+                $('#typeaheadsearch').val('');
+
             _txnMode="edit";
-            $('.title').html('Edit Sales Invoice');
+            $('.cash_invoice_title').html('Edit Cash Invoice');
             _selectRowObj=$(this).closest('tr');
             var data=dt.row(_selectRowObj).data();
             _selectedID=data.cash_invoice_id;
@@ -889,7 +1348,9 @@ $(document).ready(function(){
                 });
             });
             $('#cbo_departments').select2('val',data.department_id);
+            $('#cbo_department').select2('val',data.department_id);
             $('#cbo_customers').select2('val',data.customer_id);
+            $('#cbo_salesperson').select2('val',data.salesperson_id);
             $.ajax({
                 url : 'Cash_invoice/transaction/items/'+data.cash_invoice_id,
                 type : "GET",
@@ -903,7 +1364,18 @@ $(document).ready(function(){
                 success : function(response){
                     var rows=response.data;
                     $('#tbl_items > tbody').html('');
+                     a=0;
                     $.each(rows,function(i,value){
+
+                        var retail_price;
+
+                            if(value.is_bulk == 1){
+                                retail_price = getFloat(value.sale_price) / getFloat(value.child_unit_desc);
+
+                            }else if (value.is_bulk == 0){
+                                retail_price = 0;
+                            }
+
                         $('#tbl_items > tbody').append(newRowItem({
                             inv_qty : value.inv_qty,
                             product_code : value.product_code,
@@ -921,14 +1393,32 @@ $(document).ready(function(){
                             inv_line_total_price : value.inv_line_total_price,
                             inv_non_tax_amount: value.inv_non_tax_amount,
                             inv_tax_amount:value.inv_tax_amount,
-                            inv_line_total_after_global : 0.00
+                            inv_line_total_after_global : 0.00,
+                            child_unit_id : value.child_unit_id,
+                            child_unit_name : value.child_unit_name,
+                            parent_unit_name : value.parent_unit_name,
+                            parent_unit_id : getFloat(value.parent_unit_id),
+                            is_bulk: value.is_bulk,
+                            is_parent : value.is_parent,
+                            bulk_price: value.sale_price,
+                            retail_price: retail_price,
+                            a:a
                         }));
+                        changetxn = 'inactive';
+                          _line_unit=$('.line_unit'+a).select2({
+                            minimumResultsForSearch: -1
+                            });
+                            _line_unit.select2('val',value.unit_id);
+                            a++;
                     });
+                    changetxn = 'active';
                     reComputeTotal();
+            reInitializeNumeric();
+
                 }
             });
             $('#span_invoice_no').html(data.cash_inv_no);
-            $('#txt_overall_discount').val(accounting.formatNumber($('#txt_overall_discount').val(),2)); 
+            $('#txt_overall_discount').val(accounting.formatNumber($('#txt_overall_discount').val(),2));
             showList(false);
         }
         });
@@ -957,6 +1447,21 @@ $(document).ready(function(){
         //track every changes on numeric fields
         $('#txt_overall_discount').on('keyup',function(){
             reComputeTotal();
+        });
+
+        $('#tbl_items tbody').on('change','select',function(){
+        if(changetxn == 'active'){
+        var row=$(this).closest('tr');
+        var unit_value=row.find(oTableItems.unit_value).find('option:selected').attr("data-unit-identifier"); 
+        if(getFloat(unit_value) == 1 ){
+            var price=parseFloat(accounting.unformat(row.find(oTableItems.bulk_price).find('input.numeric').val()));
+        }else{
+            var price=parseFloat(accounting.unformat(row.find(oTableItems.retail_price).find('input.numeric').val()));
+        }
+        $(oTableItems.unit_price,row).find('input').val(price);  
+        $(oTableItems.unit_identifier,row).find('input').val(unit_value); 
+        }
+        $('.trigger-keyup').keyup();
         });
 
         $('#tbl_items tbody').on('keyup','input.numeric',function(){
@@ -999,7 +1504,7 @@ $(document).ready(function(){
             //if(getFloat(d.order_status_id)>1){
             //showNotification({title:"Error!",stat:"error",msg:"Sorry, you cannot delete purchase order that is already been recorded on purchase invoice."});
             //}else{
-            removeRecord().done(function(response){
+            removeIssuanceRecord().done(function(response){
                 showNotification(response);
                 if(response.stat=="success"){
                     dt.row(_selectRowObj).remove().draw();
@@ -1014,7 +1519,7 @@ $(document).ready(function(){
         $('#btn_save').click(function(){
             if(validateRequiredFields($('#frm_cash_invoice'))){
                 if(_txnMode=="new"){
-                    CreateCashInvoice().done(function(response){
+                    createCashInvoice().done(function(response){
                         showNotification(response);
                         dt.row.add(response.row_added[0]).draw();
                         clearFields($('#frm_cash_invoice'));
@@ -1023,7 +1528,7 @@ $(document).ready(function(){
                         showSpinningProgress($('#btn_save'));
                     });
                 }else{
-                    UpdateCashInvoice().done(function(response){
+                    updateCashInvoice().done(function(response){
                         showNotification(response);
                         dt.row(_selectRowObj).data(response.row_updated[0]).draw();
                         clearFields($('#frm_cash_invoice'));
@@ -1034,7 +1539,42 @@ $(document).ready(function(){
                 }
             }
         });
-      
+        /*$('#btn_save').click(function(){
+                if(validateRequiredFields($('#frm_cash_invoice'))){
+                    if(_txnMode=="new"){
+                        createCashInvoice().done(function(response){
+                            showNotification(response);
+                            if(response.stat=="success"){
+                                dt.row.add(response.row_added[0]).draw();
+                                clearFields($('#frmSO @#_sales_invoice'));
+                                showList(true);
+                            }
+                            if (response.current_row_index != undefined) {
+                                var rowObj=$('#tbl_items > tbody tr:eq('+response.current_row_index+')');
+                                rowHighlight(rowObj);
+                            }
+                        }).always(function(){
+                            showSpinningProgress($('#btn_save'));
+                        });
+                    }else{
+                        updateCashInvoice().done(function(response){
+                            showNotification(response);
+                            if(response.stat=="success"){
+                                dt.row(_selectRowObj).data(response.row_updated[0]).draw(false);
+                                clearFields($('#frm_cash_invoice'));
+                                showList(true);
+                            }
+                            if (response.current_row_index != undefined) {
+                                var rowObj=$('#tbl_items > tbody tr:eq('+response.current_row_index+')');
+                                rowHighlight(rowObj);
+                            }
+                        }).always(function(){
+                            showSpinningProgress($('#btn_save'));
+                        });
+                    }
+                    //$('#cbo_prodType').select2('val',null);
+                }
+            });*/
         $('#tbl_items > tbody').on('click','button[name="remove_item"]',function(){
             $(this).closest('tr').remove();
             reComputeTotal();
@@ -1094,6 +1634,20 @@ $(document).ready(function(){
         });
         return stat;
     };
+    var getproduct=function(){
+       return $.ajax({
+           "dataType":"json",
+           "type":"POST",
+           "url":"products/transaction/list",
+           "beforeSend": function(){
+                countproducts = products.local.length;
+                if(countproducts > 100){
+                    showNotification({title:"Please Wait !",stat:"info",msg:"Refreshing your Products List."});
+                }
+           }
+      });
+    };
+
     var createCustomer=function(){
         var _data=$('#frm_customer').serializeArray();
         _data.push({name : "photo_path" ,value : $('img[name="img_user"]').attr('src')});
@@ -1105,7 +1659,7 @@ $(document).ready(function(){
             "beforeSend": showSpinningProgress($('#btn_create_customer'))
         });
     };
-    var CreateCashInvoice=function(){
+    var createCashInvoice=function(){
         var _data=$('#frm_cash_invoice,#frm_items').serializeArray();
         var tbl_summary=$('#tbl_cash_invoice_summary');
         _data.push({name : "remarks", value : $('textarea[name="remarks"]').val()});
@@ -1123,7 +1677,7 @@ $(document).ready(function(){
             "beforeSend": showSpinningProgress($('#btn_save'))
         });
     };
-    var UpdateCashInvoice=function(){
+    var updateCashInvoice=function(){
         var _data=$('#frm_cash_invoice,#frm_items').serializeArray();
         var tbl_summary=$('#tbl_cash_invoice_summary');
         _data.push({name : "remarks", value : $('textarea[name="remarks"]').val()});
@@ -1142,7 +1696,7 @@ $(document).ready(function(){
             "beforeSend": showSpinningProgress($('#btn_save'))
         });
     };
-    var removeRecord=function(){
+    var removeIssuanceRecord=function(){
         return $.ajax({
             "dataType":"json",
             "type":"POST",
@@ -1152,12 +1706,12 @@ $(document).ready(function(){
     };
     var showList=function(b){
         if(b){
-            $('#div_list').show();
-            $('#div_form').hide();
+            $('#div_cash_invoice_list').show();
+            $('#div_cash_invoice_fields').hide();
             $('.datepicker.dropdown-menu').hide();
         }else{
-            $('#div_list').hide();
-            $('#div_form').show();
+            $('#div_cash_invoice_list').hide();
+            $('#div_cash_invoice_fields').show();
         }
     };
     var showNotification=function(obj){
@@ -1197,28 +1751,34 @@ $(document).ready(function(){
         return parseFloat(accounting.unformat(f));
     };
     var newRowItem=function(d){
-return '<tr>'+
-//DISPLAY
-'<td width="5%"><input name="inv_qty[]" type="text" class="numeric form-control" value="'+ d.inv_qty+'"></td>'+
-'<td width="5%">'+ d.unit_name+'</td>'+
-'<td width="5%">'+d.product_desc+'</td>'+
-'<td width="10%"><input name="inv_price[]" type="text" class="numeric form-control" value="'+accounting.formatNumber(d.inv_price,2)+'" style="text-align:right;"></td>'+
-'<td width="10%" style=""><input name="inv_discount[]" type="text" class="numeric form-control" value="'+ accounting.formatNumber(d.inv_discount,2)+'" style="text-align:right;"></td>'+
-// DISPLAY NONE
-'<td style="display:none;" width="10%"><input name="inv_line_total_discount[]" type="text" class="numeric form-control" value="'+ accounting.formatNumber(d.inv_line_total_discount,2)+'" readonly></td>'+
-'<td width="10%" style="display:none;"><input name="inv_tax_rate[]" type="text" class="numeric form-control" value="'+ accounting.formatNumber(d.inv_tax_rate,2)+'"></td>'+
-// DISPLAY AGAIN 10%
-'<td width="15%" style=""><input name="inv_gross[]" type="text" class="numeric form-control" value="'+ accounting.formatNumber(d.inv_gross,2)+'" readonly></td>'+
-'<td width="15%" align="right"><input name="inv_line_total_price[]" type="text" class="numeric form-control" value="'+ accounting.formatNumber(d.inv_line_total_price,2)+'" readonly></td>'+
-// DISPLAY NONE AGAIN
-'<td style="display:none;" width="10%"><input name="inv_tax_amount[]" type="text" class="numeric form-control" value="'+ d.inv_tax_amount+'" readonly></td>'+
-'<td style="display:none;" width="10%"><input name="inv_non_tax_amount[]" type="text" class="numeric form-control" value="'+ d.inv_non_tax_amount+'" readonly></td>'+
-'<td style="display:none;" width="10%"><input name="product_id[]" type="text" class="numeric form-control" value="'+ d.product_id+'" readonly></td>'+
-'<td style="display:none;" width="10%"><input name="inv_line_total_after_global[]" type="text" class="numeric form-control" value="'+ d.inv_line_total_after_global+'" readonly></td>'+
+        if(d.is_bulk == '1'){ 
+            unit = '<td ><select class="line_unit'+d.a+'" name="unit_id[]"><option value="'+d.parent_unit_id+'" data-unit-identifier="1">'+d.parent_unit_name+'</option><option value="'+d.child_unit_id+'" data-unit-identifier="0" >'+d.child_unit_name+'</option></select></td>';
+        }else{ 
+            unit  = '<td ><select class="line_unit'+d.a+'" name="unit_id[]" ><option value="'+d.parent_unit_id+'" data-unit-identifier="1">'+d.parent_unit_name+'</option></select></td>';
+        }
+        return '<tr>'+
+        //DISPLAY
+        '<td ><input name="inv_qty[]" type="text" class="numeric form-control trigger-keyup" value="'+accounting.formatNumber(d.inv_qty,2)+'"></td>'+unit+
+        '<td ">'+d.product_desc+'<input type="text" style="display:none;" class="form-control" name="is_parent[]" value="'+d.is_parent+'"></td>'+
+        '<td ><input name="inv_price[]" type="text" class="numeric form-control" value="'+accounting.formatNumber(d.inv_price,2)+'" style="text-align:right;"></td>'+
+        '<td  style=""><input name="inv_discount[]" type="text" class="numeric form-control" value="'+ accounting.formatNumber(d.inv_discount,2)+'" style="text-align:right;"></td>'+
+        // DISPLAY NONE
+        '<td style="display:none;" ><input name="inv_line_total_discount[]" type="text" class="numeric form-control" value="'+ accounting.formatNumber(d.inv_line_total_discount,2)+'" readonly></td>'+
+        '<td  style="display:none;"><input name="inv_tax_rate[]" type="text" class="numeric form-control" value="'+ accounting.formatNumber(d.inv_tax_rate,2)+'"></td>'+
+        // DISPLAY AGAIN 10%
+        '<td  style=""><input name="inv_gross[]" type="text" class="numeric form-control" value="'+ accounting.formatNumber(d.inv_gross,2)+'" readonly></td>'+
+        '<td  align="right"><input name="inv_line_total_price[]" type="text" class="numeric form-control" value="'+ accounting.formatNumber(d.inv_line_total_price,2)+'" readonly></td>'+
+        // DISPLAY NONE AGAIN
+        '<td style="display:none;"><input name="inv_tax_amount[]" type="text" class="numeric form-control" value="'+ d.inv_tax_amount+'" readonly></td>'+
+        '<td style="display:none;"><input name="inv_non_tax_amount[]" type="text" class="numeric form-control" value="'+ d.inv_non_tax_amount+'" readonly></td>'+
+        '<td style="display:none;"><input name="product_id[]" type="text" class="numeric form-control" value="'+ d.product_id+'" readonly></td>'+
+        '<td style="display:none;"><input name="inv_line_total_after_global[]" type="text" class="numeric form-control" value="'+ d.inv_line_total_after_global+'" readonly></td>'+
 
 
-'<td align="center"><button type="button" name="remove_item" class="btn btn-red"><i class="fa fa-trash"></i></button></td>'+
-'</tr>';
+        '<td align="center"><button type="button" name="remove_item" class="btn btn-red"><i class="fa fa-trash"></i></button></td>'+
+                '<td  style="display:none;"><input type="text" class="numeric form-control" value="'+ accounting.formatNumber(d.bulk_price,2)+'" readonly></td>'+
+                '<td  style="display:none;"><input type="text" class="numeric form-control" value="'+ accounting.formatNumber(d.retail_price,2)+'" readonly></td>'+
+        '</tr>';
     };
     var reComputeTotal=function(){
         var rows=$('#tbl_items > tbody tr');

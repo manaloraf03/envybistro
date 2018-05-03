@@ -709,6 +709,31 @@ GROUP BY n.customer_id HAVING total_balance > 0";
 
          return $this->db->query($sql)->result();
     }
+
+ function get_invoices_per_month($month,$year){
+    $sql="SELECT 
+            SUM(IFNULL(income_amount,0)) as income_amount
+
+            FROM
+            (SELECT
+            SUM(si.total_after_tax) as income_amount 
+            FROM sales_invoice si 
+            WHERE si.is_active = TRUE AND si.is_deleted = FALSE
+            AND MONTH(si.date_invoice) = '$month' AND YEAR(si.date_invoice) = '$year'
+            UNION ALL
+
+            SELECT 
+
+            SUM(ci.total_after_tax) as income_amount
+            FROM  cash_invoice ci
+            WHERE ci.is_active = TRUE AND ci.is_deleted = FALSE
+            AND MONTH(ci.date_invoice) = '$month' AND YEAR(ci.date_invoice) = '$year'
+
+            ) as main";
+
+         return $this->db->query($sql)->result();
+    }
+    
 }
 
 

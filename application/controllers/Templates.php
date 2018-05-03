@@ -2651,13 +2651,13 @@ class Templates extends CORE_Controller {
                 'cash_invoice.address',
                 'sales_order.so_no'
             ),
-            array(
-                array('departments','departments.department_id=cash_invoice.department_id','left'),
-                array('customers','customers.customer_id=cash_invoice.customer_id','left'),
-                array('sales_order','sales_order.sales_order_id=cash_invoice.sales_order_id','left'),
-            ),
-            'cash_invoice.cash_invoice_id DESC'
-        );
+                array(
+                    array('departments','departments.department_id=cash_invoice.department_id','left'),
+                    array('customers','customers.customer_id=cash_invoice.customer_id','left'),
+                    array('sales_order','sales_order.sales_order_id=cash_invoice.sales_order_id','left'),
+                ),
+                'cash_invoice.cash_invoice_id DESC'
+            );
                 $data['info']=$info[0];
 
 

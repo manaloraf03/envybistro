@@ -21,6 +21,7 @@ class Sales_invoice extends CORE_Controller
         $this->load->model('Salesperson_model');
         $this->load->model('Users_model');
         $this->load->model('Trans_model');
+        $this->load->model('Cash_invoice_model');
 
 
     }
@@ -708,10 +709,17 @@ class Sales_invoice extends CORE_Controller
     function get_so_status($id){
         //NOTE : 1 means open, 2 means Closed, 3 means partially invoice
         $m_sales_invoice=$this->Sales_invoice_model;
+        $m_cash_invoice=$this->Cash_invoice_model;
 
         if(count($m_sales_invoice->get_list(
                 array('sales_invoice.sales_order_id'=>$id,'sales_invoice.is_active'=>TRUE,'sales_invoice.is_deleted'=>FALSE),
-                'sales_invoice.sales_invoice_id'))==0 ){ //means no SO found on sales invoice that means this so is still open
+                'sales_invoice.sales_invoice_id'))==0  &&
+
+            count($m_cash_invoice->get_list(
+                array('cash_invoice.sales_order_id'=>$id,'cash_invoice.is_active'=>TRUE,'cash_invoice.is_deleted'=>FALSE),
+                'cash_invoice.cash_invoice_id'))==0 
+
+                ){ //means no SO found on sales invoice that means this so is still open
 
             return 1;
 

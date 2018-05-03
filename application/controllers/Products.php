@@ -55,9 +55,17 @@ class Products extends CORE_Controller
         $data['item_types'] = $this->Item_type_model->get_list(array('item_types.is_deleted'=>FALSE));
         $data['accounts'] = $this->Account_title_model->get_list('is_active= TRUE AND is_deleted = FALSE','account_id,account_title');
         $data['tax_types']=$this->Tax_model->get_list(array('tax_types.is_deleted'=>FALSE));
-        (in_array('5-1',$this->session->user_rights)? 
-        $this->load->view('products_view', $data)
-        :redirect(base_url('dashboard')));
+        // (in_array('5-1',$this->session->user_rights)? 
+        // $this->load->view('products_view', $data)
+        // :redirect(base_url('dashboard')));
+        
+        if(in_array('5-1',$this->session->user_rights)){
+            $this->load->view('products_view', $data);
+        }elseif (in_array('15-1',$this->session->user_rights)) {
+            $this->load->view('products_view', $data);
+        }else{
+            redirect(base_url('dashboard'));
+        }
         
     }
 
@@ -70,7 +78,7 @@ class Products extends CORE_Controller
                 $a_i=$account_integration->get_list();
                 $account =$a_i[0]->sales_invoice_inventory;
 
-                $response['data']=$m_products->product_list(1);
+                $response['data']=$m_products->product_list(1,null,null,null,null,null,null,null,1);
                 // $response['data']=$this->response_rows(array('products.is_deleted'=>FALSE));
                 echo json_encode($response);
                 break;
@@ -164,7 +172,7 @@ class Products extends CORE_Controller
                 $account_integration =$this->Account_integration_model;
                 $a_i=$account_integration->get_list();
                 $account =$a_i[0]->sales_invoice_inventory;
-
+                $ci_account =$a_i[0]->cash_invoice_inventory;
 
                 $m_products=$this->Products_model;
 
@@ -218,7 +226,7 @@ class Products extends CORE_Controller
                 $response['title']='Success!';
                 $response['stat']='success';
                 $response['msg']='Product information successfully updated.';
-                $response['row_updated']=$m_products->product_list($account,$as_of_date=null,$product_id);
+                $response['row_updated']=$m_products->product_list(1,null,$product_id,null,null,null,null,null,1);
 
                 $m_trans=$this->Trans_model;
                 $m_trans->user_id=$this->session->user_id;
@@ -377,20 +385,19 @@ class Products extends CORE_Controller
                 $a_i=$account_integration->get_list();
 
                 $account =$a_i[0]->sales_invoice_inventory;
-
+                $ci_account =$a_i[0]->cash_invoice_inventory;
+ 
 
                 $product_id=$this->input->get('id');
                 $department_id=($this->input->get('depid')==null||$this->input->get('depid')==0?0:$this->input->get('depid'));
                 $as_of_date=$this->input->get('date');
 
-                if($as_of_date==null){
-                    $date = null;
-                }else{
-                    $date = date('Y-m-d',strtotime($as_of_date));
-                }
+                if($as_of_date==null){$date = null; }else{$date = date('Y-m-d',strtotime($as_of_date));}
+ 
 
                 $m_products=$this->Products_model;
                 $data['products']=$m_products->get_product_history($product_id,$department_id,$date,$account);
+                $data['products_parent']=$m_products->get_product_history_with_child($product_id,$department_id,$date,$account,1,$ci_account);
                 $data['product_id']=$product_id;
                 //$this->load->view('Template/product_history_menus',$data);
 
@@ -420,13 +427,13 @@ class Products extends CORE_Controller
 
                 $data['product_id'] = $product_id;
                 $m_products=$this->Products_model;
-                $data['products_parent']=$m_products->get_product_history_with_child($product_id,$department_id,$date,1,1);
-                $data['products_child']=$m_products->get_product_history_with_child($product_id,$department_id,$date,1,0);
+                $data['products_parent']=$m_products->get_product_history_with_child($product_id,$department_id,$date,1,1,1);
+                $data['products_child']=$m_products->get_product_history_with_child($product_id,$department_id,$date,1,0,1);
                 $data['product_id']=$product_id;
                 //$this->load->view('Template/product_history_menus',$data);
 
 
-                $product_info = $m_products->product_list(1,null,$product_id);
+                $product_info = $m_products->product_list(1,null,$product_id,null,null,null,null,null,null,1);
 
                 $data['product_info'] = $product_info[0];
                 $type=$this->input->get('type');
@@ -602,13 +609,12 @@ function Export(){
                 $m_products=$this->Products_model;
                 // $products=$m_products->get_product_history($product_id,$department_id,$date,1);
 
-                $products=$m_products->get_product_history_with_child($product_id,$department_id,$date,1,1);
-                $products_child=$m_products->get_product_history_with_child($product_id,$department_id,$date,1,0);
-                $data['product_id']=$product_id;
+                $products=$m_products->get_product_history_with_child($product_id,$department_id,$date,1,1,1);
+                $products_child=$m_products->get_product_history_with_child($product_id,$department_id,$date,1,0,1);
                 //$this->load->view('Template/product_history_menus',$data);
 
 
-                $product_info = $m_products->product_list(1,null,$product_id);
+                $product_info = $m_products->product_list(1,null,$product_id,null,null,null,null,null,1);
                 $data['product_info'] = $product_info[0];
 
             $excel=$this->excel;
