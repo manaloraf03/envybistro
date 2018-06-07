@@ -17,21 +17,21 @@
 
            </thead>
            <tbody>
-                <?php if(count($products)==0){ ?>
+                <?php if(count($products_parent)==0){ ?>
                     <tr>
                         <td colspan="9" style="border: 1px solid lightgrey;padding: 10px;" align="center">No transaction found.</td>
                     </tr>
                 <?php } ?>
 
-                <?php foreach($products as $product){ ?>
+                <?php foreach($products_parent as $product){ ?>
                <tr>
                    <td style="border: 1px solid lightgrey;padding: 5px;"><?php echo date("M d, Y",strtotime($product->txn_date)); ?></td>
                    <td style="border: 1px solid lightgrey;padding: 5px;"><?php echo $product->ref_no; ?></td>
                    <td style="border: 1px solid lightgrey;padding: 5px;"><?php echo $product->type; ?></td>
                    <td style="border: 1px solid lightgrey;padding: 5px;"><?php echo $product->Description; ?></td>
-                   <td style="border: 1px solid lightgrey;padding: 5px;text-align: right;"><?php echo number_format($product->in_qty,2); ?></td>
-                   <td style="border: 1px solid lightgrey;padding: 5px;text-align: right;"><?php echo number_format($product->out_qty,2); ?></td>
-                   <td style="border: 1px solid lightgrey;padding: 5px;text-align: right;font-weight: bolder;"><?php echo number_format($product->balance,2); ?></td>
+                   <td style="border: 1px solid lightgrey;padding: 5px;text-align: right;"><?php echo number_format($product->parent_in_qty,2); ?></td>
+                   <td style="border: 1px solid lightgrey;padding: 5px;text-align: right;"><?php echo number_format($product->parent_out_qty,2); ?></td>
+                   <td style="border: 1px solid lightgrey;padding: 5px;text-align: right;font-weight: bolder;"><?php echo number_format($product->parent_balance,2); ?></td>
                </tr>
                 <?php } ?>
 

@@ -89,7 +89,7 @@
     		<tr>
     			<td></td>
     			<td></td>
-				<td><h2><?php echo number_format($sum,2); ?></h2></td>
+				<td><h2><?php echo number_format($sum,4); ?></h2></td>
 			</tr>
     	</tbody>
 	</table>

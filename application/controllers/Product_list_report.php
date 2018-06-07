@@ -74,7 +74,7 @@ class Product_list_report extends CORE_Controller
                 $supplier_id = $this->input->get('sup');
                 $category_id = $this->input->get('cat');
                 $item_type_id = $this->input->get('inv');
-                $response['data']=$m_products->product_list(1,null,null,$supplier_id,$category_id,$item_type_id);
+                $response['data']=$m_products->product_list(1,null,null,$supplier_id,$category_id,$item_type_id,null,null,1);
                 echo json_encode($response);
                 break;
 

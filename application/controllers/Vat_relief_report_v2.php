@@ -29,7 +29,7 @@
 	        $data['_side_bar_navigation'] = $this->load->view('template/elements/side_bar_navigation', '', TRUE);
 	        $data['_top_navigation'] = $this->load->view('template/elements/top_navigation', '', TRUE);
 	        $data['title'] = 'VAT Relief Report';
-        (in_array('6-11',$this->session->user_rights)? 
+        (in_array('9-23',$this->session->user_rights)? 
         $this->load->view('vat_relief_report_view',$data)
         :redirect(base_url('dashboard')));
 	        

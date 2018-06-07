@@ -49,7 +49,7 @@
             <th>PLU</th>
             <th>Product Description</th>
             <th>Unit</th>
-            <th>Price</th>
+            <th style="text-align: right;">Price</th>
             <th>Supplier</th>
             <th>Date Invoice</th>
             <th>Reference No</th>
@@ -62,7 +62,7 @@
              <td><?php echo $data->product_code; ?></td>
              <td><?php echo $data->product_desc; ?></td>
              <td><?php echo $data->unit_name; ?></td>             
-             <td><?php echo $data->dr_price; ?></td>
+             <td style="text-align: right;"><?php echo $data->dr_price; ?></td>
              <td><?php echo $data->supplier_name; ?></td>
              <td class="right-align"><?php echo $data->date_delivered;  ?></td>
              <td class="right-align"><?php echo $data->dr_invoice_no; ?></td>

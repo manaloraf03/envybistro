@@ -405,20 +405,20 @@
                     <tr>
                         <td colspan="" style="text-align: right;"><strong><i class="glyph-icon icon-star"></i> Discount (%) :</strong></td>
                         <td align="right" colspan="1" id="" color="red">
-                        <input id="txt_overall_discount" name="total_overall_discount" type="text" class="numeric form-control" value="0.00" />
-                        <input id="txt_overall_discount_amount" name="total_overall_discount_amount" type="hidden" class="numeric form-control" value="0.00" readonly />
+                        <input id="txt_overall_discount" name="total_overall_discount" type="text" class="numeric form-control" value="0.0000" />
+                        <input id="txt_overall_discount_amount" name="total_overall_discount_amount" type="hidden" class="numeric form-control" value="0.0000" readonly />
                             
                         </td>
                         <td style="text-align: right;"><strong><i class="glyph-icon icon-star"></i>Total After Discount :</strong></td>
-                        <td id="td_total_after_discount" style="text-align: right;"><strong>0.00</strong></td>
+                        <td id="td_total_after_discount" style="text-align: right;"><strong>0.0000</strong></td>
                         <td style="text-align: right;"><strong><i class="glyph-icon icon-star"></i> Total Before Tax :</strong></td>
-                        <td align="right" colspan="4" id="td_before_tax" color="red">0.00</td>
+                        <td align="right" colspan="4" id="td_before_tax" color="red">0.0000</td>
                     </tr>
                     <tr>
                         <td colspan="2" style="text-align: right;"><strong><i class="glyph-icon icon-star"></i> Tax :</strong></td>
-                        <td align="right" colspan="1" id="td_tax" color="red">0.00</td>
+                        <td align="right" colspan="1" id="td_tax" color="red">0.0000</td>
                         <td colspan="2" style="text-align: right;"><strong><i class="glyph-icon icon-star"></i> Total After Tax :</strong></td>
-                        <td align="right" colspan="4" id="td_after_tax" color="red">0.00</td>
+                        <td align="right" colspan="4" id="td_after_tax" color="red">0.0000</td>
                     </tr>
                 </tfoot>
 
@@ -441,20 +441,20 @@
 
                     <tr>
                         <td>Discount :</td>
-                        <td align="right">0.00</td>
+                        <td align="right">0.0000</td>
                     </tr>
 
                     <tr>
                         <td>Total before Tax :</td>
-                        <td align="right">0.00</td>
+                        <td align="right">0.0000</td>
                     </tr>
                     <tr>
                         <td>Tax :</td>
-                        <td align="right">0.00</td>
+                        <td align="right">0.0000</td>
                     </tr>
                     <tr>
                         <td><strong>Total After Tax :</strong></td>
-                        <td align="right"><b>0.00</b></td>
+                        <td align="right"><b>0.0000</b></td>
                     </tr>
                     </tbody>
                 </table>
@@ -978,8 +978,7 @@ $(document).ready(function(){
 
         });
 
-        $('.numeric').autoNumeric('init');
-
+        $('.numeric').autoNumeric('init',{mDec: 4});
         $('#contact_no').keypress(validateNumber);
 
         _cboSuppliers=$("#cbo_suppliers").select2({
@@ -1097,16 +1096,16 @@ $(document).ready(function(){
                     unit_name : suggestion.unit_name,
                     product_id: suggestion.product_id,
                     product_desc : suggestion.product_desc,
-                    dr_line_total_discount : "0.00",
+                    dr_line_total_discount : "0.0000",
                     tax_exempt : false,
                     dr_tax_rate : tax_rate,
                     dr_price : suggestion.purchase_cost,
-                    dr_discount : "0.00",
+                    dr_discount : "0.0000",
                     tax_type_id : null,
                     dr_line_total_price : total,
                     dr_non_tax_amount: net_vat,
                     dr_tax_amount:vat_input,
-                    total_after_global : 0.00,
+                    total_after_global : 0.0000,
                         bulk_price: bulk_price,
                         retail_price: retail_price,
                         is_bulk: suggestion.is_bulk,
@@ -1282,10 +1281,10 @@ $(document).ready(function(){
             $('#cbo_departments').select2('val', null);
             $('#cbo_suppliers').select2('val', null);
             $('#img_user').attr('src','assets/img/anonymous-icon.png');
-            $('#td_discount').html('0.00');
-            $('#td_before_tax').html('0.00');
-            $('#td_tax').html('0.00');
-            $('#td_after_tax').html('0.00');
+            $('#td_discount').html('0.0000');
+            $('#td_before_tax').html('0.0000');
+            $('#td_tax').html('0.0000');
+            $('#td_after_tax').html('0.0000');
             $('#tbl_items tbody').html('');
             $('#order_default').datepicker('setDate', 'today');
             $('#due_default').datepicker('setDate', 'today');
@@ -1401,7 +1400,7 @@ $(document).ready(function(){
                             parent_unit_id : value.parent_unit_id,
                             child_unit_id : value.child_unit_id,
                             // exp_date: exp_date,
-                            total_after_global : 0.00,
+                            total_after_global : 0.0000,
                             batch_no:"",
                             a:a
                         }));
@@ -1418,7 +1417,7 @@ $(document).ready(function(){
 
                     });
                     changetxn = 'active';
-                    $('#txt_overall_discount').val(accounting.formatNumber($('#txt_overall_discount').val(),2));
+                    $('#txt_overall_discount').val(accounting.formatNumber($('#txt_overall_discount').val(),4));
                     reInitializeNumeric();
                     reComputeTotal();
                    
@@ -1639,7 +1638,7 @@ $(document).ready(function(){
                         tbl_summary.find(oTableDetails.before_tax).html(accounting.formatNumber(total_non_tax_amount,4));
                         tbl_summary.find(oTableDetails.tax_amount).html(accounting.formatNumber(total_tax_amount,4));
                         tbl_summary.find(oTableDetails.after_tax).html('<b>'+accounting.formatNumber(gross_amount,4)+'</b>');*/
-                        $('#txt_overall_discount').val(accounting.formatNumber($('#txt_overall_discount').val(),2));
+                        $('#txt_overall_discount').val(accounting.formatNumber($('#txt_overall_discount').val(),4));
                         reComputeTotal();
 
                     }
@@ -1719,11 +1718,11 @@ $(document).ready(function(){
             var total_after_global = new_line_total-(new_line_total*(global_discount/100));
 
 
-            $(oTableItems.total,row).find('input.numeric').val(accounting.formatNumber(new_line_total,2)); // line total amount
-            $(oTableItems.total_line_discount,row).find('input.numeric').val(accounting.formatNumber(new_discount_price,2)); //line total discount
-            $(oTableItems.net_vat,row).find('input.numeric').val(accounting.formatNumber(net_vat,2)); //net of vat
-            $(oTableItems.vat_input,row).find('input.numeric').val(accounting.formatNumber(vat_input,2)); //vat input
-            $(oTableItems.total_after_global,row).find('input.numeric').val(accounting.formatNumber(total_after_global,2));
+            $(oTableItems.total,row).find('input.numeric').val(accounting.formatNumber(new_line_total,4)); // line total amount
+            $(oTableItems.total_line_discount,row).find('input.numeric').val(accounting.formatNumber(new_discount_price,4)); //line total discount
+            $(oTableItems.net_vat,row).find('input.numeric').val(accounting.formatNumber(net_vat,4)); //net of vat
+            $(oTableItems.vat_input,row).find('input.numeric').val(accounting.formatNumber(vat_input,4)); //vat input
+            $(oTableItems.total_after_global,row).find('input.numeric').val(accounting.formatNumber(total_after_global,4));
 
             //console.log(net_vat);
             reComputeTotal();
@@ -2014,8 +2013,8 @@ $(document).ready(function(){
         $('input,textarea,select,input:not(.date-picker)',f).val('');
         $('input,textarea',f).val('');
         $('#remarks').val('');
-        $('#txt_overall_discount').val('0.00');
-        $('#txt_overall_discount_amount').val('0.00');
+        $('#txt_overall_discount').val('0.0000');
+        $('#txt_overall_discount_amount').val('0.0000');
         $(f).find('input:first').focus();
         //$('#tbl_items > tbody').html('');
     };
@@ -2031,7 +2030,7 @@ $(document).ready(function(){
             || event.keyCode === 37 || event.keyCode === 39) {
             return true;
         }
-        else if ( key < 48 || key > 57 ) {
+        else if ( key < 48 || key > 57 ) {  
             return false;
         }
         else return true;
@@ -2050,22 +2049,22 @@ $(document).ready(function(){
         return '<tr>'+
         '<td ><input name="dr_qty[]" type="text" class="numeric form-control trigger-keyup" value="'+ d.dr_qty +'"></td>'+unit+
         '<td >'+d.product_desc+'<input type="text" style="display: none;" class="form-control" name="is_parent[]" value="'+d.is_parent+'"></td>'+
-        '<td ><input name="dr_price[]" type="text" class="numeric form-control" value="'+accounting.formatNumber(d.dr_price,2)+'" style="text-align:right;"></td>'+
-        '<td ><input name="dr_discount[]" type="text" class="numeric form-control" value="'+ accounting.formatNumber(d.dr_discount,2)+'" style="text-align:right;"></td>'+
+        '<td ><input name="dr_price[]" type="text" class="numeric form-control" value="'+accounting.formatNumber(d.dr_price,4)+'" style="text-align:right;"></td>'+
+        '<td ><input name="dr_discount[]" type="text" class="numeric form-control" value="'+ accounting.formatNumber(d.dr_discount,4)+'" style="text-align:right;"></td>'+
         // display: none;
-        '<td  style="display: none;"><input name="dr_line_total_discount[]" type="text" class="numeric form-control" value="'+ accounting.formatNumber(d.dr_line_total_discount,2)+'" readonly></td>'+
-        '<td  style="display: none;"><input name="dr_tax_rate[]" type="text" class="numeric form-control" value="'+ accounting.formatNumber(d.dr_tax_rate,2)+'"></td>'+
+        '<td  style="display: none;"><input name="dr_line_total_discount[]" type="text" class="numeric form-control" value="'+ accounting.formatNumber(d.dr_line_total_discount,4)+'" readonly></td>'+
+        '<td  style="display: none;"><input name="dr_tax_rate[]" type="text" class="numeric form-control" value="'+ accounting.formatNumber(d.dr_tax_rate,4)+'"></td>'+
         //display
-        '<td colspan="3"  align="right"><input name="dr_line_total_price[]" type="text" class="numeric form-control" value="'+ accounting.formatNumber(d.dr_line_total_price,2)+'" readonly></td>'+
+        '<td colspan="3"  align="right"><input name="dr_line_total_price[]" type="text" class="numeric form-control" value="'+ accounting.formatNumber(d.dr_line_total_price,4)+'" readonly></td>'+
         //display: none;
-        '<td  style="display: none;"><input name="dr_tax_amount[]" type="text" class="numeric form-control" value="'+ accounting.formatNumber(d.dr_tax_amount,2)+'" readonly></td>'+
-        '<td  style="display: none;"><input name="dr_non_tax_amount[]" type="text" class="numeric form-control" value="'+ accounting.formatNumber(d.dr_non_tax_amount,2)+'" readonly></td>'+
+        '<td  style="display: none;"><input name="dr_tax_amount[]" type="text" class="numeric form-control" value="'+ accounting.formatNumber(d.dr_tax_amount,4)+'" readonly></td>'+
+        '<td  style="display: none;"><input name="dr_non_tax_amount[]" type="text" class="numeric form-control" value="'+ accounting.formatNumber(d.dr_non_tax_amount,4)+'" readonly></td>'+
         '<td  style="display: none;" ><input name="product_id[]" type="text" class="numeric form-control" value="'+ d.product_id+'" readonly></td>'+
-        '<td  style="display: none;" ><input name="dr_line_total_after_global[]" type="text" class="numeric form-control" value="'+ accounting.formatNumber(d.total_after_global,2)+'" readonly></td>'+
+        '<td  style="display: none;" ><input name="dr_line_total_after_global[]" type="text" class="numeric form-control" value="'+ accounting.formatNumber(d.total_after_global,4)+'" readonly></td>'+
         //display
         '<td  align="center"><button type="button" name="remove_item" class="btn btn-red"><i class="fa fa-trash"></i></button></td>'+
-        '<td  style="display: none;" ><input type="text" class="numeric form-control" value="'+ accounting.formatNumber(d.bulk_price,2)+'" readonly></td>'+
-        '<td  style="display: none;" ><input type="text" class="numeric form-control" value="'+ accounting.formatNumber(d.retail_price,2)+'" readonly></td>'+
+        '<td  style="display: none;" ><input type="text" class="numeric form-control" value="'+ accounting.formatNumber(d.bulk_price,4)+'" readonly></td>'+
+        '<td  style="display: none;" ><input type="text" class="numeric form-control" value="'+ accounting.formatNumber(d.retail_price,4)+'" readonly></td>'+
         '</tr>';
     };
 
@@ -2088,41 +2087,41 @@ $(document).ready(function(){
             before_tax+=parseFloat(accounting.unformat($(oTableItems.net_vat,$(this)).find('input.numeric').val()));
             tax_amount+=parseFloat(accounting.unformat($(oTableItems.vat_input,$(this)).find('input.numeric').val()));
             after_tax+=parseFloat(accounting.unformat($(oTableItems.total,$(this)).find('input.numeric').val()));
-            $(oTableItems.total_after_global,$(this)).find('input.numeric').val(accounting.formatNumber(total_after_global,2));
+            $(oTableItems.total_after_global,$(this)).find('input.numeric').val(accounting.formatNumber(total_after_global,4));
 
         });
         
         var tbl_summary=$('#tbl_delivery_summary');
-        tbl_summary.find(oTableDetails.discount).html(accounting.formatNumber(discounts,2));
-        tbl_summary.find(oTableDetails.before_tax).html(accounting.formatNumber(before_tax,2));
-        tbl_summary.find(oTableDetails.tax_amount).html(accounting.formatNumber(tax_amount,2));
-        tbl_summary.find(oTableDetails.after_tax).html('<b>'+accounting.formatNumber(after_tax,2)+'</b>');
-        tbl_summary.find(oTableDetails.total_line_discount).html('<b>'+accounting.formatNumber(after_discount,2)+'</b>');
+        tbl_summary.find(oTableDetails.discount).html(accounting.formatNumber(discounts,4));
+        tbl_summary.find(oTableDetails.before_tax).html(accounting.formatNumber(before_tax,4));
+        tbl_summary.find(oTableDetails.tax_amount).html(accounting.formatNumber(tax_amount,4));
+        tbl_summary.find(oTableDetails.after_tax).html('<b>'+accounting.formatNumber(after_tax,4)+'</b>');
+        tbl_summary.find(oTableDetails.total_line_discount).html('<b>'+accounting.formatNumber(after_discount,4)+'</b>');
 
 
 
-        $('#txt_overall_discount_amount').val(accounting.formatNumber(after_tax * ($('#txt_overall_discount').val() / 100),2));
-        $('#td_before_tax').html(accounting.formatNumber(before_tax,2));
-        $('#td_after_tax').html('<b>'+accounting.formatNumber(after_tax,2)+'</b>');
-        $('#td_discount').html(accounting.formatNumber(discounts,2));
-        $('#td_tax').html(accounting.formatNumber(tax_amount,2));
-        $('#td_total_after_discount').html(accounting.formatNumber(after_tax - (after_tax * ($('#txt_overall_discount').val() / 100)),2));
+        $('#txt_overall_discount_amount').val(accounting.formatNumber(after_tax * ($('#txt_overall_discount').val() / 100),4));
+        $('#td_before_tax').html(accounting.formatNumber(before_tax,4));
+        $('#td_after_tax').html('<b>'+accounting.formatNumber(after_tax,4)+'</b>');
+        $('#td_discount').html(accounting.formatNumber(discounts,4));
+        $('#td_tax').html(accounting.formatNumber(tax_amount,4));
+        $('#td_total_after_discount').html(accounting.formatNumber(after_tax - (after_tax * ($('#txt_overall_discount').val() / 100)),4));
     };
 
 
 
     var reInitializeNumeric=function(){
-        $('.numeric').autoNumeric('init',{mDec: 2});
+        $('.numeric').autoNumeric('init',{mDec: 4});
     };
 
 
 
     var resetSummary=function(){
         var tbl_summary=$('#tbl_delivery_summary');
-        tbl_summary.find(oTableDetails.discount).html('0.00');
-        tbl_summary.find(oTableDetails.before_tax).html('0.00');
-        tbl_summary.find(oTableDetails.tax_amount).html('0.00');
-        tbl_summary.find(oTableDetails.after_tax).html('<b>0.00</b>');
+        tbl_summary.find(oTableDetails.discount).html('0.0000');
+        tbl_summary.find(oTableDetails.before_tax).html('0.0000');
+        tbl_summary.find(oTableDetails.tax_amount).html('0.0000');
+        tbl_summary.find(oTableDetails.after_tax).html('<b>0.0000</b>');
     };
 
 

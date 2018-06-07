@@ -78,7 +78,7 @@ class Pick_list extends CORE_Controller
 
 
 
-                $response['data']=$m_products->product_list(1,null,null,$supplier_id,$category_id,null,1);
+                $response['data']=$m_products->product_list(1,null,null,$supplier_id,$category_id,null,1,null,1);
                 echo json_encode($response);
                 break;
 
@@ -89,7 +89,7 @@ class Pick_list extends CORE_Controller
                 $m_products = $this->Products_model;
                 $supplier_id = $this->input->get('sup');
                 $category_id = $this->input->get('cat');
-                $data['data']=$m_products->product_list(1,null,null,$supplier_id,$category_id,null,1);
+                $data['data']=$m_products->product_list(1,null,null,$supplier_id,$category_id,null,1,null,1);
                 // echo json_encode($response);
                 $suppliers = $this->Suppliers_model->get_list($supplier_id);
                 $categories = $this->Categories_model->get_list($category_id);
