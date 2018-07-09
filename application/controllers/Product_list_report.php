@@ -86,7 +86,7 @@ class Product_list_report extends CORE_Controller
                 $supplier_id = $this->input->get('sup');
                 $category_id = $this->input->get('cat');
                 $item_type_id = $this->input->get('inv');
-                $data['data']=$m_products->product_list(1,null,null,$supplier_id,$category_id,$item_type_id);
+                $data['data']=$m_products->product_list(1,null,null,$supplier_id,$category_id,$item_type_id,null,null,1);
                 // echo json_encode($response);
                 $this->load->view('template/product_list_report_content',$data);
                 break;
@@ -107,7 +107,7 @@ class Product_list_report extends CORE_Controller
                 ($supplier_id == null ? $supplier_name = 'ALL' : $supplier_name=$suppliers[0]->supplier_name);
                 ($category_id == null ? $category_name = 'ALL' : $category_name=$categories[0]->category_name);
                 ($item_type_id == null ? $item_type = 'ALL' : $item_type=$item_types[0]->item_type);
-                $data=$m_products->product_list(1,null,null,$supplier_id,$category_id,$item_type_id);
+                $data=$m_products->product_list(1,null,null,$supplier_id,$category_id,$item_type_id,null,null,1);
                 // echo json_encode($response);
                 // $this->load->view('template/product_list_report_content',$data);
 
@@ -271,7 +271,7 @@ class Product_list_report extends CORE_Controller
                 ($supplier_id == null ? $supplier_name = 'ALL' : $supplier_name=$suppliers[0]->supplier_name);
                 ($category_id == null ? $category_name = 'ALL' : $category_name=$categories[0]->category_name);
                 ($item_type_id == null ? $item_type = 'ALL' : $item_type=$item_types[0]->item_type);
-                $data=$m_products->product_list(1,null,null,$supplier_id,$category_id,$item_type_id);
+                $data=$m_products->product_list(1,null,null,$supplier_id,$category_id,$item_type_id,null,null,1);
                 // echo json_encode($response);
 
                 $excel=$this->excel;

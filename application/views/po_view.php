@@ -780,6 +780,7 @@ $(document).ready(function(){
         total : 'td:eq(7)',
         vat_input : 'td:eq(8)',
         net_vat : 'td:eq(9)',
+        item_id : 'td:eq(10)',
         bulk_price : 'td:eq(12)',
         retail_price : 'td:eq(13)'
 
@@ -972,6 +973,11 @@ $(document).ready(function(){
             //var tax_id=$('#cbo_tax_type').select2('val');
             //var tax_rate=parseFloat($('#cbo_tax_type').find('option[value="'+tax_id+'"]').data('tax-rate'));
             //alert(suggestion.tax_rate);
+
+            if(!(checkProduct(suggestion.product_id))){ // Checks if item is already existing in the Table of Items for invoice
+                showNotification({title: suggestion.product_desc,stat:"error",msg: "Item is Already Added."});
+                return;
+            }
 
             var tax_rate=suggestion.tax_rate; //base on the tax rate set to current product
 
@@ -1332,22 +1338,15 @@ $(document).ready(function(){
                     changetxn = 'active';
                 }
             });
-
-
-
-
             showList(false);
-
         });
 
         $('#tbl_purchases tbody').on('click','button[name="remove_info"]',function(){
             _selectRowObj=$(this).closest('tr');
             var data=dt.row(_selectRowObj).data();
             _selectedID=data.purchase_order_id;
-
             $('#modal_confirmation').modal('show');
         });
-
         $('#tbl_items tbody').on('change','select',function(){
             if(changetxn == 'active'){
                 var row=$(this).closest('tr');
@@ -1357,14 +1356,12 @@ $(document).ready(function(){
                 }else{
                     var price=parseFloat(accounting.unformat(row.find(oTableItems.retail_price).find('input.numeric').val()));
                 }
-                $(oTableItems.unit_price,row).find('input').val(price);  
-                $(oTableItems.unit_identifier,row).find('input').val(unit_value); 
+                $(oTableItems.unit_price,row).find('input').val(accounting.formatNumber(price,2));  
+                $(oTableItems.unit_identifier,row).find('input').val(accounting.formatNumber(unit_value,2)); 
             } 
-
-        $('.number').keyup();
+        // $('.number').keyup();
+        row.find(oTableItems.qty).find('input').keyup();
         });
-
-
         //track every changes on numeric fields
         $('#tbl_items tbody').on('keyup ','input.numeric',function(){
             var row=$(this).closest('tr');
@@ -1793,6 +1790,19 @@ $(document).ready(function(){
         $('.number').autoNumeric('init', {mDec:0});
     };
 
+    var checkProduct= function(check_id){
+        var prodstat=true;
+        var rowcheck=$('#tbl_items > tbody tr');
+        $.each(rowcheck,function(){
+            item = parseFloat(accounting.unformat($(oTableItems.item_id,$(this)).find('input').val()));
+            // alert()
+            if(check_id == item){
+                prodstat=false;
+                return false;
+            }
+        });
+         return prodstat;    
+    };
 });
 
 

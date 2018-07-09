@@ -780,6 +780,7 @@ $(document).ready(function(){
         total : 'td:eq(8)',
         vat_input : 'td:eq(9)',
         net_vat : 'td:eq(10)',
+        item_id : 'td:eq(11)',
         total_after_global :' td:eq(12)',
         bulk_price : 'td:eq(14)',
         retail_price : 'td:eq(15)'
@@ -917,6 +918,10 @@ $(document).ready(function(){
     _objTypeHead.typeahead('val','');         //  -- changed due to barcode scan not working
             }
         }).bind('typeahead:select', function(ev, suggestion) {
+            if(!(checkProduct(suggestion.product_id))){ // Checks if item is already existing in the Table of Items for invoice
+                showNotification({title: suggestion.product_desc,stat:"error",msg: "Item is Already Added."});
+                return;
+            }
             //console.log(suggestion);
             //alert(suggestion.sale_price);
             var tax_rate=suggestion.tax_rate; //base on the tax rate set to current product
@@ -1350,7 +1355,7 @@ $(document).ready(function(){
                         a++;
                     });
                 changetxn = 'active';
-                $('#txt_overall_discount').val(accounting.formatNumber($('#txt_overall_discount').val(),2));
+                $('#txt_overall_discount').val(accounting.formatNumber($('#txt_overall_discount').val(),4));
                 reInitializeNumeric();
                 reComputeTotal();
                 
@@ -1464,6 +1469,7 @@ $(document).ready(function(){
                     });
                     changetxn = 'active';
                     reComputeTotal();
+                    reInitializeNumeric();
                 }
             });
             $('#span_invoice_no').html(data.sales_inv_no);
@@ -1539,8 +1545,8 @@ $(document).ready(function(){
             var new_line_total=line_total-line_total_discount; 
 
 
-            $(oTableItems.gross,row).find('input.numeric').val(accounting.formatNumber(line_total,2)); //gross
-            $(oTableItems.total,row).find('input.numeric').val(accounting.formatNumber(new_line_total,2)); // line total amount
+            $(oTableItems.gross,row).find('input.numeric').val(accounting.formatNumber(line_total,4)); //gross
+            $(oTableItems.total,row).find('input.numeric').val(accounting.formatNumber(new_line_total,4)); // line total amount
             $(oTableItems.total_line_discount,row).find('input.numeric').val(line_total_discount); //line total discount
             $(oTableItems.net_vat,row).find('input.numeric').val(net_vat); //net of vat
             $(oTableItems.vat_input,row).find('input.numeric').val(vat_input); //vat input
@@ -1806,16 +1812,16 @@ $(document).ready(function(){
         }
 return '<tr>'+
 //DISPLAY
-'<td ><input name="inv_qty[]" type="text" class="numeric form-control trigger-keyup" value="'+accounting.formatNumber(d.inv_qty,2)+'"></td>'+unit+
+'<td ><input name="inv_qty[]" type="text" class="numeric form-control trigger-keyup" value="'+accounting.formatNumber(d.inv_qty,4)+'"></td>'+unit+
 '<td ">'+d.product_desc+'<input type="text" style="display:none;" class="form-control" name="is_parent[]" value="'+d.is_parent+'"></td>'+
-'<td ><input name="inv_price[]" type="text" class="numeric form-control" value="'+accounting.formatNumber(d.inv_price,2)+'" style="text-align:right;"></td>'+
-'<td  style=""><input name="inv_discount[]" type="text" class="numeric form-control" value="'+ accounting.formatNumber(d.inv_discount,2)+'" style="text-align:right;"></td>'+
+'<td ><input name="inv_price[]" type="text" class="numeric form-control" value="'+accounting.formatNumber(d.inv_price,4)+'" style="text-align:right;"></td>'+
+'<td  style=""><input name="inv_discount[]" type="text" class="numeric form-control" value="'+ accounting.formatNumber(d.inv_discount,4)+'" style="text-align:right;"></td>'+
 // DISPLAY NONE
-'<td style="display:none;" ><input name="inv_line_total_discount[]" type="text" class="numeric form-control" value="'+ accounting.formatNumber(d.inv_line_total_discount,2)+'" readonly></td>'+
-'<td  style="display:none;"><input name="inv_tax_rate[]" type="text" class="numeric form-control" value="'+ accounting.formatNumber(d.inv_tax_rate,2)+'"></td>'+
+'<td style="display:none;" ><input name="inv_line_total_discount[]" type="text" class="numeric form-control" value="'+ accounting.formatNumber(d.inv_line_total_discount,4)+'" readonly></td>'+
+'<td  style="display:none;"><input name="inv_tax_rate[]" type="text" class="numeric form-control" value="'+ accounting.formatNumber(d.inv_tax_rate,4)+'"></td>'+
 // DISPLAY AGAIN 10%
-'<td  style=""><input name="inv_gross[]" type="text" class="numeric form-control" value="'+ accounting.formatNumber(d.inv_gross,2)+'" readonly></td>'+
-'<td  align="right"><input name="inv_line_total_price[]" type="text" class="numeric form-control" value="'+ accounting.formatNumber(d.inv_line_total_price,2)+'" readonly></td>'+
+'<td  style=""><input name="inv_gross[]" type="text" class="numeric form-control" value="'+ accounting.formatNumber(d.inv_gross,4)+'" readonly></td>'+
+'<td  align="right"><input name="inv_line_total_price[]" type="text" class="numeric form-control" value="'+ accounting.formatNumber(d.inv_line_total_price,4)+'" readonly></td>'+
 // DISPLAY NONE AGAIN
 '<td style="display:none;"><input name="inv_tax_amount[]" type="text" class="numeric form-control" value="'+ d.inv_tax_amount+'" readonly></td>'+
 '<td style="display:none;"><input name="inv_non_tax_amount[]" type="text" class="numeric form-control" value="'+ d.inv_non_tax_amount+'" readonly></td>'+
@@ -1824,8 +1830,8 @@ return '<tr>'+
 
 
 '<td align="center"><button type="button" name="remove_item" class="btn btn-red"><i class="fa fa-trash"></i></button></td>'+
-        '<td  style="display:none;"><input type="text" class="numeric form-control" value="'+ accounting.formatNumber(d.bulk_price,2)+'" readonly></td>'+
-        '<td  style="display:none;"><input type="text" class="numeric form-control" value="'+ accounting.formatNumber(d.retail_price,2)+'" readonly></td>'+
+        '<td  style="display:none;"><input type="text" class="numeric form-control" value="'+ accounting.formatNumber(d.bulk_price,4)+'" readonly></td>'+
+        '<td  style="display:none;"><input type="text" class="numeric form-control" value="'+ accounting.formatNumber(d.retail_price,4)+'" readonly></td>'+
 '</tr>';
     };
     var reComputeTotal=function(){
@@ -1836,7 +1842,7 @@ return '<tr>'+
             //console.log($(oTableItems.net_vat,$(this)));
             total=parseFloat(accounting.unformat($(oTableItems.total,$(this)).find('input.numeric').val()));
             total_after_global = (total - (total*global_discount));
-            $(oTableItems.total_after_global,$(this)).find('input.numeric').val(accounting.formatNumber(total_after_global,2));
+            $(oTableItems.total_after_global,$(this)).find('input.numeric').val(accounting.formatNumber(total_after_global,4));
 
 
             discounts+=parseFloat(accounting.unformat($(oTableItems.total_line_discount,$(this)).find('input.numeric').val()));
@@ -1847,18 +1853,18 @@ return '<tr>'+
 
 
         var tbl_summary=$('#tbl_sales_invoice_summary');
-        tbl_summary.find(oTableDetails.discount).html(accounting.formatNumber(discounts,2));
-        tbl_summary.find(oTableDetails.before_tax).html(accounting.formatNumber(before_tax,2));
-        tbl_summary.find(oTableDetails.inv_tax_amount).html(accounting.formatNumber(inv_tax_amount,2));
-        tbl_summary.find(oTableDetails.after_tax).html('<b>'+accounting.formatNumber(after_tax,2)+'</b>');
+        tbl_summary.find(oTableDetails.discount).html(accounting.formatNumber(discounts,4));
+        tbl_summary.find(oTableDetails.before_tax).html(accounting.formatNumber(before_tax,4));
+        tbl_summary.find(oTableDetails.inv_tax_amount).html(accounting.formatNumber(inv_tax_amount,4));
+        tbl_summary.find(oTableDetails.after_tax).html('<b>'+accounting.formatNumber(after_tax,4)+'</b>');
 
 
-        $('#txt_overall_discount_amount').val(accounting.formatNumber(after_tax * ($('#txt_overall_discount').val() / 100),2));
-        $('#td_total_before_tax').html(accounting.formatNumber(before_tax,2));
-        $('#td_after_tax').html('<b>'+accounting.formatNumber(after_tax,2)+'</b>');
-        $('#td_total_after_discount').html(accounting.formatNumber(after_tax - (after_tax * ($('#txt_overall_discount').val() / 100)),2));
-        $('#td_tax').html(accounting.formatNumber(inv_tax_amount,2));
-                    $('#td_discount').html(accounting.formatNumber(discounts,2)); // unknown - must be referring to table summary but not on id given
+        $('#txt_overall_discount_amount').val(accounting.formatNumber(after_tax * ($('#txt_overall_discount').val() / 100),4));
+        $('#td_total_before_tax').html(accounting.formatNumber(before_tax,4));
+        $('#td_after_tax').html('<b>'+accounting.formatNumber(after_tax,4)+'</b>');
+        $('#td_total_after_discount').html(accounting.formatNumber(after_tax - (after_tax * ($('#txt_overall_discount').val() / 100)),4));
+        $('#td_tax').html(accounting.formatNumber(inv_tax_amount,4));
+                    $('#td_discount').html(accounting.formatNumber(discounts,4)); // unknown - must be referring to table summary but not on id given
     };
     var resetSummary=function(){
         var tbl_summary=$('#tbl_sales_invoice_summary');
@@ -1868,7 +1874,20 @@ return '<tr>'+
         tbl_summary.find(oTableDetails.after_tax).html('<b>0.00</b>');
     };
     var reInitializeNumeric=function(){
-        $('.numeric').autoNumeric('init');
+         $('.numeric').autoNumeric('init', {mDec:4});
+    };
+    var checkProduct= function(check_id){
+        var prodstat=true;
+        var rowcheck=$('#tbl_items > tbody tr');
+        $.each(rowcheck,function(){
+            item = parseFloat(accounting.unformat($(oTableItems.item_id,$(this)).find('input').val()));
+            // alert()
+            if(check_id == item){
+                prodstat=false;
+                return false;
+            }
+        });
+         return prodstat;    
     };
     setInterval(function(){
     //console.log('test');
