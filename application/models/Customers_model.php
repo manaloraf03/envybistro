@@ -96,7 +96,7 @@ class Customers_model extends CORE_Model{
                 IF(ISNULL(si.date_due),serv_inv.date_due,si.date_due) date_due,
                 IF(ISNULL(si.remarks),IFNULL(serv_inv.remarks, ji.remarks),IFNULL(si.remarks, ji.remarks)) remarks,
                 IF(ISNULL(ref_no), txn_no, ref_no) inv_no,
-                IF(ji.is_sales = 1, IFNULL(si.total_after_discount,SUM(ja.dr_amount)), IFNULL(serv_inv.total_amount_after_discount,SUM(ja.dr_amount))) journal_receivable_amount,
+                IF(ji.is_sales = 1, SUM(ja.dr_amount), SUM(ja.dr_amount)) as journal_receivable_amount,
                 ji.is_sales
                 FROM
                 (journal_info ji

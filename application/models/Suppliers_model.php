@@ -71,7 +71,7 @@ class Suppliers_model extends CORE_Model {
         di.date_due,
         IFNULL(di.remarks,ji.remarks) remarks,
         IFNULL(ref_no, txn_no) inv_no,
-        IFNULL(di.total_after_discount, ja.dr_amount) journal_payable_amount
+         SUM(ja.cr_amount) as journal_payable_amount
         FROM
         (journal_info ji
         INNER JOIN journal_accounts ja ON ja.journal_id = ji.journal_id)
@@ -100,9 +100,7 @@ class Suppliers_model extends CORE_Model {
         GROUP BY ppl.dr_invoice_id) paid
 
         ON unpaid.journal_id = paid.dr_invoice_id
-
         HAVING amount_due > 0";
-
           return $this->db->query($sql)->result();
     }
 

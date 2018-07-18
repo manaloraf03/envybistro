@@ -231,6 +231,7 @@ class Cash_disbursement extends CORE_Controller
                     $m_payable_payment=$this->Payable_payment_model;
                     $m_payable_payment->journal_id=$journal_id;
                     $m_payable_payment->is_journal_posted=TRUE;
+                    $m_payable_payment->is_posted=TRUE;
                     $m_payable_payment->modify($payment_id);
 
                 // AUDIT TRAIL START
