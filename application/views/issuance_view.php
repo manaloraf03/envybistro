@@ -722,7 +722,7 @@ dt_si = $('#tbl_si_list').DataTable({
             placeholder: "Please select customer.",
             allowClear: true
         });*/
-        $('.numeric').autoNumeric('init',{mDec: 4});
+        $('.numeric').autoNumeric('init',{mDec: 2});
         _cboDepartments=$("#cbo_departments").select2({
             placeholder: "Issue item to Department.",
             allowClear: true
@@ -1098,7 +1098,7 @@ dt_si = $('#tbl_si_list').DataTable({
             }else{
                 var price=parseFloat(accounting.unformat(row.find(oTableItems.retail_price).find('input.numeric').val()));
             }
-            $(oTableItems.unit_price,row).find('input').val(accounting.formatNumber(price,4));
+            $(oTableItems.unit_price,row).find('input').val(accounting.formatNumber(price,2));
             $(oTableItems.unit_identifier,row).find('input').val(unit_value); 
         }
         $('.trigger-number').keyup();
@@ -1121,10 +1121,10 @@ dt_si = $('#tbl_si_list').DataTable({
             var line_total=discounted_price*qty;
             var net_vat=line_total/(1+tax_rate);
             var vat_input=line_total-net_vat;
-            $(oTableItems.total,row).find('input.numeric').val(accounting.formatNumber(line_total,4)); // line total amount
-            $(oTableItems.total_line_discount,row).find('input.numeric').val(accounting.formatNumber(line_total_discount,4)); //line total discount
-            $(oTableItems.net_vat,row).find('input.numeric').val(accounting.formatNumber(net_vat,4)); //net of vat
-            $(oTableItems.vat_input,row).find('input.numeric').val(accounting.formatNumber(vat_input,4)); //vat input
+            $(oTableItems.total,row).find('input.numeric').val(accounting.formatNumber(line_total,2)); // line total amount
+            $(oTableItems.total_line_discount,row).find('input.numeric').val(accounting.formatNumber(line_total_discount,2)); //line total discount
+            $(oTableItems.net_vat,row).find('input.numeric').val(accounting.formatNumber(net_vat,2)); //net of vat
+            $(oTableItems.vat_input,row).find('input.numeric').val(accounting.formatNumber(vat_input,2)); //vat input
             //console.log(net_vat);
             reComputeTotal();
         });
@@ -1318,11 +1318,11 @@ dt_si = $('#tbl_si_list').DataTable({
         return '<tr>'+
         '<td width="10%"><input name="issue_qty[]" type="text" class="numeric form-control trigger-number" value="'+ d.issue_qty+'"></td>'+unit+
         '<td width="30%">'+d.product_desc+'<input type="text" style="display: none;" class="form-control" name="is_parent[]" value="'+d.is_parent+'"></td>'+
-        '<td width="11%"><input name="issue_price[]" type="text" class="numeric form-control" value="'+accounting.formatNumber(d.issue_price,4)+'" style="text-align:right;"></td>'+
-        '<td width="11%" style="display: none;"><input name="issue_discount[]" type="text" class="numeric form-control" value="'+ accounting.formatNumber(d.issue_discount,4)+'" style="text-align:right;"></td>'+
-        '<td style="display: none;" width="11%"><input name="issue_line_total_discount[]" type="text" class="numeric form-control" value="'+ accounting.formatNumber(d.issue_line_total_discount,4)+'" readonly></td>'+
-        '<td width="11%" style="display: none;"><input name="issue_tax_rate[]" type="text" class="numeric form-control" value="'+ accounting.formatNumber(d.issue_tax_rate,4)+'"></td>'+
-        '<td width="11%" align="right"><input name="issue_line_total_price[]" type="text" class="numeric form-control" value="'+ accounting.formatNumber(d.issue_line_total_price,4)+'" readonly></td>'+
+        '<td width="11%"><input name="issue_price[]" type="text" class="numeric form-control" value="'+accounting.formatNumber(d.issue_price,2)+'" style="text-align:right;"></td>'+
+        '<td width="11%" style="display: none;"><input name="issue_discount[]" type="text" class="numeric form-control" value="'+ accounting.formatNumber(d.issue_discount,2)+'" style="text-align:right;"></td>'+
+        '<td style="display: none;" width="11%"><input name="issue_line_total_discount[]" type="text" class="numeric form-control" value="'+ accounting.formatNumber(d.issue_line_total_discount,2)+'" readonly></td>'+
+        '<td width="11%" style="display: none;"><input name="issue_tax_rate[]" type="text" class="numeric form-control" value="'+ accounting.formatNumber(d.issue_tax_rate,2)+'"></td>'+
+        '<td width="11%" align="right"><input name="issue_line_total_price[]" type="text" class="numeric form-control" value="'+ accounting.formatNumber(d.issue_line_total_price,2)+'" readonly></td>'+
         '<td style="display: none;"><input name="issue_tax_amount[]" type="text" class="numeric form-control" value="'+ d.issue_tax_amount+'" readonly></td>'+
         '<td style="display: none;"><input name="issue_non_tax_amount[]" type="text" class="numeric form-control" value="'+ d.issue_non_tax_amount+'" readonly></td>'+
         '<td style="display: none;"><input name="product_id[]" type="text" class="numeric form-control" value="'+ d.product_id+'" readonly></td>'+
@@ -1341,20 +1341,20 @@ dt_si = $('#tbl_si_list').DataTable({
             issue_tax_amount+=parseFloat(accounting.unformat($(oTableItems.vat_input,$(this)).find('input.numeric').val()));
             after_tax+=parseFloat(accounting.unformat($(oTableItems.total,$(this)).find('input.numeric').val()));
         });
-        $('#td_before_tax').html(accounting.formatNumber(before_tax,4));
-        $('#td_after_tax').html('<b>'+accounting.formatNumber(after_tax,4)+'</b>');
-        $('#td_discount').html(accounting.formatNumber(discounts,4));
-        $('#td_tax').html(accounting.formatNumber(issue_tax_amount,4));
+        $('#td_before_tax').html(accounting.formatNumber(before_tax,2));
+        $('#td_after_tax').html('<b>'+accounting.formatNumber(after_tax,2)+'</b>');
+        $('#td_discount').html(accounting.formatNumber(discounts,2));
+        $('#td_tax').html(accounting.formatNumber(issue_tax_amount,2));
 
         var tbl_summary=$('#tbl_issuance_summary');
-        tbl_summary.find(oTableDetails.discount).html(accounting.formatNumber(discounts,4));
-        tbl_summary.find(oTableDetails.before_tax).html(accounting.formatNumber(before_tax,4));
-        tbl_summary.find(oTableDetails.issue_tax_amount).html(accounting.formatNumber(issue_tax_amount,4));
-        tbl_summary.find(oTableDetails.after_tax).html('<b>'+accounting.formatNumber(after_tax,4)+'</b>');
+        tbl_summary.find(oTableDetails.discount).html(accounting.formatNumber(discounts,2));
+        tbl_summary.find(oTableDetails.before_tax).html(accounting.formatNumber(before_tax,2));
+        tbl_summary.find(oTableDetails.issue_tax_amount).html(accounting.formatNumber(issue_tax_amount,2));
+        tbl_summary.find(oTableDetails.after_tax).html('<b>'+accounting.formatNumber(after_tax,2)+'</b>');
                
     };
     var reInitializeNumeric=function(){
-        $('.numeric').autoNumeric('init',{mDec: 4});
+        $('.numeric').autoNumeric('init',{mDec: 2});
     };
 
     var getproduct=function(){

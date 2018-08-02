@@ -383,7 +383,7 @@
                                 sClass: "numericCol", 
                                 targets:[3],data: "total_after_discount",
                                 render: function(data,type,full,meta){
-                                    return accounting.formatNumber(data,4);
+                                    return accounting.formatNumber(data,2);
                                 }
                             }
                         ],
@@ -414,8 +414,8 @@
                                     return intVal(a) + intVal(b);
                                 }, 0 );
 
-                            $('#td_page_total_summary').html('<b>'+accounting.formatNumber(pageTotal,4)+'</b>');
-                            $('#td_grand_total_summary').html('<b>'+accounting.formatNumber(total,4)+'</b>');
+                            $('#td_page_total_summary').html('<b>'+accounting.formatNumber(pageTotal,2)+'</b>');
+                            $('#td_grand_total_summary').html('<b>'+accounting.formatNumber(total,2)+'</b>');
 
 
 
@@ -448,7 +448,7 @@
                                 sClass: "numericCol", 
                                 targets:[3],data: "dr_price", 
                                 render: function(data,type,full,meta){
-                                    return accounting.formatNumber(data,4);
+                                    return accounting.formatNumber(data,2);
                                 } 
                             },
                             { targets:[4],data: "dr_qty" },
@@ -456,7 +456,7 @@
                                 sClass: "numericCol", 
                                 targets:[3],data: "total_amount",
                                 render: function(data,type,full,meta){
-                                    return accounting.formatNumber(data,4);
+                                    return accounting.formatNumber(data,2);
                                 }
                             }
                         ],
@@ -487,8 +487,8 @@
                                     return intVal(a) + intVal(b);
                                 }, 0 );
 
-                            $('#td_page_total_detailed').html('<b>'+accounting.formatNumber(pageTotal,4)+'</b>');
-                            $('#td_grand_total_detailed').html('<b>'+accounting.formatNumber(total,4)+'</b>');
+                            $('#td_page_total_detailed').html('<b>'+accounting.formatNumber(pageTotal,2)+'</b>');
+                            $('#td_grand_total_detailed').html('<b>'+accounting.formatNumber(total,2)+'</b>');
 
 
 

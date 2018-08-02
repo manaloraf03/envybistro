@@ -99,7 +99,7 @@ $(document).ready(function(){
                 { targets:[0],data: "product_code" },
                 { targets:[1],data: "product_desc" },
                 { targets:[2],data: "unit_name" },
-                { sClass: 'right-align',targets:[3],data: "dr_price" , render: $.fn.dataTable.render.number( ',', '.', 4 ) },
+                { sClass: 'right-align',targets:[3],data: "dr_price" , render: $.fn.dataTable.render.number( ',', '.', 2 ) },
                 { targets:[4],data: "supplier_name" },
                 { targets:[4],data: "date_delivered" },
                 { targets:[4],data: "dr_invoice_no" }

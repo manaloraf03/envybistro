@@ -2105,6 +2105,7 @@ class Templates extends CORE_Controller {
                     array(
                         'delivery_invoice_items.*',
                         'products.product_desc',
+                        'products.product_code',
                         'units.unit_name',
                         'IFNULL(m.po_price,0) AS po_price'
                     ),

@@ -80,9 +80,9 @@
 							<?php if($detail->supplier_id==$invoice_number->supplier_id&&$detail->dr_invoice_id==$invoice_number->dr_invoice_id) { ?>
 								<tr>
 									<td style="text-align: left;"><?php echo $detail->product_desc; ?></td>
-									<td><?php echo number_format($detail->dr_price,4); ?></td>
-									<td><?php echo number_format($detail->dr_qty,4); ?></td>
-									<td><?php echo number_format(($detail->dr_price*$detail->dr_qty),4); ?></td>
+									<td><?php echo number_format($detail->dr_price,2); ?></td>
+									<td><?php echo number_format($detail->dr_qty,2); ?></td>
+									<td><?php echo number_format(($detail->dr_price*$detail->dr_qty),2); ?></td>
 								</tr>
                                 <?php $inv_total+=$detail->dr_price*$detail->dr_qty; ?>
 							<?php } ?>
@@ -94,7 +94,7 @@
 							<td></td>
 							<td></td>
 							<td></td>
-							<td style="text-align: right;"><span style="font-size: 20px; font-weight: bolder;"><?php echo number_format($inv_total,4); ?></span></td>
+							<td style="text-align: right;"><span style="font-size: 20px; font-weight: bolder;"><?php echo number_format($inv_total,2); ?></span></td>
 						</tr>
 					</table><br>
 

@@ -98,7 +98,7 @@ $(document).ready(function(){
                         if(isNaN(data)){
                             return 0.00;
                         }else{
-                            return  accounting.formatNumber(parseFloat(data),4);
+                            return  accounting.formatNumber(parseFloat(data),2);
                         }
 
                     }
@@ -109,7 +109,7 @@ $(document).ready(function(){
                         if(isNaN(data)){
                             return 0.00;
                         }else{
-                            return  accounting.formatNumber(parseFloat(data),4);
+                            return  accounting.formatNumber(parseFloat(data),2);
                         }
 
                     }
@@ -173,7 +173,7 @@ $(document).ready(function(){
 
         showPanelActive('list');
 
-        $('.numeric').autoNumeric('init',{mDec:4});
+        $('.numeric').autoNumeric('init',{mDec:2});
 
         $('#mobile_no').keypress(validateNumber);
 
@@ -683,7 +683,7 @@ $(document).ready(function(){
             $('#is_tax_exempt').prop('checked', (data.is_tax_exempt==1?true:false));
             $('#is_bulk').prop('checked', (data.is_bulk==1?true:false));
 
-       
+       $('.numeric').autoNumeric('init',{mDec:2});
          if(data.is_bulk == true){
             $('#child_unit_desc').prop('required',true);
            $('#child_unit_id').prop('required',true);
@@ -976,37 +976,37 @@ $('#is_bulk').prop("checked") ?  _data.push({name : "is_bulk" , value : '1'   })
         '<td>Ideal : </td><td>'+ d.product_ideal+'</td>' +
         '</tr>' +
         '<tr>' +
-        '<td>Purchase Cost : </td><td>'+ accounting.formatNumber(d.purchase_cost,4)+'</td>' +
+        '<td>Purchase Cost : </td><td>'+ accounting.formatNumber(d.purchase_cost,2)+'</td>' +
         '</tr>' +
         '<tr>' +
         '<td>Markup Percent : </td><td>'+ d.markup_percent+'</td>' +
         '</tr>' +
         '<tr>' +
-        '<td>Sale Price : </td><td>'+ accounting.formatNumber(d.sale_price,4)+'</td>' +
+        '<td>Sale Price : </td><td>'+ accounting.formatNumber(d.sale_price,2)+'</td>' +
         '</tr>' +
         '<tr>' +
-        '<td>Whole Sale Price : </td><td>'+ accounting.formatNumber(d.whole_sale,4)+'</td>' +
+        '<td>Whole Sale Price : </td><td>'+ accounting.formatNumber(d.whole_sale,2)+'</td>' +
         '</tr>' +
         '<tr>' +
-        '<td>Retailer Price : </td><td>'+ accounting.formatNumber(d.retailer_price,4)+'</td>' +
+        '<td>Retailer Price : </td><td>'+ accounting.formatNumber(d.retailer_price,2)+'</td>' +
         '</tr>' +
         '<tr>' +
-        '<td>Special Discount Price : </td><td>'+ accounting.formatNumber(d.special_disc,4)+'</td>' +
+        '<td>Special Discount Price : </td><td>'+ accounting.formatNumber(d.special_disc,2)+'</td>' +
         '</tr>' +
         '<tr>' +
-        '<td>Valued Customer Price : </td><td>'+ accounting.formatNumber(d.valued_customer,4)+'</td>' +
+        '<td>Valued Customer Price : </td><td>'+ accounting.formatNumber(d.valued_customer,2)+'</td>' +
         '</tr>' +
         '<tr>' +
-        '<td>Discount Price : </td><td>'+ accounting.formatNumber(d.discounted_price,4)+'</td>' +
+        '<td>Discount Price : </td><td>'+ accounting.formatNumber(d.discounted_price,2)+'</td>' +
         '</tr>' +
         '<tr>' +
-        '<td>Dealer Price : </td><td>'+ accounting.formatNumber(d.dealer_price,4)+'</td>' +
+        '<td>Dealer Price : </td><td>'+ accounting.formatNumber(d.dealer_price,2)+'</td>' +
         '</tr>' +
         '<tr>' +
-        '<td>Distributor Price : </td><td>'+ accounting.formatNumber(d.distributor_price,4)+'</td>' +
+        '<td>Distributor Price : </td><td>'+ accounting.formatNumber(d.distributor_price,2)+'</td>' +
         '</tr>' +
         '<tr>' +
-        '<td>Public Price : </td><td>'+ accounting.formatNumber(d.public_price,4)+'</td>' +
+        '<td>Public Price : </td><td>'+ accounting.formatNumber(d.public_price,2)+'</td>' +
         '</tr>' +
         '</tbody></table><br />';
     };
@@ -1020,7 +1020,7 @@ $('#is_bulk').prop("checked") ?  _data.push({name : "is_bulk" , value : '1'   })
             var markupDecimal=markupPercent/100;
             var newAmount=purchaseAmount*markupDecimal;
             var srpAmount=purchaseAmount+newAmount;
-            $('input[name="sale_price"]').val(accounting.formatNumber(srpAmount,4));
+            $('input[name="sale_price"]').val(accounting.formatNumber(srpAmount,2));
         }
 
     };*/

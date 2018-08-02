@@ -134,16 +134,16 @@
              ?>
                 <tr>
                     <td style="border-bottom: 1px solid gray;"><?php echo $item->product_desc; ?></td>
-                    <td style="text-align:center; border-bottom: 1px solid gray;"><?php echo number_format($item->issue_qty,4); ?></td>
+                    <td style="text-align:center; border-bottom: 1px solid gray;"><?php echo number_format($item->issue_qty,2); ?></td>
                     <td style="text-align:center; border-bottom: 1px solid gray;"></td>
-                    <td style="text-align:center;border-bottom: 1px solid gray;"><?php echo number_format($item->issue_price,4); ?></td>
-                    <td style="text-align:center;border-bottom: 1px solid gray;"><?php echo number_format($item->issue_line_total_price,4); ?></td>
+                    <td style="text-align:center;border-bottom: 1px solid gray;"><?php echo number_format($item->issue_price,2); ?></td>
+                    <td style="text-align:center;border-bottom: 1px solid gray;"><?php echo number_format($item->issue_line_total_price,2); ?></td>
                 </tr>
             <?php } ?>
             <tr>
             <td colspan="3"></td>
                 <td  style="text-align:left;font-weight:bold;  border-bottom: 1px solid gray;">Grand Total</td>
-                <td style="text-align:center;font-weight:bold; border-bottom: 1px solid gray;"><?php echo number_format($grandtotal,4); ?></td>
+                <td style="text-align:center;font-weight:bold; border-bottom: 1px solid gray;"><?php echo number_format($grandtotal,2); ?></td>
             </tr>
     </tbody>
 </table>
