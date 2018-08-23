@@ -381,34 +381,6 @@ background: #616161 !important;color: white !important;border-top: 0.5px solid w
                                 <span class="help-block m-b-none">Account that represents the Credit Entry of the Depreciation Expense</span>
                             </div>
                         </div>
-
-                        <h4><span style="margin-left: 1%"><strong><i class="fa fa-gear"></i> Cash Invoice Account</strong></span></h4>
-                        <div class="form-group">
-                            <label class="col-md-3 control-label"> * Debit Account :</label>
-                            <div class="col-md-7">
-                                <select name="cash_invoice_debit_id"  class="cbo_accounts" data-error-msg="Cash Invoice Debit account is required." required>
-
-                                    <?php foreach($accounts as $account){ ?>
-                                        <option value="<?php echo $account->account_id; ?>" <?php echo ($current_accounts->cash_invoice_debit_id==$account->account_id?'selected':''); ?>><?php echo $account->account_title; ?></option>
-                                    <?php } ?>
-                                </select>
-
-                                <span class="help-block m-b-none">Account that represents the Debit Entry of the Cash Invoice.</span>
-                            </div>
-                        </div>
-<!--                         <div class="form-group">
-                            <label class="col-md-3 control-label"> * Credit Account :</label>
-                            <div class="col-md-7">
-                                <select name="cash_invoice_credit_id"  class="cbo_accounts" data-error-msg="Cash Invoice Credit account is required." required>
-
-                                    <?php foreach($accounts as $account){ ?>
-                                        <option value="<?php echo $account->account_id; ?>" <?php echo ($current_accounts->cash_invoice_credit_id==$account->account_id?'selected':''); ?>><?php echo $account->account_title; ?></option>
-                                    <?php } ?>
-                                </select>
-
-                                <span class="help-block m-b-none">Account that represents the Credit Entry of the Cash Invoice</span>
-                            </div>
-                        </div> -->
                         <hr />
 
                         <div class=" col-lg-offset-3">

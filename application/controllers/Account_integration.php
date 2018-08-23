@@ -121,8 +121,8 @@ class Account_integration extends CORE_Controller
                 $m_integration->cash_invoice_inventory=$this->get_numeric_value($this->input->post('cash_invoice_inventory',TRUE));
                 $m_integration->depreciation_expense_debit_id=$this->input->post('depreciation_expense_debit_id',TRUE);
                 $m_integration->depreciation_expense_credit_id=$this->input->post('depreciation_expense_credit_id',TRUE);
-                $m_integration->cash_invoice_debit_id=$this->input->post('cash_invoice_debit_id',TRUE);
-                $m_integration->cash_invoice_credit_id=$this->input->post('cash_invoice_credit_id',TRUE);              
+                // $m_integration->cash_invoice_debit_id=$this->input->post('cash_invoice_debit_id',TRUE);
+                // $m_integration->cash_invoice_credit_id=$this->input->post('cash_invoice_credit_id',TRUE);              
                 $m_integration->save();
 
                 $response['stat']="success";

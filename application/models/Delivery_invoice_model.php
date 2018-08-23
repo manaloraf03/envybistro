@@ -295,27 +295,9 @@ GROUP BY n.supplier_id HAVING total_balance > 0
         DATE_FORMAT(di.date_due,'%m/%d/%Y')as date_due,
         DATE_FORMAT(di.date_delivered,'%m/%d/%Y')as date_delivered,
 
-        CONCAT_WS(' ',CAST(di.terms as CHAR(250)) ,di.duration) as term_description,
-        IFNULL(count.count,0) as count
+        CONCAT_WS(' ',CAST(di.terms as CHAR(250)) ,di.duration) as term_description
         FROM
         delivery_invoice as di
-         
-        LEFT JOIN 
-        (SELECT 
-        pp.payment_id,
-        pp.is_active AS payment_active,
-        pp.is_deleted AS payment_deleted,
-        pl.dr_invoice_id, 
-
-        count(dr_invoice_id) as count
-        FROM payable_payments_list AS pl
-        LEFT JOIN payable_payments AS pp 
-        ON pp.payment_id = pl.payment_id
-
-        WHERE is_active = TRUE AND is_deleted=FALSE
-        group by pl.dr_invoice_id) as count
-
-        ON count.dr_invoice_id = di.dr_invoice_id
 
         LEFT JOIN suppliers ON suppliers.supplier_id = di.supplier_id
         LEFT JOIN departments ON departments.department_id = di.department_id

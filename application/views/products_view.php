@@ -629,6 +629,7 @@ $(document).ready(function(){
             _cboTax.select2('val',null);
             _cboInventory.select2('val',null);
             _cboMeasurement.select2('val',null);
+            _child_unit_id.select2('val',null);
             _cboCredit.select2('val',0);
             _cboDebit.select2('val',0);
             $('#child_unit_desc').prop('required',false);

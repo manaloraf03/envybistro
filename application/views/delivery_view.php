@@ -1515,17 +1515,11 @@ $(document).ready(function(){
             _selectRowObj=$(this).closest('tr');
             var data=dt.row(_selectRowObj).data();
             _selectedID=data.dr_invoice_id;
-            _count=data.count;
             _is_journal_posted=data.is_journal_posted;
 
             if(_is_journal_posted > 0){
                 showNotification({title:"Error!",stat:"error",msg:"Cannot Edit: Invoice is already Posted in Purchase Journal."});
-            }
-            // else if (_count > 0){
-            //     showNotification({title:"Error!",stat:"error",msg:"Cannot Edit: Invoice is already in use in Record Payment."});
-            // }
-            else
-            {
+            }else {
                 getproduct().done(function(data){
                     products.clear();
                     products.local = data.data;
@@ -1658,30 +1652,12 @@ $(document).ready(function(){
             _selectRowObj=$(this).closest('tr');
             var data=dt.row(_selectRowObj).data();
             _selectedID=data.dr_invoice_id;
-            _count=data.count;
             _is_journal_posted=data.is_journal_posted;
-
             if(_is_journal_posted > 0){
                 showNotification({title:"Error!",stat:"error",msg:"Cannot Delete: Invoice is already Posted in Purchase Journal."});
-            }
-            // else if (_count > 0){
-            //     showNotification({title:"Error!",stat:"error",msg:"Cannot Delete: Invoice is already in use in Record Payment."});
-            // }
-            else
-            {
-
-
-            _selectRowObj=$(this).closest('tr');
-            var data=dt.row(_selectRowObj).data();
-            _selectedID=data.dr_invoice_id;           
-            _count=data.count;
-            if(_count > 0){
-                showNotification({title:"Error!",stat:"error",msg:"Cannot Delete: Invoice is already in use in Record Payment."});
-            } else { 
+            } else {  
                 $('#modal_confirmation').modal('show');
             }
-
-        }
         });
         $('#tbl_items tbody').on('change','select',function(){
         if(changetxn == 'active'){
