@@ -200,6 +200,7 @@ class Cash_invoice extends CORE_Controller
                 $m_invoice->issue_to_department=$this->input->post('issue_to_department',TRUE);
                 $m_invoice->address=$this->input->post('address',TRUE);
                 $m_invoice->remarks=$this->input->post('remarks',TRUE);
+                $m_invoice->salesperson_id=$this->input->post('salesperson_id',TRUE);
                 $m_invoice->contact_no=$this->input->post('contact_no',TRUE);
                 $m_invoice->email_address=$this->input->post('email_address',TRUE);
                 $m_invoice->contact_person=$this->input->post('contact_person',TRUE);
