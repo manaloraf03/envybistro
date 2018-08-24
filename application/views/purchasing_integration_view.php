@@ -128,14 +128,14 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-md-3 control-label"> <b class="required"> * </b> Debit Account :</label>
+                            <label class="col-md-3 control-label"> <b class="required"> * </b> Inventory Account :</label>
                             <div class="col-md-7">
                                 <select name="iss_debit_id" class="cbo_accounts" data-error-msg="Debit Account is required." required>
                                     <?php foreach($accounts as $account){ ?>
                                         <option value="<?php echo $account->account_id; ?>" <?php echo ($current_accounts->iss_debit_id==$account->account_id?'selected':''); ?>  ><?php echo $account->account_title; ?></option>
                                     <?php } ?>
                                 </select>
-                            <span class="help-block m-b-none">Please Choose Debit Account for the Issuance of Inventory</span>
+                            <span class="help-block m-b-none">Please Choose Account for the Issuance of Inventory</span>
                             </div><br>
                             
                         </div>
