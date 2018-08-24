@@ -275,8 +275,7 @@ class Sales_invoice extends CORE_Controller
                     $m_invoice_items->sales_invoice_id=$sales_invoice_id;
                     $m_invoice_items->product_id=$this->get_numeric_value($prod_id[$i]);
                     $m_invoice_items->inv_line_total_after_global=$this->get_numeric_value($inv_line_total_after_global[$i]);
-                    //+$m_invoice_items->inv_qty=$this->get_numeric_value($inv_qty[$i]);
-                    $m_invoice_items->inv_qty=$inv_qty[$i];
+                    $m_invoice_items->inv_qty=$this->get_numeric_value($inv_qty[$i]);
                     $m_invoice_items->inv_price=$this->get_numeric_value($inv_price[$i]);
                     $m_invoice_items->inv_gross=$this->get_numeric_value($inv_gross[$i]);
                     $m_invoice_items->inv_discount=$this->get_numeric_value($inv_discount[$i]);
