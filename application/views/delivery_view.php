@@ -197,11 +197,13 @@
                     <th></th>
                     <th>Invoice #</th>
                     <th>Supplier</th>
+                    <th>Document Type</th>
                     <th>External Ref#</th>
                     <th>PO #</th>
                     <th>Terms</th>
                     <th>Delivered</th>
                     <th><center>Action</center></th>
+                    <th>ID</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -257,7 +259,13 @@
                 </div>
 
                 <div class="col-sm-3 col-sm-offset-4">
-
+                    <b class="required">*</b> <label>Document Type </label>:<br />
+                    <select name="doc_type_id" id="cbo_doc_type" data-error-msg="Document Type is required." required>
+                        <option value="0">[ Create New Document Type ]</option>
+                        <?php foreach($doc_types as $doc_type){ ?>
+                            <option value="<?php echo $doc_type->doc_type_id; ?>"><?php echo $doc_type->doc_type_name; ?></option>
+                        <?php } ?>
+                    </select>
                 </div>
 
             </div>
@@ -492,9 +500,9 @@
 </div>
 
 
-<div id="modal_confirmation" class="modal fade" tabindex="-1" role="dialog"><!--modal-->
+<div id="modal_confirmation" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-sm">
-        <div class="modal-content"><!---content--->
+        <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close"   data-dismiss="modal" aria-hidden="true">X</button>
                 <h4 class="modal-title" style="color:white;"><span id="modal_mode"> </span>Confirm Deletion</h4>
@@ -506,13 +514,13 @@
                 <button id="btn_yes" type="button" class="btn btn-danger" data-dismiss="modal" style="text-transform: capitalize;font-family: Tahoma, Georgia, Serif;">Yes</button>
                 <button id="btn_close" type="button" class="btn btn-default" data-dismiss="modal" style="text-transform: capitalize;font-family: Tahoma, Georgia, Serif;">No</button>
             </div>
-        </div><!---content---->
+        </div>
     </div>
-</div><!---modal-->
+</div>
 
-<div id="modal_po_list" class="modal fade" tabindex="-1" role="dialog"><!--modal-->
+<div id="modal_po_list" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog" style="width: 80%;">
-        <div class="modal-content"><!---content--->
+        <div class="modal-content">
             <div class="modal-header ">
                 <button type="button" class="close"   data-dismiss="modal" aria-hidden="true">X</button>
                 <h4 class="modal-title" style="color: white;"><span id="modal_mode"> </span>Purchase Order</h4>
@@ -544,9 +552,45 @@
 
                 <button type="button" class="btn btn-default" data-dismiss="modal" style="text-transform: none;font-family: Tahoma, Georgia, Serif;">Cancel</button>
             </div>
-        </div><!---content---->
+        </div>
     </div>
-</div><!---modal-->
+</div>
+
+<div id="modal_doc_type" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 id="doc_type_title" class="modal-title" style="color: white;">Document Type</h4>
+            </div>
+            <div class="modal-body">
+                <form id="frm_doc_type" role="form" class="form-horizontal row-border">
+                    <div class="form-group">
+                        <label class="col-md-3 col-md-offset-1 control-label"><strong><B class="required"> * </B> Document Type Name :</strong></label>
+                        <div class="col-md-7">
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="fa fa-tag"></i>
+                                </span>
+                                <input type="text" name="doc_type_name" class="form-control" placeholder="Document Type Name" data-error-msg="Document Type Name is required!" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-3 col-md-offset-1 control-label"><strong><B class="required"> * </B> Document Type Description :</strong></label>
+                        <div class="col-md-7">
+                            <textarea name="doc_type_description" class="form-control" data-error-msg="Document Type Description is required!" placeholder="Description" required></textarea>
+                        </div>
+                    </div><br/>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="btn_save_doc_type" class="btn btn-primary"><span class=""></span>  Save</button>
+                <button id="btn_cancel_doc_type" class="btn btn-default">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div id="modal_new_department" class="modal fade" role="dialog">
     <div class="modal-dialog">
@@ -864,7 +908,7 @@
 
 $(document).ready(function(){
     var dt; var dt_po; var _txnMode; var _selectedID; var _selectRowObj; var _cboSuppliers; var _cboTaxType;
-    var _productType; var _cboDepartments; var _defCostType; var products; var _line_unit; var changetxn ;
+    var _productType; var _cboDepartments; var _defCostType; var products; var _line_unit; var changetxn ; var _cboDocType;
 
     //_defCostType=0;
 
@@ -927,7 +971,7 @@ $(document).ready(function(){
         dt=$('#tbl_delivery_invoice').DataTable({
             "dom": '<"toolbar">frtip',
             "bLengthChange":false,
-            "order": [[ 1, "desc" ]],
+            "order": [[ 9, "desc" ]],
             "language": {
                 "searchPlaceholder":"Search Purchase Invoice"
             },
@@ -942,23 +986,23 @@ $(document).ready(function(){
                 },
                 { targets:[1],data: "dr_invoice_no" },
                 { targets:[2],data: "supplier_name" },
-                { targets:[3],data: "external_ref_no" },
-                { targets:[4],data: "po_no" },
-                { targets:[5],data: "term_description" },
-                { targets:[6],data: "date_delivered" },
+                { targets:[3],data: "doc_type_name" },
+                { targets:[4],data: "external_ref_no" },
+                { targets:[5],data: "po_no" },
+                { targets:[6],data: "term_description" },
+                { targets:[7],data: "date_delivered" },
                 {
-                    targets:[7],
+                    targets:[8],
                     render: function (data, type, full, meta){
                         var btn_edit='<button class="btn btn-primary btn-sm" name="edit_info"  style="margin-left:-15px;" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-pencil"></i> </button>';
                         var btn_trash='<button class="btn btn-red btn-sm" name="remove_info" style="margin-right:0px;" data-toggle="tooltip" data-placement="top" title="Move to trash"><i class="fa fa-trash-o"></i> </button>';
 
                         return '<center>'+btn_edit+'&nbsp;'+btn_trash+'</center>';
                     }
-                }
+                },
+                { targets:[9],data: "dr_invoice_id",visible:false }
             ]
         });
-
-
         var createToolBarButton=function(){
             var _btnNew='<button class="btn btn-primary"  id="btn_new" style="text-transform: capitalize;font-family: Tahoma, Georgia, Serif;" data-toggle="modal" data-target="" data-placement="left" title="Record Purchase Invoice" >'+
                 '<i class="fa fa-plus"></i> Record Purchase Invoice</button>';
@@ -1010,6 +1054,11 @@ $(document).ready(function(){
             if (event.keyCode == 13) {
                 $('.tt-suggestion:first').click();
             }
+        });
+
+        _cboDocType=$("#cbo_doc_type").select2({
+            placeholder: "Please select Document Type.",
+            allowClear: false
         });
 
 
@@ -1244,6 +1293,15 @@ $(document).ready(function(){
 
         });
 
+        _cboDocType.on("select2:select", function (e) {
+            var i=$(this).select2('val');
+            if(i==0){ //new Document Type
+                _cboDocType.select2('val',null);
+                clearFields($('#frm_doc_type'));
+                $('#modal_doc_type').modal('show');
+            }
+        });
+
         _cboSuppliers.on("select2:select", function (e) {
 
             var i=$(this).select2('val');
@@ -1285,6 +1343,7 @@ $(document).ready(function(){
             clearFields($('#frm_deliveries'));
             $('#cbo_departments').select2('val', null);
             $('#cbo_suppliers').select2('val', null);
+            $('#cbo_doc_type').select2('val', null);
             $('#img_user').attr('src','assets/img/anonymous-icon.png');
             $('#td_discount').html('0.0000');
             $('#td_before_tax').html('0.0000');
@@ -1302,7 +1361,6 @@ $(document).ready(function(){
                     if(countproducts > 100){
                     showNotification({title:"Success !",stat:"success",msg:"Products List successfully updated."});
                     }
-
             }).always(function(){  });
 
 
@@ -1486,6 +1544,28 @@ $(document).ready(function(){
             }
         });
 
+
+
+        $('#btn_save_doc_type').click(function(){
+            var btn=$(this);
+            if(validateRequiredFields($('#frm_doc_type'))){
+                var data=$('#frm_doc_type').serializeArray();
+                createDocType().done(function(response){
+                    showNotification(response);
+                    $('#modal_doc_type').modal('hide');
+                    var _doc_type=response.row_added[0];
+                    $('#cbo_doc_type').append('<option value="'+_doc_type.doc_type_id+'" selected>'+_doc_type.doc_type_name+'</option>');
+                    $('#cbo_doc_type').select2('val', _doc_type.doc_type_id);
+                    clearFields($('#frm_doc_type'));
+                }).always(function(){
+                    showSpinningProgress(btn);
+                });
+            }
+        });
+
+
+
+
         $('#btn_create_new_supplier').click(function(){
 
             var btn=$(this);
@@ -1542,6 +1622,7 @@ $(document).ready(function(){
                 $('textarea[name="remarks"]').val(data.remarks);
                 $('#cbo_suppliers').select2('val',data.supplier_id);
                 $('#cbo_departments').select2('val',data.department_id);
+                $('#cbo_doc_type').select2('val',data.doc_type_id);
 
                 $('input,textarea').each(function(){
                     var _elem=$(this);
@@ -1759,6 +1840,12 @@ $(document).ready(function(){
             $('#modal_new_department').modal('hide');
         });
 
+        $('#btn_cancel_doc_type').click(function() {
+            $('#modal_doc_type').modal('hide');
+        });
+
+        
+
         $('#btn_close_new_supplier').click(function() {
             $('#modal_new_supplier').modal('hide');        });
 
@@ -1885,6 +1972,18 @@ $(document).ready(function(){
             "url":"Departments/transaction/create",
             "data":_data,
             "beforeSend": showSpinningProgress($('#btn_create_new_department'))
+        });
+    };
+
+    var createDocType=function(){
+        var _data=$('#frm_doc_type').serializeArray();
+
+        return $.ajax({
+            "dataType":"json",
+            "type":"POST",
+            "url":"Doc_types/transaction/create",
+            "data":_data,
+            "beforeSend": showSpinningProgress($('#btn_save_doc_type'))
         });
     };
 

@@ -109,7 +109,6 @@ class Cash_disbursement extends CORE_Controller
                     "journal_info.is_active=1 AND journal_info.is_deleted=0 AND journal_info.book_type='CDJ' AND journal_info.payment_method_id=2",
                     array(
                         'journal_info.*',
-                        'IF(journal_info.check_status=1,"Yes","No") as check_status',
                         's.supplier_name',
                         'UPPER(journal_info.bank)as bank',
                         'DATE_FORMAT(journal_info.check_date,"%m/%d/%Y")as check_date'

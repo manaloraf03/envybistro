@@ -87,6 +87,7 @@
                                 <li  class="<?php echo (in_array('4-4',$this->session->user_rights)?'':'hidden'); ?>"><a href="units">Unit Management</a></li>
                                 <li  class="<?php echo (in_array('4-5',$this->session->user_rights)?'':'hidden'); ?>"><a href="Locations">Locations Management</a></li>
                                 <li  class="<?php echo (in_array('4-6',$this->session->user_rights)?'':'hidden'); ?>"><a href="Bank">Bank Management</a></li>
+                                <li  class="<?php echo (in_array('4-8',$this->session->user_rights)?'':'hidden'); ?>"><a href="Doc_types">Document Management</a></li>
                                 <!-- <li  class="<?php echo (in_array('4-7',$this->session->user_rights)?'':'hidden'); ?>"><a href="Menu">Menu Management</a></li> -->
                                 <!-- <li  class="<?php //echo (in_array('4-4',$this->session->user_rights)?'':'hidden'); ?>"><a href="Refproducts">Product Types</a></li> -->
                                 <!--<li><a href="brands">Brand Management</a></li>

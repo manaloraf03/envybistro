@@ -332,6 +332,7 @@
                         <tr>
                             <th width="12%">Invoice #</th>
                             <th width="12%">Due Date</th>
+                            <th width="12%">Document Type</th>
                             <th width="12%">Terms</th>
                             <th width="30%">Remarks</th>
                             <th width="12%" style="text-align: right;">Payable</th>

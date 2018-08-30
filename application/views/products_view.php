@@ -746,7 +746,7 @@ $(document).ready(function(){
                 if(_txnMode==="edit"){
                     updateProduct().done(function(response){
                         showNotification(response);
-                        dt.row(_selectRowObj).data(response.row_updated[0]).draw();
+                        dt.row(_selectRowObj).data(response.row_updated[0]).draw(false);
                                     showPanelActive('list');
                     }).always(function(){
                         // $('#modal_create_product').modal('toggle');

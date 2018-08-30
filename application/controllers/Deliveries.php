@@ -18,6 +18,7 @@ class Deliveries extends CORE_Controller
         $this->load->model('Refproduct_model');
         $this->load->model('Users_model');
         $this->load->model('Trans_model');
+        $this->load->model('Doc_types_model');
 
 
     }
@@ -50,6 +51,7 @@ class Deliveries extends CORE_Controller
 
 
         $data['tax_types']=$this->Tax_types_model->get_list('is_deleted=0');
+        $data['doc_types']=$this->Doc_types_model->get_list('is_deleted=0 AND is_active = 1');
 
         // $data['products']=$this->Products_model->get_list(
         //     null, //no id filter
@@ -177,6 +179,7 @@ class Deliveries extends CORE_Controller
                 $m_delivery_invoice->department_id = $this->input->post('department',TRUE);
                 $m_delivery_invoice->remarks = $this->input->post('remarks',TRUE);
                 $m_delivery_invoice->tax_type_id = $this->input->post('tax_type',TRUE);
+                $m_delivery_invoice->doc_type_id = $this->input->post('doc_type_id',TRUE);
                 $m_delivery_invoice->date_delivered = date('Y-m-d',strtotime($this->input->post('date_delivered',TRUE)));
                 $m_delivery_invoice->date_due = date('Y-m-d',strtotime($this->input->post('date_due',TRUE)));
                 $m_delivery_invoice->posted_by_user = $this->session->user_id;
@@ -315,6 +318,7 @@ class Deliveries extends CORE_Controller
                 $m_delivery_invoice->supplier_id=$this->input->post('supplier',TRUE);
                 $m_delivery_invoice->department_id = $this->input->post('department',TRUE);
                 $m_delivery_invoice->remarks=$this->input->post('remarks',TRUE);
+                $m_delivery_invoice->doc_type_id = $this->input->post('doc_type_id',TRUE);
                 $m_delivery_invoice->tax_type_id=$this->input->post('tax_type',TRUE);
                 $m_delivery_invoice->date_delivered=date('Y-m-d',strtotime($this->input->post('date_delivered',TRUE)));
                 $m_delivery_invoice->date_due=date('Y-m-d',strtotime($this->input->post('date_due',TRUE)));
