@@ -120,7 +120,8 @@
 		                    				<table id="tbl_vat_relief" class="table table-striped" width="100%">
 		                    					<thead>
 		                    						<th>Supplier</th>
-		                    						<th>Invoice / OR #</th>
+                                                    <th>Invoice / OR #</th>
+		                    						<th>Document Type</th>
                                                     <th>Reference #</th>                                        
 		                    						<th>Gross</th>
                                                     <th>Non Vatable</th>
@@ -290,29 +291,30 @@
                 "columns": [
                     { "searchable": true,targets:[0],data: "supplier_name" }, 
                     { "searchable": false,targets:[1],data: "dr_invoice_no" },
-                    { "searchable": false,targets:[2],data: "external_ref_no" },
+                    { "searchable": false,targets:[2],data: "doc_type_name" },
+                    { "searchable": false,targets:[3],data: "external_ref_no" },
 
-                    { className: "text-right", "searchable": false,targets:[3],data: "total_after_tax",
+                    { className: "text-right", "searchable": false,targets:[4],data: "total_after_tax",
 	                    render: function(data){ 
                             return accounting.formatNumber(data,2); 
                         }  
                     },               
-                    { className: "text-right", "searchable": false,targets:[4],data: "invoice_non_vat",
+                    { className: "text-right", "searchable": false,targets:[5],data: "invoice_non_vat",
                         render: function(data){ 
                             return accounting.formatNumber(data,2); 
                         }  
                     }, 
-                    { className: "text-right", "searchable": false,targets:[5],data: "dr_taxable",
+                    { className: "text-right", "searchable": false,targets:[6],data: "dr_taxable",
                         render: function(data){ 
                             return accounting.formatNumber(data,2); 
                         }   
                     }, 
-                    { className: "text-right", "searchable": false,targets:[6],data: "total_tax_amount",
+                    { className: "text-right", "searchable": false,targets:[7],data: "total_tax_amount",
                     	render: function(data){ 
                             return accounting.formatNumber(data,2); 
                         }   
                     }, 
-                    { className: "text-right", "searchable": false,targets:[7],data: "net_of_vat", 
+                    { className: "text-right", "searchable": false,targets:[9],data: "net_of_vat", 
                         render: function(data){ 
                             return accounting.formatNumber(data,2); 
                         }  

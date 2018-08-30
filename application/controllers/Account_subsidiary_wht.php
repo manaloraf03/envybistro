@@ -197,8 +197,8 @@
 	                	$excel->getActiveSheet()->setCellValue('F'.$i,number_format($sub->gross,2));
 	                	$excel->getActiveSheet()->setCellValue('G'.$i,number_format($sub->gross,2));
 	                	$excel->getActiveSheet()->setCellValue('H'.$i,number_format(0,2));
-	                	$excel->getActiveSheet()->setCellValue('I'.$i,number_format(0,2));
-	                	$excel->getActiveSheet()->setCellValue('J'.$i,number_format($sub->gross,2));
+	                	$excel->getActiveSheet()->setCellValue('I'.$i,number_format($sub->tax,2));
+	                	$excel->getActiveSheet()->setCellValue('J'.$i,number_format($sub->net,2));
 	                	$excel->getActiveSheet()->setCellValue('K'.$i,$sub->tin_no);
 
 

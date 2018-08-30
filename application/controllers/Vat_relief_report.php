@@ -107,11 +107,12 @@
                	$excel->getActiveSheet()->mergeCells('C'.$i.':D'.$i);
                 $excel->getActiveSheet()->getColumnDimension('A')->setWidth('40');
                 $excel->getActiveSheet()->getColumnDimension('B')->setWidth('30');
-                $excel->getActiveSheet()->getColumnDimension('C')->setWidth('50');
-                $excel->getActiveSheet()->getColumnDimension('D')->setWidth('50');
-                $excel->getActiveSheet()->getColumnDimension('E')->setWidth('50');
-                $excel->getActiveSheet()->getColumnDimension('F')->setWidth('50');
-                $excel->getActiveSheet()->getColumnDimension('G')->setWidth('50');
+                $excel->getActiveSheet()->getColumnDimension('C')->setWidth('20');
+                $excel->getActiveSheet()->getColumnDimension('D')->setWidth('20');
+                $excel->getActiveSheet()->getColumnDimension('E')->setWidth('20');
+                $excel->getActiveSheet()->getColumnDimension('F')->setWidth('20');
+                $excel->getActiveSheet()->getColumnDimension('G')->setWidth('20');
+                $excel->getActiveSheet()->getColumnDimension('H')->setWidth('20');
 
 
                	$sum_invoice_amt=0; 
@@ -122,10 +123,6 @@
                 $sum_of_net_vat=0; 
 
 	    		$i++;
-                $excel->getActiveSheet()
-                        ->getStyle('C'.$i)
-                        ->getAlignment()
-                        ->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
                 $excel->getActiveSheet()
                         ->getStyle('D'.$i)
                         ->getAlignment()
@@ -142,29 +139,35 @@
                         ->getStyle('G'.$i)
                         ->getAlignment()
                         ->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+                $excel->getActiveSheet()
+                        ->getStyle('H'.$i)
+                        ->getAlignment()
+                        ->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
 
 	    		 $excel->getActiveSheet()->setCellValue('A'.$i,'Invoice / OR #');
 	    		 $excel->getActiveSheet()->getStyle('A'.$i)->getFont()->setBold(TRUE);
-                 $excel->getActiveSheet()->setCellValue('B'.$i,'Reference #');
+                 $excel->getActiveSheet()->setCellValue('B'.$i,'Document Type');
                  $excel->getActiveSheet()->getStyle('B'.$i)->getFont()->setBold(TRUE);
-	    		 $excel->getActiveSheet()->setCellValue('C'.$i,'Gross');
+                 $excel->getActiveSheet()->setCellValue('C'.$i,'Reference #');
                  $excel->getActiveSheet()->getStyle('C'.$i)->getFont()->setBold(TRUE);
-	    		 $excel->getActiveSheet()->setCellValue('D'.$i,'Non Vatable');
+	    		 $excel->getActiveSheet()->setCellValue('D'.$i,'Gross');
                  $excel->getActiveSheet()->getStyle('D'.$i)->getFont()->setBold(TRUE);
-	    		 $excel->getActiveSheet()->setCellValue('E'.$i,'Vatable');
+	    		 $excel->getActiveSheet()->setCellValue('E'.$i,'Non Vatable');
                  $excel->getActiveSheet()->getStyle('E'.$i)->getFont()->setBold(TRUE);
-                 $excel->getActiveSheet()->setCellValue('F'.$i,'VAT Input');
+	    		 $excel->getActiveSheet()->setCellValue('F'.$i,'Vatable');
                  $excel->getActiveSheet()->getStyle('F'.$i)->getFont()->setBold(TRUE);
-                 $excel->getActiveSheet()->setCellValue('G'.$i,'Net of VAT');
+                 $excel->getActiveSheet()->setCellValue('G'.$i,'VAT Input');
                  $excel->getActiveSheet()->getStyle('G'.$i)->getFont()->setBold(TRUE);
+                 $excel->getActiveSheet()->setCellValue('H'.$i,'Net of VAT');
+                 $excel->getActiveSheet()->getStyle('H'.$i)->getFont()->setBold(TRUE);
 
 
 	    		 $i++;
                 	foreach ($vat_reliefs as $vat_relief) {
                 		if ($supplier->supplier_id == $vat_relief->supplier_id) {
                 $excel->getActiveSheet()
-                        ->getStyle('C'.$i)
+                        ->getStyle('H'.$i)
                         ->getAlignment()
                         ->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
                 $excel->getActiveSheet()
@@ -189,13 +192,14 @@
                         ->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
                 $excel->getActiveSheet()->setCellValue('A'.$i,$vat_relief->dr_invoice_no);
                 $excel->getActiveSheet()->getStyle('A'.$i)->getFont()->setBold(FALSE);
-                $excel->getActiveSheet()->setCellValue('B'.$i,$vat_relief->external_ref_no);
-                $excel->getActiveSheet()->getStyle('C'.$i.':E'.$i)->getNumberFormat()->setFormatCode('###,##0.00;(###,##0.00)');
-                $excel->getActiveSheet()->setCellValue('C'.$i,number_format($vat_relief->total_after_tax,2));
-                $excel->getActiveSheet()->setCellValue('D'.$i,number_format($vat_relief->invoice_non_vat,2));
-                $excel->getActiveSheet()->setCellValue('E'.$i,number_format($vat_relief->dr_taxable,2));
-                $excel->getActiveSheet()->setCellValue('F'.$i,number_format($vat_relief->total_tax_amount,2));
-                $excel->getActiveSheet()->setCellValue('G'.$i,number_format($vat_relief->net_of_vat,2));
+                $excel->getActiveSheet()->setCellValue('B'.$i,$vat_relief->doc_type_name);
+                $excel->getActiveSheet()->setCellValue('C'.$i,$vat_relief->external_ref_no);
+                $excel->getActiveSheet()->getStyle('D'.$i.':H'.$i)->getNumberFormat()->setFormatCode('###,##0.00;(###,##0.00)');
+                $excel->getActiveSheet()->setCellValue('D'.$i,number_format($vat_relief->total_after_tax,2));
+                $excel->getActiveSheet()->setCellValue('E'.$i,number_format($vat_relief->invoice_non_vat,2));
+                $excel->getActiveSheet()->setCellValue('F'.$i,number_format($vat_relief->dr_taxable,2));
+                $excel->getActiveSheet()->setCellValue('G'.$i,number_format($vat_relief->total_tax_amount,2));
+                $excel->getActiveSheet()->setCellValue('H'.$i,number_format($vat_relief->net_of_vat,2));
 
                 $i++;
     				$sum_invoice_amt += $vat_relief->total_after_tax; 
@@ -204,10 +208,6 @@
                     $sum_of_vat += $vat_relief->total_tax_amount;
     				$sum_of_net_vat += $vat_relief->net_of_vat;
 	    		$excel->getActiveSheet()
-                        ->getStyle('C'.$i)
-                        ->getAlignment()
-                        ->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-                $excel->getActiveSheet()
                         ->getStyle('D'.$i)
                         ->getAlignment()
                         ->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
@@ -223,13 +223,18 @@
                         ->getStyle('G'.$i)
                         ->getAlignment()
                         ->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+                $excel->getActiveSheet()
+                        ->getStyle('H'.$i)
+                        ->getAlignment()
+                        ->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+                $excel->getActiveSheet()->getStyle('D'.$i.':H'.$i)->getNumberFormat()->setFormatCode('###,##0.00;(###,##0.00)');
 	    		$excel->getActiveSheet()->setCellValue('A'.$i,'TOTAL:');
 	    		$excel->getActiveSheet()->getStyle('A'.$i)->getFont()->setBold(TRUE);
-                $excel->getActiveSheet()->setCellValue('C'.$i,number_format($sum_invoice_amt,2));
-                $excel->getActiveSheet()->setCellValue('D'.$i,number_format($sum_net_vat,2));
-                $excel->getActiveSheet()->setCellValue('E'.$i,number_format($sum_vatable_amount,2));
-                $excel->getActiveSheet()->setCellValue('F'.$i,number_format($sum_of_vat,2));
-                $excel->getActiveSheet()->setCellValue('G'.$i,number_format($sum_of_net_vat,2));
+                $excel->getActiveSheet()->setCellValue('D'.$i,number_format($sum_invoice_amt,2));
+                $excel->getActiveSheet()->setCellValue('E'.$i,number_format($sum_net_vat,2));
+                $excel->getActiveSheet()->setCellValue('F'.$i,number_format($sum_vatable_amount,2));
+                $excel->getActiveSheet()->setCellValue('G'.$i,number_format($sum_of_vat,2));
+                $excel->getActiveSheet()->setCellValue('H'.$i,number_format($sum_of_net_vat,2));
 
 
                 	}

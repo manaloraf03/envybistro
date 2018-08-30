@@ -45,9 +45,10 @@
     	<thead>
     		<tr>
 				<td colspan="5"><strong>SUPPLIER : </strong><?php echo $supplier->supplier_name; ?></strong></td>
-				<td colspan="2"><strong> TIN # :</strong> <?php echo $supplier->tin_no; ?></strong></td>
+				<td colspan="3"><strong> TIN # :</strong> <?php echo $supplier->tin_no; ?></strong></td>
 			</tr>
-    		<th width="25%" align="left">Invoice / OR #</th>
+            <th width="15%" align="left">Invoice / OR #</th>
+    		<th width="15%" align="left">Document Type</th>
             <th width="10%" align="left">Reference #</th>
     		<th width="10%" align="right">Invoice Amount</th>
             <th width="10%" align="right">Non Vatable</th>
@@ -68,7 +69,8 @@
     		<?php foreach($vat_reliefs as $vat_relief) { ?>
     			<?php if ($supplier->supplier_id == $vat_relief->supplier_id) { ?>
     			<tr>
-    				<td ><?php echo $vat_relief->dr_invoice_no; ?></td>
+                    <td ><?php echo $vat_relief->dr_invoice_no; ?></td>
+    				<td ><?php echo $vat_relief->doc_type_name; ?></td>
                     <td ><?php echo $vat_relief->external_ref_no; ?></td>
                     <td  align="right"><?php echo number_format($vat_relief->total_after_tax,2); ?></td>
                     <td  align="right"><?php echo number_format($vat_relief->invoice_non_vat,2); ?></td>
@@ -86,7 +88,7 @@
     			<?php } ?>
     		<?php } ?>
 			<tr>
-				<td  colspan=2><strong>TOTAL :</strong></td>
+				<td  colspan="3"><strong>TOTAL :</strong></td>
                 <td  align="right"><?php echo number_format($sum_invoice_amt,2) ?></td>
                 <td  align="right"><?php echo number_format($sum_non_vatable,2) ?></td>
 				<td  align="right"><?php echo number_format($sum_vatable_amount,2) ?></td>

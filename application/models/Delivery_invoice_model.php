@@ -238,6 +238,7 @@ GROUP BY n.supplier_id HAVING total_balance > 0
     function get_vat_relief($startDate,$endDate) {
         $sql="SELECT main.* FROM (      SELECT
             di.*,
+            dt.doc_type_name,
             s.supplier_name,s.tin_no,s.address,
             (IFNULL(dr_taxable.dr_taxable,0) - IFNULL(di.total_tax_amount,0)) AS net_of_vat,
             IFNULL(dr_non_taxable.dr_non_taxable,0) AS invoice_non_vat,
@@ -261,7 +262,7 @@ GROUP BY n.supplier_id HAVING total_balance > 0
                         GROUP BY dr_invoice_id) as dr_non_taxable
 
             ON dr_non_taxable.dr_invoice_id = di.dr_invoice_id
-            
+            LEFT JOIN doc_types dt On dt.doc_type_id = di.doc_type_id
             
             WHERE di.is_deleted=FALSE AND di.is_active=TRUE
             AND di.date_delivered BETWEEN '$startDate' AND '$endDate' 
