@@ -206,7 +206,7 @@
                                                 <td><?php echo $item->unit_name; ?></td>
                                                 <td align="right"><?php echo number_format($item->adjust_non_tax_amount,2); ?></td>
                                                 <td align="right"><?php echo number_format($item->adjust_tax_amount,2); ?></td>
-                                                <td align="right"><?php echo number_format($item->adjust_price,2); ?></td>
+                                                <td align="right"><?php echo number_format($item->adjust_line_total_price,2); ?></td>
                                                 
                                             </tr>
                                             <?php

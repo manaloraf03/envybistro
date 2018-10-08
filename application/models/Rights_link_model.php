@@ -100,7 +100,7 @@ class Rights_link_model extends CORE_Model{
                                           (90,'3','3-4','Cash Invoice'),
                                           (91,'6','6-13','Audit Trail'),
                                           (92,'9','9-23','Vat Relief Version 2'),
-                                          (93,'4','4-8','Document Management')
+                                          (93,'4','4-8','Document Type Management')
 
 
 
