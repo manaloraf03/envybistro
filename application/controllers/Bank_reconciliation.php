@@ -45,9 +45,9 @@
 
 					$startDate=date('Y-m-d',strtotime($this->input->get('sDate',TRUE)));
 					$endDate=date('Y-m-d',strtotime($this->input->get('eDate',TRUE)));
-					$bank_id=$this->input->get('bankid',TRUE);
+					$account_id=$this->input->get('accountid',TRUE);
 
-					$response['data']=$m_journal->get_bank_recon($bank_id,$startDate,$endDate);
+					$response['data']=$m_journal->get_bank_recon($account_id,$startDate,$endDate);
 
 					echo json_encode($response);
 					break;
@@ -107,9 +107,10 @@
 
 					$response['data'] = $m_bankr->get_list(
 						null,
-						'bank_reconciliation.*, CONCAT(ua.user_fname," ", ua.user_lname) AS fullname,b.*',
+						'bank_reconciliation.*, CONCAT(ua.user_fname," ", ua.user_lname) AS fullname,b.*,at.account_title,DATE_FORMAT(bank_reconciliation.date_reconciled,"%m/%d/%Y") as date_reconciled',
 						array(
 							array('user_accounts as ua','ua.user_id=bank_reconciliation.reconciled_by','left'),
+							array('account_titles as at','at.account_id=bank_reconciliation.account_id','left'),
 							array('bank as b','b.bank_id=bank_reconciliation.bank_id','left')
 						)
 					);

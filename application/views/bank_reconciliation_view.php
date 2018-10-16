@@ -164,10 +164,10 @@
                                                 <div class="row">
                                                     <div class="container-fluid">
                                                         <div class="col-xs-12 col-sm-4">
-                                                            <strong>* Bank:</strong><br>
-                                                            <select id="cbo_bank" class="form-control" data-error-msg="Please Select Bank." required>
-                                                                <?php foreach($banks as $bank) { ?>
-                                                                    <option value="<?php echo $bank->bank_id; ?>"><?php echo $bank->bank_name; ?></option>
+                                                        <strong>* Account:</strong><br>
+                                                            <select id="cbo_accounts" class="form-control" name="account_id" data-error-msg="Please Select Account to reconcile." required style="width: 100%!important;">
+                                                                <?php foreach($account_titles as $account_title) { ?>
+                                                                    <option value="<?php echo $account_title->account_id; ?>"><?php echo $account_title->account_title; ?></option>
                                                                 <?php } ?>
                                                             </select>
                                                         </div>
@@ -228,11 +228,12 @@
                                                                 <strong>ACCOUNT TO RECONCILE</strong>
                                                                 <div class="row">
                                                                     <div class="col-sm-8">
-                                                                        <select id="cbo_accounts" class="form-control" name="account_id" data-error-msg="Please Select Account to reconcile." required style="width: 100%!important;">
+                                                                            <input type="text" class="form-control" name="account_to_reconcile" disabled>
+<!--                                                                         <select id="cbo_accounts" class="form-control" name="account_id" data-error-msg="Please Select Account to reconcile." required style="width: 100%!important;">
                                                                             <?php foreach($account_titles as $account_title) { ?>
                                                                                 <option value="<?php echo $account_title->account_id; ?>"><?php echo $account_title->account_title; ?></option>
                                                                             <?php } ?>
-                                                                        </select>
+                                                                        </select> -->
                                                                     </div>
                                                                     <div class="col-sm-4">
                                                                         <input type="text" class="form-control text-right numeric" name="account_balance" value="0" disabled>
@@ -350,8 +351,8 @@
                                     <thead>
                                         <th></th>
                                         <th>Date Reconciled</th>
+                                        <th>Account Title</th>
                                         <th>Reconciled by</th>
-                                        <th>Bank</th>
                                     </thead>
                                     <tbody></tbody>
                                 </table>
@@ -364,7 +365,7 @@
             <footer role="contentinfo">
                 <div class="clearfix">
                     <ul class="list-unstyled list-inline pull-left">
-                        <li><h6 style="margin: 0;">&copy; 2018 - JDEV OFFICE SOLUTION INC.</h6></li>
+                        <li><h6 style="margin: 0;">&copy; 2017 - JDEV IT Business Solutions</h6></li>
                     </ul>
                     <button class="pull-right btn btn-link btn-xs hidden-print" id="back-to-top"><i class="ti ti-arrow-up"></i></button>
                 </div>
@@ -394,7 +395,7 @@
 <script>
 
 $(document).ready(function(){
-    var dt; var dtHistory; var _cboBank; var _cboAccounts;
+    var dt; var dtHistory;  var _cboAccounts;
     var _checkNo; var dtBankReconData;
 
 
@@ -405,11 +406,6 @@ $(document).ready(function(){
             forceParse: false,
             calendarWeeks: true,
             autoclose: true
-        });
-
-        _cboBank=$('#cbo_bank').select2({
-            allowClear: true,
-            placeholder: 'Please Select Bank'
         });
 
         _cboAccounts=$('#cbo_accounts').select2({
@@ -453,12 +449,12 @@ $(document).ready(function(){
                     targets:[1],data: "date_reconciled" 
                 },
                 { 
-                    searchable: true,
-                    targets:[2],data: "fullname" 
+                    searchable: false,
+                    targets:[2],data: "account_title" 
                 },
                 { 
-                    searchable: false,
-                    targets:[3],data: "bank_name" 
+                    searchable: true,
+                    targets:[3],data: "fullname" 
                 }
             ]
         });
@@ -479,7 +475,8 @@ $(document).ready(function(){
                     return $.extend({}, d, {
                         "sDate":$('#startDate').val(),
                         "eDate":$('#endDate').val(),
-                        "bankid":_cboBank.select2('val')
+                        "accountid": _cboAccounts.select2('val')
+
                     });
                 }
             },
@@ -552,6 +549,7 @@ $(document).ready(function(){
         _cboAccounts.on('change', function(){
             var data = _cboAccounts.select2('data');
             $('input[name="current_bank_account"]').val(data[0].text);
+            $('input[name="account_to_reconcile"]').val(data[0].text);
 
             $.ajax({
                 "dataType":"json",
@@ -559,6 +557,8 @@ $(document).ready(function(){
                 "url":"Bank_reconciliation/transaction/get-account-balance?account_id="+_cboAccounts.select2('val')
             }).done(function(response){
                 $('input[name="account_balance"]').val(response.data);
+
+
                 reComputeTotal();
             });
 
@@ -590,12 +590,12 @@ $(document).ready(function(){
             reInitializeNumeric();
         });
 
-        _cboBank.on('select2:select', function(){
+        $('#startDate').on('change',function(){
             dt.destroy();
             reinitializeDataTable();
         });
 
-        $('#startDate').on('change',function(){
+        $('#cbo_accounts').on('change',function(){
             dt.destroy();
             reinitializeDataTable();
         });
@@ -637,11 +637,6 @@ $(document).ready(function(){
 
         if ($('input[name="outstanding_checks"]').val() == '0.00') {
             _msg="Outstanding check must not be zero";
-            showNotification({title: 'Error!', msg: _msg, stat: 'error'});
-            stat=false;
-            return false;
-        } else if (_cboBank.val() == null) {
-            _msg="Bank is required";
             showNotification({title: 'Error!', msg: _msg, stat: 'error'});
             stat=false;
             return false;
@@ -694,7 +689,6 @@ $(document).ready(function(){
             _data.push({name: "journal_id[]", value: data.journal_id });
         });
 
-        _data.push({name: "bank_id", value: _cboBank.select2('val') });
         _data.push({name: "account_id", value: _cboAccounts.select2('val') });
         _data.push({name: "account_balance", value: $('input[name="account_balance"]').val() });
         _data.push({name: "bank_service_charge", value: $('input[name="bank_service_charge"]').val() });

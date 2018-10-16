@@ -12,7 +12,7 @@ class Journal_info_model extends CORE_Model{
         parent::__construct();
     }
 
-    function get_bank_recon($bank_id,$sDate,$eDate) 
+    function get_bank_recon($account_id,$sDate,$eDate) 
     {
         $sql="SELECT 
                 t.*
@@ -26,12 +26,12 @@ class Journal_info_model extends CORE_Model{
                 LEFT JOIN suppliers AS s ON s.supplier_id = ji.supplier_id
                 LEFT JOIN customers AS c ON c.customer_id = ji.customer_id
                 LEFT JOIN departments AS d ON d.department_id = ji.department_id
+                ".($account_id!=null?" INNER JOIN(SELECT DISTINCT journal_id FROM journal_accounts WHERE account_id = $account_id) ja ON ja.journal_id = ji.journal_id ":"")." 
                 WHERE
                     ji.is_deleted = FALSE
                     AND ji.is_active = TRUE
                     AND ji.payment_method_id=2
                     AND ji.is_reconciled = 0
-                    ".($bank_id!=null?" AND ji.bank_id=$bank_id":"")."
                     AND ji.date_txn BETWEEN '$sDate' AND '$eDate') AS t
                 WHERE
                 t.book_type = 'CDJ' OR t.book_type = 'CRJ'";
