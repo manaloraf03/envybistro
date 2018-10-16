@@ -619,6 +619,12 @@ $(document).ready(function(){
             }
         });
 
+        $('#tbl_history tbody').on( 'click', 'tr td.details-control', function () {
+            var tr = $(this).closest('tr');
+            var row = dtHistory.row(tr);
+            var d=row.data();
+            window.open('Bank_reconciliation/transaction/print-history?id='+ d.bank_recon_id+'&type=contentview');
+        } );
 
     }();
 

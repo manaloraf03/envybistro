@@ -15,6 +15,7 @@
 					'Account_title_model',
 					'Bank_reconciliation_model',
 					'Users_model',
+					'Company_model',
 					'Bank_reconciliation_details_model'
 				)
 			);
@@ -140,6 +141,30 @@
 					$response['data']=number_format($account_balance[0]->Balance,2);
 
 					echo json_encode($response);
+					break;
+
+				case 'print-history':
+	                $m_company_info=$this->Company_model;
+	                $company_info=$m_company_info->get_list();
+	                $data['company_info']=$company_info[0];
+					$m_bankr = $this->Bank_reconciliation_model;
+					$id=$this->input->get('id');
+					$data['data'] = $m_bankr->get_list(
+						$id,
+						'bank_reconciliation.*, CONCAT(ua.user_fname," ", ua.user_lname) AS fullname,b.*,at.account_title,DATE_FORMAT(bank_reconciliation.date_reconciled,"%m/%d/%Y") as date_reconciled',
+						array(
+							array('user_accounts as ua','ua.user_id=bank_reconciliation.reconciled_by','left'),
+							array('account_titles as at','at.account_id=bank_reconciliation.account_id','left'),
+							array('bank as b','b.bank_id=bank_reconciliation.bank_id','left')
+						)
+					)[0];
+					$data['outs']=$this->Bank_reconciliation_details_model->get_list('bank_reconciliation_details.check_status = 1 and bank_reconciliation_details.bank_recon_id='.$id,
+						'bank_reconciliation_details.*,journal_info.check_no,DATE_FORMAT(journal_info.check_date,"%M %d") as check_date,journal_info.amount',
+						array(array('journal_info','journal_info.journal_id=bank_reconciliation_details.journal_id','left'))
+
+						);
+
+					$this->load->view('template/bank_recon_content',$data);
 					break;
 			}
 		}
