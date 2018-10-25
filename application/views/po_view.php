@@ -1738,7 +1738,6 @@ $(document).ready(function(){
             before_tax+=parseFloat(accounting.unformat($(oTableItems.net_vat,$(this)).find('input.numeric').val()));
             tax_amount+=parseFloat(accounting.unformat($(oTableItems.vat_input,$(this)).find('input.numeric').val()));
             after_tax+=parseFloat(accounting.unformat($(oTableItems.total_after_global,$(this)).find('input.numeric').val()));
-            alert(gross)
         });
 
         var tbl_summary=$('#tbl_purchase_summary');
