@@ -2055,6 +2055,7 @@ class Templates extends CORE_Controller {
                         'delivery_invoice.total_before_tax',
                         'delivery_invoice.total_tax_amount',
                         'delivery_invoice.total_after_tax',
+                        'delivery_invoice.total_overall_discount',
                         'delivery_invoice.total_overall_discount_amount',
                         'delivery_invoice.total_after_discount',
                         'CONCAT_WS(" ",delivery_invoice.terms,delivery_invoice.duration)as term_description',

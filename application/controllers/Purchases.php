@@ -285,6 +285,7 @@ class Purchases extends CORE_Controller
                     $tax_amount=$this->input->post('tax_amount',TRUE);
                     $non_tax_amount=$this->input->post('non_tax_amount',TRUE);
                     $is_parent=$this->input->post('is_parent',TRUE);
+                    $po_line_total_after_global=$this->input->post('po_line_total_after_global',TRUE);
 
                     for($i=0;$i<count($prod_id);$i++){
 
@@ -296,6 +297,7 @@ class Purchases extends CORE_Controller
                         $m_po_items->po_line_total_discount=$this->get_numeric_value($po_line_total_discount[$i]);
                         $m_po_items->po_tax_rate=$this->get_numeric_value($po_tax_rate[$i]);
                         $m_po_items->po_line_total=$this->get_numeric_value($po_line_total[$i]);
+                        $m_po_items->po_line_total_after_global=$this->get_numeric_value($po_line_total_after_global[$i]);
                         $m_po_items->tax_amount=$this->get_numeric_value($tax_amount[$i]);
                         $m_po_items->non_tax_amount=$this->get_numeric_value($non_tax_amount[$i]);
                         $m_po_items->is_parent=$this->get_numeric_value($is_parent[$i]);
@@ -378,6 +380,7 @@ class Purchases extends CORE_Controller
                     $tax_amount=$this->input->post('tax_amount',TRUE);
                     $non_tax_amount=$this->input->post('non_tax_amount',TRUE);
                     $is_parent=$this->input->post('is_parent',TRUE);
+                    $po_line_total_after_global=$this->input->post('po_line_total_after_global',TRUE);
                     for($i=0;$i<count($prod_id);$i++){
 
                         $m_po_items->purchase_order_id=$po_id;
@@ -386,6 +389,7 @@ class Purchases extends CORE_Controller
                         $m_po_items->po_price=$this->get_numeric_value($po_price[$i]);
                         $m_po_items->po_discount=$this->get_numeric_value($po_discount[$i]);
                         $m_po_items->po_line_total_discount=$this->get_numeric_value($po_line_total_discount[$i]);
+                        $m_po_items->po_line_total_after_global=$this->get_numeric_value($po_line_total_after_global[$i]);
                         $m_po_items->po_tax_rate=$this->get_numeric_value($po_tax_rate[$i]);
                         $m_po_items->po_line_total=$this->get_numeric_value($po_line_total[$i]);
                         $m_po_items->tax_amount=$this->get_numeric_value($tax_amount[$i]);
