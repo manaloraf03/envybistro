@@ -159,6 +159,16 @@
                                                         </select>
                                                     </div>
                                                 </div>
+                                                <div id="show_crj">
+                                                    <div class="col-xs-12 col-md-4">
+                                                        <strong>* Customer :</strong><br>
+                                                        <select id="cbo_customer" name="particular_id" class="show-tick form-control" data-live-search="true" data-error-msg="Customer is required!">
+                                                            <?php foreach($customers as $customer){ ?>
+                                                                <option value='C-<?php echo $customer->customer_id; ?>'><?php echo $customer->customer_name; ?></option>
+                                                            <?php } ?>
+                                                        </select>
+                                                    </div>
+                                                </div>
                                             </div><br>
                                             <div class="container-fluid group-box">
                                                 <div style="width: 100%;">
@@ -299,6 +309,7 @@
                             <select id="cboBookType" class="form-control">
                                 <option value="GJE">General Journal</option>
                                 <option value="CDJ">Cash Disbursement Journal</option>
+                                <option value="CRJ">Cash Receipt Journal</option>
                             </select>
                         </div>
                         <div class="modal-footer">
@@ -380,9 +391,13 @@ $(document).ready(function(){
         $('#cbo_supplier').select2({
             placeholder: "Select Supplier"
         });
+        $('#cbo_customer').select2({
+            placeholder: "Select Customer"
+        });
 
         $('#cbo_particulars').select2('val',null);
         $('#cbo_supplier').select2('val',null);
+        $('#cbo_customer').select2('val',null);
 
         dt=$('#tbl_recurring_templates').DataTable({
             "dom":'<"toolbar">frtip',
@@ -479,9 +494,11 @@ $(document).ready(function(){
 
             if (data.book_type == 'CDJ') {
                 $('#cbo_supplier').select2('val',data.particular_id);
-            } else {
+            } else if (data.book_type == 'GJE'){
                 $('#cbo_particulars').select2('val',data.particular_id);
-            }
+            }else if (data.book_type == 'CRJ'){
+                $('#cbo_customer').select2('val',data.particular_id);
+            }  
 
             bookType = data.book_type;
 
@@ -579,7 +596,7 @@ $(document).ready(function(){
                         showNotification(response);
                         $('#btn_save_entry').attr('disabled',true);
                         if(response.stat=="success"){
-                            dt.row(_selectRowObj).data(response.row_updated[0]).draw();
+                            dt.row(_selectRowObj).data(response.row_updated[0]).draw(false);
                             clearFields($('#frm_journal'));
                             showList(true);
                             $('#btn_save_entry').attr('disabled',false);
@@ -706,16 +723,30 @@ $(document).ready(function(){
     function showBookType(bt) {
         if (bt == 'GJE') {
             $('#show_gj').show();
+            $('#show_crj').hide();
             $('#show_cdj').hide();
             $('.h2-panel-heading').html(' Recurring Template (General Journal)');
                 $('#cbo_particulars').prop('required',true);
                 $('#cbo_supplier').prop('required',false);
-        } else {
+                $('#cbo_customer').prop('required',false);
+
+        } else if (bt == 'CDJ'){
             $('#show_gj').hide();
+            $('#show_crj').hide();
             $('#show_cdj').show();
             $('.h2-panel-heading').html(' Recurring Template (Cash Disbursement)');
                 $('#cbo_particulars').prop('required',false);
                 $('#cbo_supplier').prop('required',true);
+                $('#cbo_customer').prop('required',false);
+
+        } else if (bt == 'CRJ'){
+            $('#show_gj').hide();
+            $('#show_cdj').hide();
+            $('#show_crj').show();
+            $('.h2-panel-heading').html(' Recurring Template (Cash Receipt)');
+                $('#cbo_particulars').prop('required',false);
+                $('#cbo_supplier').prop('required',false);
+                $('#cbo_customer').prop('required',true);
         }
     };
 

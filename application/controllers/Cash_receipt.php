@@ -22,7 +22,9 @@ class Cash_receipt extends CORE_Controller
                 'Users_model',
                 'Accounting_period_model',
                 'Cash_invoice_model',
-                'Trans_model'
+                'Trans_model',
+                'Journal_template_info_model',
+                'Journal_template_entry_model'
             )
         );
 
@@ -66,6 +68,41 @@ class Cash_receipt extends CORE_Controller
                 $data['entries']=$m_journal_accounts->get_list('journal_accounts.journal_id='.$journal_id);
 
                 $this->load->view('template/journal_entries', $data);
+                break;
+
+            case 'create-template':
+                $m_journal_temp_info=$this->Journal_template_info_model;
+                $m_journal_temp_entry=$this->Journal_template_entry_model;
+
+                $m_journal_temp_info->customer_id=$this->input->post('customer_id',TRUE);
+                $m_journal_temp_info->template_code=$this->input->post('template_code',TRUE);
+                $m_journal_temp_info->template_description=$this->input->post('template_description',TRUE);
+                $m_journal_temp_info->remarks=$this->input->post('remarks',TRUE);
+                $m_journal_temp_info->book_type=$this->input->post('book_type',TRUE);
+                $m_journal_temp_info->posted_by=$this->session->user_id;
+                $m_journal_temp_info->save();
+
+                $journal_template_id=$m_journal_temp_info->last_insert_id();
+                $accounts=$this->input->post('accounts',TRUE);
+                $memos=$this->input->post('memo',TRUE);
+                $dr_amounts=$this->input->post('dr_amount',TRUE);
+                $cr_amounts=$this->input->post('cr_amount',TRUE);
+                $department_id_line=$this->input->post('department_id_line',TRUE);
+
+                for($i=0;$i<=count($accounts)-1;$i++) {
+                    $m_journal_temp_entry->template_id=$journal_template_id;
+                    $m_journal_temp_entry->account_id=$accounts[$i];
+                    $m_journal_temp_entry->memo=$memos[$i];
+                    $m_journal_temp_entry->dr_amount=$this->get_numeric_value($dr_amounts[$i]);
+                    $m_journal_temp_entry->cr_amount=$this->get_numeric_value($cr_amounts[$i]);
+                    $m_journal_temp_entry->department_id=$this->get_numeric_value($department_id_line[$i]);
+                    $m_journal_temp_entry->save();
+                }
+
+                $response['stat']='success';
+                $response['title']='Success!';
+                $response['msg']='Template successfully saved';
+                echo json_encode($response);
                 break;
             case 'create' :
                 $m_journal=$this->Journal_info_model;

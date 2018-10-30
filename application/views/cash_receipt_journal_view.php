@@ -281,7 +281,7 @@
             <div class="panel-body" style="min-height: 400px;">
             <h2 class="h2-panel-heading">Cash Receipt Journal</h2><hr />
                 <div>
-
+        <button id="btn_browse_recurring" class="btn btn-primary" style="margin-bottom: 15px; text-transform: capitalize;"><i class="fa fa-folder-open-o"></i> Browse Recurring Template</button>
 
                     <form id="frm_journal" role="form" class="form-horizontal">
 
@@ -480,7 +480,13 @@
                         <textarea name="remarks" class="form-control col-lg-12"></textarea>
 
                     </form>
-
+            <div id="div_check">
+                <input type="checkbox" name="chk_save" id="chk_save">&nbsp;&nbsp;<label for="chk_save"><strong>Save as Template</strong></label>
+            </div>
+            <div id="div_no_check">
+                <br>
+                <br>
+            </div>
                     <br /><br /><hr />
 
                     <div class="row">
@@ -776,7 +782,31 @@
 
 
 
-
+<div id="modal_recurring" class="modal fade" role="dialog">
+    <div class="modal-dialog" style="width: 70%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" style="color: white;"><i class="fa fa-folder-open-o"></i>  Browse Recurring Templates</h4>
+            </div>
+            <div class="modal-body">
+            <div class="container-fluid">
+                <table id="tbl_recurring" class="table table-striped" width="100%">
+                    <thead>
+                        <th>Template Code</th>
+                        <th>Template Description</th>
+                        <th>Payee / Particular</th>
+                        <th><center>Action</center></th>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btn_cancel_browsing" class="btn btn-default">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 
@@ -811,7 +841,7 @@
 <script>
 $(document).ready(function(){
     var _txnMode; var _cboCustomers; var _cboMethods; var _selectRowObj; var _selectedID; var _txnMode;
-    var dtReview; var _cbo_paymentMethod; var _cbo_departments; var dt; var _cbo_banks; var _cbo_accounttype;
+    var dtReview; var _cbo_paymentMethod; var _cbo_departments; var dt; var _cbo_banks; var _cbo_accounttype; var dtRecurring;
 
 
     var oTBJournal={
@@ -824,14 +854,38 @@ $(document).ready(function(){
         "cr" : "td:eq(2)"
     };
 
+    var initializeRecurringTable=function(){
+        dtRecurring=$('#tbl_recurring').DataTable({
+            "bLengthChange": false,
+            "bPaginate":true, 
+            language: { 
+                "searchPlaceholder": "Search Template" 
+            },
+            "ajax" : {
+                "url":"Recurring_template/transaction/list-template?type=CRJ",
+                "bDestroy": true
+            },
+            "columns": [
+                { targets:[0],data: "template_code" },
+                { targets:[1],data: "template_description" },
+                { targets:[2],data: "particular" },
+                {
+                    targets:[3],
+                    render: function (data, type, full, meta){
+                        var btn_recurring='<button class="btn btn-success" name="accept_rt"  style="margin-left:-15px;" data-toggle="tooltip" data-placement="top" title="Accept Recurring"><i class="fa fa-check"></i></button>';
 
+                        return '<center>'+btn_recurring+'</center>';
+                    }
+                }
+            ]
+        });
+    };
 
 
 
 
     var initializeControls=function(){
-
-
+         initializeRecurringTable();
         dt=$('#tbl_accounts_receivable').DataTable({
             "dom": '<"toolbar">frtip',
             "bLengthChange":false,
@@ -1153,7 +1207,8 @@ $(document).ready(function(){
 
         $('#btn_new').click(function(){
             _txnMode="new";
-
+            $('#div_check').show();
+            $('#div_no_check').hide();
             reInitializeDropDownAccounts($('#tbl_entries'),true);
             $('#date_txn').datepicker('setDate','today');
             $('#check_date').datepicker('setDate','today');
@@ -1169,8 +1224,43 @@ $(document).ready(function(){
             showList(false);
 
         });
+        $('#tbl_recurring tbody').on('click', 'button[name="accept_rt"]', function() {
+            _selectRowObj=$(this).closest('tr');
+            var data=dtRecurring.row(_selectRowObj).data();
+            _selectedID=data.template_id;
 
+            $.ajax({
+                url: 'Recurring_template/transaction/get-entries?id=' + _selectedID,
+                type: 'GET',
+                cache: false,
+                dataType: 'html',
+                processData: false,
+                contentType: false,
+                beforeSend: function () {
+                    $('#tbl_entries > tbody').html('<tr><td align="center" colspan="4"><br /><img src="assets/img/loader/ajax-loader-sm.gif" /><br /><br /></td></tr>');
+                }
+            }).done(function(response){
+                $('#tbl_entries > tbody').html(response);
+                reInitializeDropDownAccounts($('#tbl_entries'),false);
+                reInitializeNumeric();
+                reComputeTotals($('#tbl_entries'));
+            });
 
+            _cboCustomers.select2('val',data.customer_id);
+
+            $('#modal_recurring').modal('hide');
+
+        });
+
+        $('#btn_browse_recurring').on('click', function(){
+            dtRecurring.destroy();
+            initializeRecurringTable();
+            $('#modal_recurring').modal('show');
+        });
+
+        $('#btn_cancel_browsing').on('click',function(){
+            $('#modal_recurring').modal('hide');    
+        });
 
         //add account button on table
         $('#tbl_entries').on('click','button.add_account',function(){
@@ -1230,6 +1320,9 @@ $(document).ready(function(){
 
         $('#tbl_accounts_receivable').on('click','button[name="edit_info"]',function(){
             _txnMode="edit";
+
+            $('#div_check').hide();
+            $('#div_no_check').show();
 
             _selectRowObj=$(this).closest('tr');
             var data=dt.row(_selectRowObj).data();
@@ -1346,6 +1439,13 @@ $(document).ready(function(){
 
             if(validateRequiredFields(f)){
                 if(_txnMode=="new"){
+
+                    if ($('input[name="chk_save"]').is(':checked')) {
+                        createTemplate().done(function(response){
+                            showNotification(response);
+                        });
+                    }
+
                     createJournal().done(function(response){
                         showNotification(response);
                         if(response.stat=="success"){
@@ -1505,8 +1605,18 @@ $(document).ready(function(){
             "beforeSend": showSpinningProgress($('#btn_save'))
         });
     };
-
-
+    var createTemplate=function(){
+        var _data=$('#frm_journal').serializeArray();
+        _data.push({ name:'template_code', value:$("#cbo_customers option:selected").text() });
+        _data.push({ name:'book_type', value: 'CRJ'});
+        
+        return $.ajax({ 
+            "dataType":"json",
+            "type":"POST",
+            "url":"Cash_receipt/transaction/create-template",
+            "data":_data
+        });
+    };
     var showList=function(b){
         if(b){
             $('#div_payable_list').show();
