@@ -187,6 +187,7 @@
                     <th>Status</th>
                     <th>Sent</th>
                     <th><center>Action</center></th>
+                    <th><center>ID</center></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -802,7 +803,7 @@ $(document).ready(function(){
             "dom": '<"toolbar">frtip',
             "bLengthChange":false,
             "pageLength":15,
-            "order": [[ 2, "desc" ]],
+            "order": [[ 9, "desc" ]],
             "ajax" : "Purchases/transaction/list",
             "columns": [
                 {
@@ -857,6 +858,8 @@ $(document).ready(function(){
                         return '<center>'+btn_edit+'&nbsp;'+btn_message+'&nbsp;'+btn_trash+'</center>';
                     }
                 },
+                { targets:[9],data: "purchase_order_id",visible:false}
+
             ]
         });
 
