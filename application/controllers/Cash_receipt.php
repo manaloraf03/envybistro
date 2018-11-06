@@ -348,6 +348,7 @@ class Cash_receipt extends CORE_Controller
                 }
 
                 //mark Items as deleted
+                $m_journal->cancel_reason =$this->input->post('cancel_reason');
                 $m_journal->set('date_cancelled','NOW()'); //treat NOW() as function and not string
                 $m_journal->cancelled_by_user=$this->session->user_id;//user that cancelled the record
                 $m_journal->set('is_active','NOT is_active');
@@ -368,7 +369,7 @@ class Cash_receipt extends CORE_Controller
                 }else if($journal_txn_no[0]->is_active ==FALSE){
                 $m_trans->trans_key_id=4; //CRUD
                 $m_trans->trans_type_id=6; // TRANS TYPE
-                $m_trans->trans_log='Cancelled Cash Receipt Journal Entry : '.$journal_txn_no[0]->txn_no;
+                $m_trans->trans_log='Cancelled Cash Receipt Journal Entry: '.$journal_txn_no[0]->txn_no.' with reason : '.$this->input->post('cancel_reason');
                 }
                 $m_trans->save();
 

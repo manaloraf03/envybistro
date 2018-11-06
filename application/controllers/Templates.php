@@ -1685,6 +1685,7 @@ class Templates extends CORE_Controller {
 
                     array(
                         'journal_info.*',
+                        'journal_info.is_active as cancelled',
                         'customers.customer_name',
                         'customers.address',
                         'customers.email_address',
@@ -1783,6 +1784,7 @@ class Templates extends CORE_Controller {
                         'journal_info.check_no',
                         'journal_info.check_date',
                         'journal_info.amount',
+                        'journal_info.cancel_reason',
                         'CONCAT_WS(" ",IFNULL(customers.customer_name,""),IFNULL(suppliers.supplier_name,"")) as particular',
                         'CONCAT_WS(" ",user_accounts.user_fname,user_accounts.user_lname)as posted_by'
                     ),

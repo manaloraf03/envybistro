@@ -619,7 +619,7 @@
 
 <div id="modal_confirmation" class="modal fade" tabindex="-1" role="dialog"><!--modal-->
     <div class="modal-dialog modal-sm">
-        <div class="modal-content"><!---content--->
+        <div class="modal-content">
             <div class="modal-header ">
                 <button type="button" class="close"   data-dismiss="modal" aria-hidden="true">X</button>
                 <h4 class="modal-title" style="color: white;"><span id="modal_mode"> </span>Confirm Cancellation</h4>
@@ -628,15 +628,17 @@
 
             <div class="modal-body">
                 <p id="modal-body-message">Are you sure you want to cancel this journal?</p>
+                <b class="required">* </b>Reason for Cancellation:
+                <textarea id="cancel_reason" class="form-control"></textarea>
             </div>
 
             <div class="modal-footer">
-                <button id="btn_yes" type="button" class="btn btn-danger" data-dismiss="modal" style="text-transform: capitalize;font-family: Tahoma, Georgia, Serif;">Yes</button>
+                <button id="btn_yes" type="button" class="btn btn-danger" style="text-transform: capitalize;font-family: Tahoma, Georgia, Serif;">Yes</button>
                 <button id="btn_close" type="button" class="btn btn-default" data-dismiss="modal" style="text-transform: capitalize;font-family: Tahoma, Georgia, Serif;">No</button>
             </div>
-        </div><!---content---->
+        </div>
     </div>
-</div><!---modal-->
+</div>
 
 <div id="modal_print_check_list_option" class="modal fade" tabindex="-1" role="dialog"><!--modal-->
     <div class="modal-dialog modal-md">
@@ -1643,7 +1645,13 @@ $(document).ready(function(){
             _selectRowObj=$(this).closest('tr');
             var data=dt.row(_selectRowObj).data();
             _selectedID=data.journal_id;
-            $('#modal_confirmation').modal('show');
+            if(data.is_active == '0' || data.is_active == 0){
+                    showNotification({"title":"Error!","stat":"error","msg":"Transaction already cancelled."});
+                    return;
+            }else{
+                $('#cancel_reason').val('');
+                $('#modal_confirmation').modal('show');
+            }
         });
 
         $('#btn_print_list').click(function(){
@@ -1651,14 +1659,20 @@ $(document).ready(function(){
         });
 
         $('#btn_yes').click(function(){
+            if($('#cancel_reason').val() == '' ||$('#cancel_reason').val() == null){
+                    showNotification({"title":"Error!","stat":"error","msg":"Please indicate the reason for cancellation."});
+                    $('#cancel_reason').focus();
+                    return;
+            }
             $.ajax({
                 "dataType":"json",
                 "type":"POST",
                 "url":"Cash_disbursement/transaction/cancel",
-                "data":{journal_id : _selectedID},
+                "data":{journal_id : _selectedID,cancel_reason: $('#cancel_reason').val()},
                 "success": function(response){
                     showNotification(response);
                     if(response.stat=="success"){
+                        $('#modal_confirmation').modal('hide');
                         dt.row(_selectRowObj).data(response.row_updated[0]).draw();
                     }
 

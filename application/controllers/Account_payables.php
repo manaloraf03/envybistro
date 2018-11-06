@@ -229,6 +229,7 @@ class Account_payables extends CORE_Controller
                 //check if the transaction is cancelled or not
                 $is_active=$m_journal->get_list('is_active>0 AND journal_id='.$journal_id);
                 if(count($is_active)>0) {
+                    $m_journal->cancel_reason =$this->input->post('cancel_reason');
                     $m_journal->is_active=0;
                     $m_journal->cancelled_by_user=$this->session->user_id;//user that cancelled the record
                     $m_journal->modify($journal_id);
@@ -240,7 +241,7 @@ class Account_payables extends CORE_Controller
                     $m_trans->set('trans_date','NOW()');
                     $m_trans->trans_key_id=4; //CRUD
                     $m_trans->trans_type_id=3; // TRANS TYPE
-                    $m_trans->trans_log='Cancelled Purchase Journal Entry : '.$journal_txn_no[0]->txn_no;
+                    $m_trans->trans_log='Cancelled Purchase Journal Entry : '.$journal_txn_no[0]->txn_no.' with reason : '.$this->input->post('cancel_reason');
                     $m_trans->save();
 
                     $response['title']='Cancelled!';

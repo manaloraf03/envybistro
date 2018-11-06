@@ -61,6 +61,9 @@
     </style>
 </head>
 <body>
+<?php if($journal_info->is_active == 0){ ?>
+<span style="font-size: 14px;font-weight: bold;"> Reason for Cancellation : <?php echo $journal_info->cancel_reason; ?></span> 
+<?php } ?>
     <table width="100%">
         <tr>
             <td width="10%"><img src="<?php echo base_url().$company_info->logo_path; ?>" style="height: 90px; width: 120px; text-align: left;"></td>
