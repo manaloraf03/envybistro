@@ -30,7 +30,7 @@ class receivable_payments extends CORE_Controller
 
 
         //data required by active view
-        $data['customers']=$this->Customers_model->get_list();
+        $data['customers']=$this->Customers_model->get_list(array('customers.is_active'=>TRUE,'customers.is_deleted'=>FALSE));
         $data['methods']=$this->Payment_method_model->get_list(array('is_active'=>TRUE,'is_deleted'=>FALSE));
         $data['departments']=$this->Departments_model->get_list(array('is_active'=>TRUE,'is_deleted'=>FALSE));
 

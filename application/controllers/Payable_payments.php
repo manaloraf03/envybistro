@@ -28,7 +28,7 @@ class Payable_payments extends CORE_Controller
         $data['_top_navigation'] = $this->load->view('template/elements/top_navigation', '', TRUE);
 
         //data required by active view
-        $data['suppliers']=$this->Suppliers_model->get_list();
+        $data['suppliers']=$this->Suppliers_model->get_list(array('suppliers.is_deleted'=>FALSE));
         $data['methods']=$this->Payment_method_model->get_list(array('is_active'=>TRUE,'is_deleted'=>FALSE));
         $data['departments']=$this->Departments_model->get_list(array('is_active'=>TRUE,'is_deleted'=>FALSE));
 

@@ -42,7 +42,7 @@ class Deliveries extends CORE_Controller
 
         //data required by active view
         $data['suppliers']=$this->Suppliers_model->get_list(
-            null,
+            array('suppliers.is_deleted'=>FALSE),
             'suppliers.*,IFNULL(tax_types.tax_rate,0)as tax_rate',
             array(
                 array('tax_types','tax_types.tax_type_id=suppliers.tax_type_id','left')
