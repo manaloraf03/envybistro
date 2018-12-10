@@ -408,14 +408,16 @@ class Cash_receipt extends CORE_Controller
                 'journal_info.amount',
                 'journal_info.bank_id',
                 'customers.customer_name as particular',
-                'CONCAT_WS(" ",user_accounts.user_fname,user_accounts.user_lname)as posted_by'
+                'CONCAT_WS(" ",user_accounts.user_fname,user_accounts.user_lname)as posted_by',
+                'SUM(journal_accounts.dr_amount) as journal_total'
             ),
             array(
                 array('customers','customers.customer_id=journal_info.customer_id','left'),
                 array('user_accounts','user_accounts.user_id=journal_info.created_by_user','left'),
                 array('payment_methods','payment_methods.payment_method_id=journal_info.payment_method_id','left'),
-                array('departments','departments.department_id=journal_info.department_id','left')
-            )
+                array('departments','departments.department_id=journal_info.department_id','left'),
+                array('journal_accounts','journal_accounts.journal_id=journal_info.journal_id','left')
+            ),null,'journal_accounts.journal_id'
         );
     }
 

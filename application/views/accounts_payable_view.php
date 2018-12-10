@@ -132,6 +132,9 @@
             width: 100% !important;
         }
 
+        .right-align{
+            text-align: right;
+        }
 
     </style>
 
@@ -182,6 +185,7 @@
                                             <th></th>
                                             <th>Invoice #</th>
                                             <th>Vendor</th>
+                                            <th>Amount</th>
                                             <th>Terms</th>
                                             <th>Delivered</th>
                                             <th>Remarks</th>
@@ -211,6 +215,7 @@
                                                 <th></th>
                                                 <th>Txn #</th>
                                                 <th>Particular</th>
+                                                <th>Amount</th>
                                                 <th>Remarks</th>
                                                 <th>Txn Date</th>
                                                 <th>Posted</th>
@@ -769,7 +774,7 @@
             dt=$('#tbl_account_payables').DataTable({
                 "dom": '<"toolbar">frtip',
                 "bLengthChange":false,
-                    "order": [[ 8, "desc" ]],
+                    "order": [[ 9, "desc" ]],
                 "ajax" : "Account_payables/transaction/list",
                 "columns": [
                     {
@@ -781,11 +786,12 @@
                     },
                     { targets:[1],data: "txn_no" },
                     { targets:[2],data: "particular" },
-                    { targets:[3],data: "remarks" },
-                    { targets:[4],data: "date_txn" },
-                    { targets:[5],data: "posted_by" },
+                    {sClass:"right-align", targets:[3],data: "journal_total", render: $.fn.dataTable.render.number( ',', '.', 2) },
+                    { targets:[4],data: "remarks" },
+                    { targets:[5],data: "date_txn" },
+                    { targets:[6],data: "posted_by" },
                     {
-                        targets:[6],data: null,
+                        targets:[7],data: null,
                         render: function (data, type, full, meta){
                             var _attribute='';
                             //console.log(data.is_email_sent);
@@ -801,7 +807,7 @@
 
                     },
                     {
-                        targets:[7],
+                        targets:[8],
                         render: function (data, type, full, meta){
                             var btn_edit='<button class="btn btn-primary btn-sm" name="edit_info" id="edit_purchase_journal" style="margin-left:-15px;" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-pencil"></i> </button>';
                             var btn_cancel='<button class="btn btn-red btn-sm" name="cancel_info" id="cancel_purchase_journal" style="margin-right:0px;" data-toggle="tooltip" data-placement="top" title="Cancel and Open Journal"><i class="fa fa-times"></i> </button>';
@@ -811,7 +817,7 @@
                             return '<center>'+btn_cancel+'</center>';
                         }
                     },
-                { visible:false, targets:[8],data: "journal_id" }
+                { visible:false, targets:[9],data: "journal_id" }
                 ]
             });
 
@@ -829,9 +835,10 @@
                     },
                     { targets:[1],data: "dr_invoice_no" },
                     { targets:[2],data: "supplier_name" },
-                    { targets:[3],data: "term_description" },
-                    { targets:[4],data: "date_delivered" },
-                    { targets:[5],data: "remarks" }
+                    {sClass:"right-align", targets:[3],data: "total_after_discount", render: $.fn.dataTable.render.number( ',', '.', 2) },
+                    { targets:[4],data: "term_description" },
+                    { targets:[5],data: "date_delivered" },
+                    { targets:[6],data: "remarks" }
                 ]
             });
 

@@ -99,6 +99,7 @@
                                 </div>
                                 <br /><br /><br />
                                 <h4><span style="margin-left: 1%"><strong><i class="fa fa-gear"></i> Journal Entries</strong></span></h4>
+                                <i style="margin-left: 5px;">Amounts herein comes from the Adjustments module which products are for posting in Accounting.</i>
                                 <hr />
                                 <table id="tbl_entries_for_review_adj<?php echo $adjustment_info->adjustment_id; ?>" class="table table-striped" style="width: 100% !important;">
                                     <thead>

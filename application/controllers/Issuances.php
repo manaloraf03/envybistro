@@ -83,6 +83,7 @@ class Issuances extends CORE_Controller
                     'issuance_info.remarks',
                     'issuance_info.issued_to_person',
                     'issuance_info.date_created',
+                    'issuance_info.total_after_tax',
                     'DATE_FORMAT(issuance_info.date_issued,"%m/%d/%Y") as date_issued',
                     'issuance_info.terms',
                     'departments.department_id',

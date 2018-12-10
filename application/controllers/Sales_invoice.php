@@ -595,6 +595,7 @@ class Sales_invoice extends CORE_Controller
                     array(
                         'sales_invoice.sales_invoice_id',
                         'sales_invoice.sales_inv_no',
+                        'sales_invoice.total_after_tax',
                         'sales_invoice.remarks',
                         'DATE_FORMAT(sales_invoice.date_invoice,"%m/%d/%Y") as date_invoice',
                         'customers.customer_name'

@@ -1552,7 +1552,7 @@ $('#is_bulk').prop("checked") ?  _data.push({name : "is_bulk" , value : '1'   })
                                                                                                             <?php } ?>
                                                                                                         </select>
                                                                                             </div>
-
+                                                                                            <i> These Links define if product is included in the computation for posting in Accounting</i>
                                                                                         </div>
                                                                                         </div>
 

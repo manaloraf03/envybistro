@@ -96,6 +96,7 @@ class Adjustments extends CORE_Controller
                         'adjustment_info.remarks',
                         'adjustment_info.adjustment_type',
                         'adjustment_info.date_created',
+                        'adjustment_info.total_after_tax',
                         'DATE_FORMAT(adjustment_info.date_adjusted,"%m/%d/%Y") as date_adjusted',
                         'departments.department_id',
                         'departments.department_name'

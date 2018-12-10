@@ -128,7 +128,9 @@
             width: 100% !important;
         }
 
-
+        .right-align{
+            text-align: right;
+        }
         input[type=checkbox] {
           /* Double-sized Checkboxes */
           margin-top: 10px;
@@ -226,6 +228,7 @@
                                     <th>Voucher #</th>
                                     <th>Particular</th>
                                     <th>Method</th>
+                                    <th>Amount</th>
                                     <th>Txn Date</th>
                                     <th>Posted</th>
                                     <th>Status</th>
@@ -1074,7 +1077,7 @@ $(document).ready(function(){
 
         dt=$('#tbl_cash_disbursement_list').DataTable({
             "dom": '<"toolbar">frtip',
-                "order": [[ 9, "desc" ]],
+                "order": [[ 10, "desc" ]],
             "bLengthChange":false,
             "ajax" : "Cash_disbursement/transaction/list",
             "columns": [
@@ -1089,10 +1092,11 @@ $(document).ready(function(){
                 { targets:[2],data: "ref_no" },
                 { targets:[3],data: "particular" },
                 { targets:[4],data: "payment_method" },
-                { targets:[5],data: "date_txn" },
-                { targets:[6],data: "posted_by" },
+                { sClass:"right-align", targets:[5],data: "journal_total", render: $.fn.dataTable.render.number( ',', '.', 2) },
+                { targets:[6],data: "date_txn" },
+                { targets:[7],data: "posted_by" },
                 {
-                    targets:[7],data: null,
+                    targets:[8],data: null,
                     render: function (data, type, full, meta){
                         var _attribute='';
                         //console.log(data.is_email_sent);
@@ -1107,7 +1111,7 @@ $(document).ready(function(){
 
                 },
                 {
-                    targets:[8],
+                    targets:[9],
                     render: function (data, type, full, meta){
                         var btn_edit='<button class="btn btn-primary btn-sm" name="edit_info"  style="margin-left:-15px;" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-pencil"></i> </button>';
                         var btn_cancel='<button class="btn btn-red btn-sm" name="cancel_info" style="margin-right:0px;" data-toggle="tooltip" data-placement="top" title="Cancel Journal"><i class="fa fa-times"></i> </button>';
@@ -1117,7 +1121,7 @@ $(document).ready(function(){
                         return '<center>'+btn_check_print+"&nbsp;"+btn_cancel+'</center>';
                     }
                 },
-                 {targets:[9],data: "journal_id",visible:false }
+                 {targets:[10],data: "journal_id",visible:false }
             ]
         });
         

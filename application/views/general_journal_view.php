@@ -98,7 +98,10 @@
         body {
             overflow-x: hidden;
         }
+        .right-align{
+            text-align: right;
 
+        }
     </style>
 
 </head>
@@ -140,10 +143,12 @@
                             <tr>
                                 <th></th>
                                 <th>Slip #</th>
+                                <th>Amount</th>
                                 <th>Date Issued</th>
                                 <th>Terms</th>
                                 <th>Remarks</th>
                                 <th>Department</th>
+                                <th>ID</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -168,6 +173,7 @@
                                 <th></th>
                                 <th>Adjustment Code</th>
                                 <th>Adjustment Type</th>
+                                <th>Amount</th>
                                 <th>Date Adjusted</th>
                                 <th>Remarks</th>
                                 <th>Department</th>
@@ -195,6 +201,7 @@
                                 <th></th>
                                 <th>Txn #</th>
                                 <th>Particular</th>
+                                <th>Amount</th>
                                 <th>Remarks</th>
                                 <th>Txn Date</th>
                                 <th>Posted</th>
@@ -956,7 +963,7 @@ $(document).ready(function(){
         dt=$('#tbl_accounts_receivable').DataTable({
             "dom": '<"toolbar">frtip',
             "bLengthChange":false,
-                "order": [[ 8, "desc" ]],
+                "order": [[ 9, "desc" ]],
             "ajax" : "General_journal/transaction/list",
             "columns": [
                 {
@@ -968,11 +975,12 @@ $(document).ready(function(){
                 },
                 { targets:[1],data: "txn_no" },
                 { targets:[2],data: "particular" },
-                { targets:[3],data: "remarks" },
-                { targets:[4],data: "date_txn" },
-                { targets:[5],data: "posted_by" },
+                { sClass:"right-align", targets:[3],data: "journal_total" , render: $.fn.dataTable.render.number( ',', '.', 2)},
+                { targets:[4],data: "remarks" },
+                { targets:[5],data: "date_txn" },
+                { targets:[6],data: "posted_by" },
                 {
-                    targets:[6],data: null,
+                    targets:[7],data: null,
                     render: function (data, type, full, meta){
                         var _attribute='';
                         //console.log(data.is_email_sent);
@@ -986,7 +994,7 @@ $(document).ready(function(){
                     }
                 },
                 {
-                    targets:[7],
+                    targets:[8],
                     render: function (data, type, full, meta){
                         var btn_edit='<button class="btn btn-primary btn-sm" name="edit_info"  style="margin-left:-15px;" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-pencil"></i> </button>';
                         var btn_cancel='<button class="btn btn-red btn-sm" name="cancel_info" style="margin-right:0px;" data-toggle="tooltip" data-placement="top" title="Cancel Journal"><i class="fa fa-times"></i> </button>';
@@ -994,13 +1002,13 @@ $(document).ready(function(){
                         return '<center>'+btn_cancel+'</center>';
                     }
                 },
-                { visible:false, targets:[8],data: "journal_id" }
+                { visible:false, targets:[9],data: "journal_id" }
             ]
         });
 
         dtReview=$('#tbl_issuance_review').DataTable({
             "bLengthChange":false,
-                "order": [[ 1, "desc" ]],
+                "order": [[ "7", "desc" ]],
             "ajax" : "Issuances/transaction/issuance-for-review",
             "columns": [
                 {
@@ -1011,16 +1019,18 @@ $(document).ready(function(){
                     "defaultContent": ""
                 },
                 { targets:[1],data: "slip_no" },
-                { targets:[2],data: "date_issued" },
-                { targets:[3],data: "terms" },
-                { targets:[4],data: "remarks" },
-                { targets:[5],data: "department_name" }
+                {sClass: "right-align", targets:[2],data: "total_after_tax", render: $.fn.dataTable.render.number( ',', '.', 2) },
+                { targets:[3],data: "date_issued" },
+                { targets:[4],data: "terms" },
+                { targets:[5],data: "remarks" },
+                { targets:[6],data: "department_name" },
+                { targets:[7],data: "issuance_id",visible:false },
             ]
         });
 
         dtReviewAdjustment=$('#tbl_adjustment_review').DataTable({
             "bLengthChange":false,
-                "order": [[ 1, "desc" ]],
+                "order": [[ 7, "desc" ]],
             "ajax" : "Adjustments/transaction/adjustment-for-review",
             "columns": [
                 {
@@ -1032,9 +1042,12 @@ $(document).ready(function(){
                 },
                 { targets:[1],data: "adjustment_code" },
                 { targets:[2],data: "adjustment_type" },
-                { targets:[3],data: "date_adjusted" },
-                { targets:[4],data: "remarks" },
-                { targets:[5],data: "department_name" }
+                { sClass:"right-align", targets:[3],data: "total_after_tax", render: $.fn.dataTable.render.number( ',', '.', 2)},
+                { targets:[4],data: "date_adjusted" },
+                { targets:[5],data: "remarks" },
+                { targets:[6],data: "department_name" },
+                { targets:[7],data: "adjustment_id" ,visible:false},
+
             ]
         });
 

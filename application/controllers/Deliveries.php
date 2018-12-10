@@ -499,6 +499,7 @@ class Deliveries extends CORE_Controller
                     array(
                         'delivery_invoice.dr_invoice_id',
                         'delivery_invoice.dr_invoice_no',
+                        'delivery_invoice.total_after_discount',
                         'CONCAT_WS(" ",delivery_invoice.terms,delivery_invoice.duration)as term_description',
                         'delivery_invoice.remarks',
                         'DATE_FORMAT(delivery_invoice.date_delivered,"%m/%d/%Y") as date_delivered',

@@ -147,7 +147,9 @@
         .select2-container { 
             width: 100% !important; 
         } 
-        
+        .right-align{
+            text-align: right;
+        }
     </style>
 
 </head>
@@ -220,6 +222,7 @@
                                 <th></th>
                                 <th>Cash Invoice No: #</th>
                                 <th>Customer Name</th>
+                                <th>Amount</th>
                                 <th>Invoice Date</th>
                                 <th>Remarks</th>
                             </tr>
@@ -244,6 +247,7 @@
                                 <th></th>
                                 <th>Transaction #</th>
                                 <th>Particular</th>
+                                <th>Amount</th>
                                 <th>Remarks</th>
                                 <th>Txn Date</th>
                                 <th>Posted</th>
@@ -895,7 +899,7 @@ $(document).ready(function(){
         dt=$('#tbl_accounts_receivable').DataTable({
             "dom": '<"toolbar">frtip',
             "bLengthChange":false,
-                "order": [[ 8, "desc" ]],
+                "order": [[ 9, "desc" ]],
             "ajax" : "Cash_receipt/transaction/list",
             "columns": [
                 {
@@ -907,11 +911,12 @@ $(document).ready(function(){
                 },
                 { targets:[1],data: "txn_no" },
                 { targets:[2],data: "particular" },
-                { targets:[3],data: "remarks" },
-                { targets:[4],data: "date_txn" },
-                { targets:[5],data: "posted_by" },
+                { sClass:"right-align", targets:[3],data: "journal_total", render: $.fn.dataTable.render.number( ',', '.', 2) },
+                { targets:[4],data: "remarks" },
+                { targets:[5],data: "date_txn" },
+                { targets:[6],data: "posted_by" },
                 {
-                    targets:[6],data: null,
+                    targets:[7],data: null,
                     render: function (data, type, full, meta){
                         var _attribute='';
                         //console.log(data.is_email_sent);
@@ -927,7 +932,7 @@ $(document).ready(function(){
 
                 },
                 {
-                    targets:[7],
+                    targets:[8],
                     render: function (data, type, full, meta){
                         var btn_edit='<button class="btn btn-primary btn-sm" name="edit_info"  style="margin-left:-15px;" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-pencil"></i> </button>';
                         var btn_trash='<button class="btn btn-red btn-sm" name="cancel_info" style="margin-right:0px;" data-toggle="tooltip" data-placement="top" title="Cancel Journal"><i class="fa fa-times"></i> </button>';
@@ -936,7 +941,7 @@ $(document).ready(function(){
                         return '<center>'+btn_trash+'</center>';
                     }
                 },
-                { visible:false, targets:[8],data: "journal_id" }
+                { visible:false, targets:[9],data: "journal_id" }
             ]
         });
 
@@ -985,8 +990,9 @@ $(document).ready(function(){
                 },
                 { targets:[1],data: "cash_inv_no" },
                 { targets:[2],data: "customer_name" },
+                { sClass:"right-align",targets:[3],data: "total_after_discount", render: $.fn.dataTable.render.number( ',', '.', 2) },
                 { targets:[4],data: "date_invoice" },
-                { targets:[3],data: "remarks" }
+                { targets:[5],data: "remarks" }
             ]
         });
 
