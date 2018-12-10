@@ -85,7 +85,7 @@
     <table width="100%" border="0" cellspacing="-1">
         <tr>
             <td style="padding: 4px;" width="50%"><strong>DATE :</strong> <?php echo date_format(new DateTime($journal_info->date_txn),"m/d/Y"); ?></td>
-            <td style="padding: 4px;" width="50%"><strong>REF # :</strong> <?php echo $journal_info->ref_no; ?></td>
+            <td style="padding: 4px;" width="50%"><strong>REF # :</strong><?php echo $journal_info->ref_type; ?> <?php echo $journal_info->ref_no; ?></td>
         </tr>
         <?php if ($journal_info->payment_method_id == 2) { ?>
             <tr> 
@@ -99,7 +99,12 @@
         </tr>
         <tr>
             <td style="padding: 4px;"><strong>PARTICULAR :</strong> <?php echo $journal_info->supplier_name; ?></td>
+
             <td style="padding: 4px;"><strong>PAYMENT METHOD :</strong> <?php echo $journal_info->payment_method; ?></td>
+        </tr>
+        <tr>
+            <td style="padding: 4px;"><strong>DOCUMENT TYPE :</strong> <?php echo $journal_info->doc_type_name; ?></td>
+            <td style="padding: 4px;"><strong></strong> </td>
         </tr>
     </table><br>
     <table width="100%" style="border-collapse: collapse;border-spacing: 0;font-family: tahoma;font-size: 11" border="0">

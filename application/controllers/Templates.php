@@ -85,6 +85,7 @@ class Templates extends CORE_Controller {
         $this->load->model('Hotel_integration_items_model');
 
         $this->load->model('Pos_integration_items_model');
+        $this->load->model('Doc_types_model');
 
         $this->load->model('Pos_integration_model');
         $this->load->model('Purchasing_integration_model');
@@ -1446,13 +1447,15 @@ class Templates extends CORE_Controller {
                         'suppliers.contact_no',
                         'suppliers.contact_name',
                         'departments.department_name',
+                        'doc_types.doc_type_name',
                         'payment_methods.*'
                     ),
 
                     array(
                         array('suppliers','suppliers.supplier_id=journal_info.supplier_id','left'),
                         array('departments','departments.department_id=journal_info.department_id','left'),
-                        array('payment_methods','payment_methods.payment_method_id=journal_info.payment_method_id','left')
+                        array('payment_methods','payment_methods.payment_method_id=journal_info.payment_method_id','left'),
+                        array('doc_types','doc_types.doc_type_id=journal_info.doc_type_id','left')
                     )
 
                 );
@@ -2807,7 +2810,7 @@ class Templates extends CORE_Controller {
                     )
                 );
                 $data['valid_particular']=(count($valid_supplier)>0);
-
+                $data['doc_types']=$this->Doc_types_model->get_list('is_deleted=0 AND is_active = 1');
                 echo $this->load->view('template/expense_journal_for_review',$data,TRUE); //details of the journal
 
 

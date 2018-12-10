@@ -62,6 +62,14 @@
                                                         </span>
                                                         <input type="text" name="txn_no" class="form-control" value="TXN-YYYYMMDD-XXX" readonly>
                                                     </div>
+                                                </div>
+                                                <div class="col-lg-4 col-lg-offset-4">
+                                                     Document Type *: <br />
+                                                    <select name="doc_type_id"  class="cbo_document_type" data-error-msg="Document Type is required." required>
+                                                        <?php foreach($doc_types as $doc_type){ ?>
+                                                            <option value="<?php echo $doc_type->doc_type_id; ?>"><?php echo $doc_type->doc_type_name; ?></option>
+                                                        <?php } ?>
+                                                    </select>
                                                 </div><br />
                                             </div>
                                             <div class="row">

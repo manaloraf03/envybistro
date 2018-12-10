@@ -28,6 +28,7 @@ class Cash_disbursement extends CORE_Controller
                 'Company_model',
                 'Users_model',
                 'Bank_model',
+                'Doc_types_model',
                 'Trans_model'
             )
         );
@@ -52,7 +53,7 @@ class Cash_disbursement extends CORE_Controller
         $data['payment_methods']=$this->Payment_method_model->get_list('is_deleted=0');
         $data['layouts']=$this->Check_layout_model->get_list('is_deleted=0');
         $data['banks']=$this->Journal_info_model->get_list('is_active=1 AND is_deleted=0 AND payment_method_id=2',null,null,null,'bank');
-
+        $data['doc_types']=$this->Doc_types_model->get_list('is_deleted=0 AND is_active = 1');
         $data['title'] = 'Disbursement Journal';
         (in_array('1-2',$this->session->user_rights)? 
         $this->load->view('cash_disbursement_view', $data)
@@ -191,6 +192,7 @@ class Cash_disbursement extends CORE_Controller
                 $m_journal->check_date=date('Y-m-d',strtotime($this->input->post('check_date',TRUE)));
                 $m_journal->ref_type=$this->input->post('ref_type');
                 $m_journal->ref_no=$this->input->post('ref_no');
+                $m_journal->doc_type_id=$this->input->post('doc_type_id');
                 $m_journal->amount=$this->get_numeric_value($this->input->post('amount'));
 
 
@@ -410,7 +412,9 @@ class Cash_disbursement extends CORE_Controller
                 'journal_info.amount',
                 'CONCAT(IFNULL(customers.customer_name,""),IFNULL(suppliers.supplier_name,""))as particular',
                 'CONCAT_WS(" ",user_accounts.user_fname,user_accounts.user_lname)as posted_by',
-                'SUM(journal_accounts.dr_amount) as journal_total'
+                'SUM(journal_accounts.dr_amount) as journal_total',
+                'doc_types.doc_type_name'
+
             ),
             array(
                 array('customers','customers.customer_id=journal_info.customer_id','left'),
@@ -418,7 +422,9 @@ class Cash_disbursement extends CORE_Controller
                 array('departments','departments.department_id=journal_info.department_id','left'),
                 array('user_accounts','user_accounts.user_id=journal_info.created_by_user','left'),
                 array('payment_methods','payment_methods.payment_method_id=journal_info.payment_method_id','left'),
-                array('journal_accounts','journal_accounts.journal_id=journal_info.journal_id','left')
+                array('journal_accounts','journal_accounts.journal_id=journal_info.journal_id','left'),
+                array('doc_types','doc_types.doc_type_id=journal_info.doc_type_id','left')
+
 
             ),
             null,

@@ -305,7 +305,7 @@
                             <input type="text" name="txn_no" class="form-control" placeholder="TXN-YYYYMMDD-XXX" readonly>
                         </div>
                     </div>
-                    <div class="col-lg-3">
+                    <div class="col-lg-2">
                        <b class="required"> * </b> <label>Date  :</label><br />
                         <div class="input-group">
                                             <span class="input-group-addon">
@@ -314,9 +314,15 @@
                             <input type="text" name="date_txn" class="date-picker form-control" data-error-msg="Date is required." required>
                         </div>
                     </div>
-
-
-                    <div class="col-lg-4 col-lg-offset-2">
+                    <div class="col-sm-3">
+                    <b class="required">*</b> <label>Document Type </label>:<br />
+                        <select name="doc_type_id" id="cbo_doc_type" data-error-msg="Document Type is required." required>
+                            <?php foreach($doc_types as $doc_type){ ?>
+                                <option value="<?php echo $doc_type->doc_type_id; ?>"><?php echo $doc_type->doc_type_name; ?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                    <div class="col-lg-4 ">
                         <b class="required"> * </b> <label>Method of Payment  :</label><br />
                         <select id="cbo_pay_type" name="payment_method" class="form-control" data-error-msg="Payment method is required." required>
                             <?php foreach($payment_methods as $payment_method){ ?>
@@ -336,7 +342,7 @@
                             <option value="JV">JV</option>
                         </select>
                     </div>
-                    <div class="col-lg-3">
+                    <div class="col-lg-2">
                         <b class="required"> * </b> <label>Reference # :</label><br />
                         <div class="input-group">
                             <span class="input-group-addon">
@@ -345,7 +351,7 @@
                             <input type="text" name="ref_no" maxlength="15" class="form-control"  data-error-msg="Reference # is required." required>
                         </div>
                     </div>
-                    <div class="col-lg-4 col-lg-offset-2">
+                    <div class="col-lg-4 col-lg-offset-3">
                         <label>Bank :</label><br />
                         <select id="cbo_bank" class="form-control" name="bank_id">
                             <option value="create_bank">[Create New Bank]</option>
@@ -357,7 +363,7 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-lg-6">
+                    <div class="col-lg-5">
                         <b class="required"> * </b> <label>Supplier  :</label><br />
                         <select id="cbo_suppliers" name="supplier_id" class="selectpicker show-tick form-control" data-live-search="true" data-error-msg="Supplier name is required." required>
                             <option value="0">[ Create New Supplier ]</option>
@@ -367,7 +373,7 @@
                         </select>
                     </div>
 
-                    <div class="col-lg-2 col-lg-offset-2">
+                    <div class="col-lg-2 col-lg-offset-3">
                         <label>Check Date :</label><br />
                         <div class="input-group">
                             <span class="input-group-addon">
@@ -390,7 +396,7 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-lg-6">
+                    <div class="col-lg-5">
                        <b class="required"> * </b> <label>Department  :</label><br />
                         <select id="cbo_branch" name="department_id" class="selectpicker show-tick form-control" data-live-search="true" data-error-msg="Department is required." required>
                             <option value="0">[ Create New Department ]</option>
@@ -400,7 +406,7 @@
                         </select>
                     </div>
 
-                    <div class="col-lg-4 col-lg-offset-2">
+                    <div class="col-lg-4 col-lg-offset-3">
                       <b class="required"> * </b>  <label>Amount  :</label><br />
                         <input class="form-control text-center numeric" id="cash_amount" type="text" maxlength="12" value="0.00" name="amount" required data-error-msg="Amount is Required!">
                     </div>
@@ -1033,7 +1039,7 @@
 $(document).ready(function(){
     var _txnMode; var _cboSuppliers; var _cboMethods; var _selectRowObj; var _selectedID; var _txnMode, _cboBranches, _cboPaymentMethod, _cboBanks, _cboAccountType;
     var dtReview; var cbo_refType; var _cboLayouts; var dtRecurring; var dtCheckList; var _attribute; var _cboTax;
-
+    var _cboDocType;
 
     var oTBJournal={
         "dr" : "td:eq(2)",
@@ -1297,6 +1303,11 @@ $(document).ready(function(){
             allowClear: true
         });
 
+        _cboDocType=$("#cbo_doc_type").select2({
+            placeholder: "Please select Document Type.",
+            allowClear: false
+        });
+
         // _cboMethods=$('#cbo_methods').select2({
         //placeholder: "Please select method of payment.",
         //allowClear: true
@@ -1432,6 +1443,8 @@ $(document).ready(function(){
                     row.child( response ).show();
 
                     reInitializeSpecificDropDown($('.cbo_supplier_list'));
+
+                    
                     reInitializeNumeric();
 
                     var tbl=$('#tbl_entries_for_review_'+ d.dr_invoice_id);
@@ -1486,7 +1499,7 @@ $(document).ready(function(){
                     reInitializeSpecificDropDown($('.cbo_customer_list'));
                     reInitializeSpecificDropDown($('.cbo_department_list'));
                     reInitializeSpecificDropDown($('.cbo_payment_method'));
-
+                    reInitializeSpecificDropDown($('.cbo_document_type'));
 
                     reInitializeNumeric();
 
@@ -1583,7 +1596,7 @@ $(document).ready(function(){
             $('#cbo_suppliers').select2('val',null);
             $('#cbo_refType').select2('val',"CV");
             $('#cbo_bank').select2('val',null);
-       
+            $('#cbo_doc_type').select2('val', null);
             //set defaults
             _cboPaymentMethod.select2('val',1);//set cash as default
             $('input[name="date_txn"]').val(_currentDate);
