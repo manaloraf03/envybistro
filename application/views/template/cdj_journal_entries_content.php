@@ -103,7 +103,7 @@
             <td style="padding: 4px;"><strong>PAYMENT METHOD :</strong> <?php echo $journal_info->payment_method; ?></td>
         </tr>
         <tr>
-            <td style="padding: 4px;"><strong>DOCUMENT TYPE :</strong> <?php echo $journal_info->doc_type_name; ?></td>
+            <td style="padding: 4px;"><strong>DOCUMENT TYPE :</strong> <?php echo $journal_info->doc_type_name; ?> <?php echo $journal_info->doc_type_no; ?></td>
             <td style="padding: 4px;"><strong></strong> </td>
         </tr>
     </table><br>

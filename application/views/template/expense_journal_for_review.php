@@ -63,7 +63,16 @@
                                                         <input type="text" name="txn_no" class="form-control" value="TXN-YYYYMMDD-XXX" readonly>
                                                     </div>
                                                 </div>
-                                                <div class="col-lg-4 col-lg-offset-4">
+                                                <div class="col-lg-4">
+                                                    Date * :<br />
+                                                    <div class="input-group">
+                                                        <input type="text" name="date_txn" class="date-picker  form-control" value="<?php echo $payment_info->payment_date; ?>">
+                                                        <span class="input-group-addon">
+                                                            <i class="fa fa-calendar"></i>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4 ">
                                                      Document Type *: <br />
                                                     <select name="doc_type_id"  class="cbo_document_type" data-error-msg="Document Type is required." required>
                                                         <?php foreach($doc_types as $doc_type){ ?>
@@ -73,7 +82,7 @@
                                                 </div><br />
                                             </div>
                                             <div class="row">
-                                                <div class="col-lg-7">
+                                                <div class="col-lg-8">
                                                     Supplier * :<br />
                                                     <select name="supplier_id" class="cbo_customer_list">
                                                         <?php foreach($suppliers as $supplier){ ?>
@@ -81,18 +90,13 @@
                                                         <?php } ?>
                                                     </select>
                                                 </div>
-                                                <div class="col-lg-4 col-lg-offset-1">
-                                                    Date * :<br />
-                                                    <div class="input-group">
-                                                        <input type="text" name="date_txn" class="date-picker  form-control" value="<?php echo $payment_info->payment_date; ?>">
-                                                        <span class="input-group-addon">
-                                                            <i class="fa fa-calendar"></i>
-                                                        </span>
-                                                    </div>
+                                                <div class="col-lg-4 ">
+                                                    * Document Reference # :<br />
+                                                    <input type="text" name="doc_type_no" class="form-control" data-error-msg="Document Reference No is required." required>
                                                 </div><br />
                                             </div>
                                             <div class="row">
-                                                <div class="col-lg-7">
+                                                <div class="col-lg-8">
                                                     Branch * :<br />
                                                     <select name="department_id" class="cbo_department_list">
                                                         <?php foreach($departments as $department){ ?>

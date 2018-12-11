@@ -227,6 +227,7 @@
                                     <th>Txn #</th>
                                     <th>Voucher #</th>
                                     <th>Particular</th>
+                                    <th>Document Type</th>
                                     <th>Method</th>
                                     <th>Amount</th>
                                     <th>Txn Date</th>
@@ -351,7 +352,11 @@
                             <input type="text" name="ref_no" maxlength="15" class="form-control"  data-error-msg="Reference # is required." required>
                         </div>
                     </div>
-                    <div class="col-lg-4 col-lg-offset-3">
+                    <div class="col-sm-3">
+                         <b class="required"> * </b> <label>Document Reference # :</label><br />
+                        <input type="text" name="doc_type_no" class="form-control" data-error-msg="Document Reference No is required." required>
+                    </div>
+                    <div class="col-lg-4">
                         <label>Bank :</label><br />
                         <select id="cbo_bank" class="form-control" name="bank_id">
                             <option value="create_bank">[Create New Bank]</option>
@@ -1083,7 +1088,7 @@ $(document).ready(function(){
 
         dt=$('#tbl_cash_disbursement_list').DataTable({
             "dom": '<"toolbar">frtip',
-                "order": [[ 10, "desc" ]],
+                "order": [[ 11, "desc" ]],
             "bLengthChange":false,
             "ajax" : "Cash_disbursement/transaction/list",
             "columns": [
@@ -1097,12 +1102,13 @@ $(document).ready(function(){
                 { targets:[1],data: "txn_no" },
                 { targets:[2],data: "ref_no" },
                 { targets:[3],data: "particular" },
-                { targets:[4],data: "payment_method" },
-                { sClass:"right-align", targets:[5],data: "journal_total", render: $.fn.dataTable.render.number( ',', '.', 2) },
-                { targets:[6],data: "date_txn" },
-                { targets:[7],data: "posted_by" },
+                { targets:[4],data: "doc_type_name" },
+                { targets:[5],data: "payment_method" },
+                { sClass:"right-align", targets:[6],data: "journal_total", render: $.fn.dataTable.render.number( ',', '.', 2) },
+                { targets:[7],data: "date_txn" },
+                { targets:[8],data: "posted_by" },
                 {
-                    targets:[8],data: null,
+                    targets:[9],data: null,
                     render: function (data, type, full, meta){
                         var _attribute='';
                         //console.log(data.is_email_sent);
@@ -1117,7 +1123,7 @@ $(document).ready(function(){
 
                 },
                 {
-                    targets:[9],
+                    targets:[10],
                     render: function (data, type, full, meta){
                         var btn_edit='<button class="btn btn-primary btn-sm" name="edit_info"  style="margin-left:-15px;" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-pencil"></i> </button>';
                         var btn_cancel='<button class="btn btn-red btn-sm" name="cancel_info" style="margin-right:0px;" data-toggle="tooltip" data-placement="top" title="Cancel Journal"><i class="fa fa-times"></i> </button>';
@@ -1127,7 +1133,7 @@ $(document).ready(function(){
                         return '<center>'+btn_check_print+"&nbsp;"+btn_cancel+'</center>';
                     }
                 },
-                 {targets:[10],data: "journal_id",visible:false }
+                 {targets:[11],data: "journal_id",visible:false }
             ]
         });
         

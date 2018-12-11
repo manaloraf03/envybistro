@@ -193,6 +193,7 @@ class Cash_disbursement extends CORE_Controller
                 $m_journal->ref_type=$this->input->post('ref_type');
                 $m_journal->ref_no=$this->input->post('ref_no');
                 $m_journal->doc_type_id=$this->input->post('doc_type_id');
+                $m_journal->doc_type_no=$this->input->post('doc_type_no');
                 $m_journal->amount=$this->get_numeric_value($this->input->post('amount'));
 
 
@@ -413,7 +414,7 @@ class Cash_disbursement extends CORE_Controller
                 'CONCAT(IFNULL(customers.customer_name,""),IFNULL(suppliers.supplier_name,""))as particular',
                 'CONCAT_WS(" ",user_accounts.user_fname,user_accounts.user_lname)as posted_by',
                 'SUM(journal_accounts.dr_amount) as journal_total',
-                'doc_types.doc_type_name'
+                'CONCAT(doc_types.doc_type_name," ",journal_info.doc_type_no) as doc_type_name'
 
             ),
             array(
